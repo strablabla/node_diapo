@@ -1,10 +1,6 @@
-<!DOCTYPE html>
 
-<html>
 
-<meta charset="UTF-8">
-
- <script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
 
@@ -72,20 +68,24 @@ $('#content').css({'margin-left':'200px',
                    })
 $('li li').hide() // hide the Mémos
 
-function foot_head(patt, dicfh){
+function p_match__inject_css(patt, dicfh){
 
-    /*
-    Generic footer header..
-    */
+      /*
+      Generic match replace
+      */
 
-    $("p").each(function(){
-         var txt = $(this).text()
-         if (txt.match(patt)){
-             var new_txt = txt.split(patt)[1]
-             $(this).text(new_txt)
-             $(this).css(dicfh)
-         }
-     })
+      $("p").each(function(){
+           var txt = $(this).text()
+           if (txt.match(patt)){
+               var new_txt = txt.split(patt)[1]
+               $(this).text(new_txt)
+               $(this).css(dicfh)
+               if (txt.match(/\!eq/)){
+                  $(this).text('$$' + $(this).text() + '$$')
+                  //alert($(this).text())
+               }
+           }
+       })
 
 }
 
@@ -97,7 +97,7 @@ function make_head(){
 
       var dichead = {'position':'absolute','top':'90px',
                      'font-size':'120%', 'right':'250px'}
-      foot_head(/\!head/, dichead)
+      p_match__inject_css(/\!head/, dichead)
       $('#content').append($('</p>').attr('id','footlim'))
       $('#footlim').html('<hr>')
       $('#footlim').css({'position':'absolute','top':'780px'})
@@ -111,11 +111,23 @@ function make_foot(){
       */
 
       var dicfoot = {'position':'absolute','top':'800px','font-size':'110%'}
-      foot_head(/\!foot/, dicfoot)
+      p_match__inject_css(/\!foot/, dicfoot)
 
       $('#content').append($('</p>').attr('id','footlim'))
       $('#footlim').html('<hr>')
       $('#footlim').css({'position':'absolute','top':'780px'})
+
+}
+
+function make_eq(){
+
+      /*
+      Equation
+      */
+
+      var diceq= {'position':'relative','font-size':'150%',
+                  'text-align':' center '}
+      p_match__inject_css(/\!eq/, diceq)
 
 }
 
@@ -127,6 +139,10 @@ make_head()
 //-----------------------------  Footer
 
 make_foot()
+
+//-----------------------------  Equation
+
+make_eq()
 
 //-----------------------------  Mémos
 
@@ -158,11 +174,9 @@ $('li').click(function(){                    // clicking on li to have the corre
 })
 
 tag_infos.click(function(){
- $(this).toggle()
+    $(this).toggle()
 })
 
 //-----------------------------
 
 </script>
-
-</html>

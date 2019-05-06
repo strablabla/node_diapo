@@ -2,20 +2,13 @@
 var new_strap = function(diapo_index){
 
       return function(){/*
-{% include 'begin.html' %}
-{% include 'header.html' %}
-{% include 'beg_straptoc.html' %}
+{% extends 'diapo_template.html' %}
 
+{% block diapo_content %}
 
 {% include 'diapos/d{}.html' %}
 
-
-{% include 'end_straptoc.html' %}
-{% include 'voice.html' %}
-{% include 'diapo.html' %}
-<!-- {% include 'detect_chinese.html' %} -->
-{% include 'scroll_socket.html' %}
-{% include 'end.html' %}
+{% endblock %}
 */}.toString().slice(14,-3).format(diapo_index)
 
 }
