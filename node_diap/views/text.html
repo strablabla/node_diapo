@@ -42,7 +42,7 @@
                   mode: 'markdown'
             });
 
-            code_mirror_add_func(editor)
+            code_mirror_add_func(editor) // add various functionnalities to code mirror
 
              //------------- from textarea to html
 
@@ -83,7 +83,7 @@
           });
 
    var diapo_index = null
-   socket.on('numdiap', function(text){
+   socket.on('numdiap', function(text){       // retrieve diapo index
             diapo_index = text
           })
 

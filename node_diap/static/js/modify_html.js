@@ -11,7 +11,7 @@ var new_strap = function(diapo_index){
 
 
 {% include 'end_straptoc.html' %}
-{% include 'voice_toc.html' %}
+{% include 'voice.html' %}
 {% include 'diapo.html' %}
 <!-- {% include 'detect_chinese.html' %} -->
 {% include 'scroll_socket.html' %}

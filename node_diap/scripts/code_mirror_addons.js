@@ -28,4 +28,9 @@ function code_mirror_add_func(editor){
               editor.replaceSelection(modified_selection)
          })
 
+         $('#insert').click(function(){
+               var cursor = editor.getCursor()
+               editor.replaceRange("bingo", cursor);
+          })
+
  }
