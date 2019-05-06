@@ -68,7 +68,7 @@ $('#content').css({'margin-left':'200px',
 $('li li').hide() // hide the Mémos
 
 
-function remove_patt_change_css(this,txt,patt,dic_css){
+function remove_patt_change_css(elem,txt,patt,dic_css){
 
       /*
       Remove the pattern and modiy the css
@@ -77,8 +77,8 @@ function remove_patt_change_css(this,txt,patt,dic_css){
       */
 
       var new_txt = txt.split(patt)[1]
-      this.text(new_txt)
-      this.css(dic_css)
+      elem.text(new_txt)
+      elem.css(dic_css)
 
 }
 

@@ -43,6 +43,8 @@ function addget(app,i){
 
 }
 
+
+// ----------------  Make the Routage
 numdiap = null
 
 var stats = countFiles('views/diapos', function (err, results) {
@@ -56,6 +58,7 @@ var stats = countFiles('views/diapos', function (err, results) {
 })
 
 app.get('/text', function(req, res){ res.render('text.html') });
+app.get('/synopt', function(req, res){ res.render('diapo_synopt.html') });
 
 //--------------  static addresses
 
