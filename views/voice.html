@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html>
+
+<meta charset="UTF-8">
+
+<script src="artyom.window.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+var socket = io.connect();
+
+String.prototype.format = function () {
+  var i = 0, args = arguments;
+  return this.replace(/{}/g, function () {
+    return typeof args[i] != 'undefined' ? args[i++] : '';
+  });
+};
+
+const artyom = new Artyom();
+
+artyom.initialize({
+  lang:'fr-FR',
+  continuous:true,
+  debug:false,
+  listen:true
+})
+
+function add_commands(dict, func){
+
+      /*
+      Add commands to Artyom
+      dict : {target: sound}
+      */
+
+      var dctools = {}
+
+      Object.entries(dict).forEach(([key, value]) => {
+
+              dctools[key] = {
+                  indexes:[value], // These spoken words will trigger the execution of the command
+                  action: function(){ func(key) }
+                }
+              artyom.addCommands(dctools[key]); // Add the command with addCommands method. Now
+
+      }); // end for each
+}
+
+var dic_simple =  {
+        indexes: ['table des matière'],
+        action: function() {
+            artyom.say("change le toc");
+            $('#toc').toggle()
+            }
+    }
+
+function go_to_diapo(i){
+
+      /*
+      Go to the diapo num i..
+      */
+
+      location.replace("d{}".format(i))
+      socket.emit('numdiap', i)
+
+}
+
+var diapo_max = null
+var dic_diapo =  {}
+comm_done = false
+socket.on('maxdiap', function(text){
+      diapo_max = text
+      for (var i=0; i < diapo_max; i++){dic_diapo[i] = 'diapo {}'.format(i) }
+      if (!comm_done){ add_commands(dic_diapo, go_to_diapo) }
+      else{comm_done = true}
+
+ })    // number max of diap
+
+artyom.addCommands(dic_simple);     // Add the command with addCommands method. Now
+
+</script>
+
+</html>
