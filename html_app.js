@@ -44,18 +44,24 @@ function addget(app,i){
 }
 
 // ----------------  Make the Routage
-numdiap = null
 
-var stats = countFiles('views/diapos', function (err, results) {
-  console.log('done counting')
-  console.log(results) // { files: 10, dirs: 2, bytes: 234 }
-  numdiap = parseInt(results.files/2)
-  console.log(numdiap)
-  var list_diap = _.range(numdiap).map((nb) => (nb))
-  list_diap.forEach(function(i){ addget(app,i) }) // Routage
+function make_main_routage(){
 
-})
+      numdiap = null
 
+      var stats = countFiles('views/diapos', function (err, results) {
+            console.log('done counting')
+            console.log(results) // { files: 10, dirs: 2, bytes: 234 }
+            numdiap = parseInt(results.files/2)
+            console.log(numdiap)
+            var list_diap = _.range(numdiap).map((nb) => (nb))
+            list_diap.forEach(function(i){ addget(app,i) }) // Routage
+
+      })
+
+}
+
+make_main_routage()
 app.get('/text', function(req, res){ res.render('text.html') });
 app.get('/all', function(req, res){ res.render('diapo_all.html') });
 //app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
@@ -92,6 +98,15 @@ io.sockets.on('connection', function (socket) {
       socket.on('return', function(new_text) { // change html with textarea
             modify.modify_html_with_newtext(socket, fs, util, new_text, diapo_index)
         }); // end socket.on return
+
+      //---------------------------------------- Make a new diapo..
+
+      socket.on('make_new_diap', function(){
+            modify.modify_html_with_newtext(socket, fs, util, ' ', numdiap)
+            make_main_routage()
+      })
+
+      //---------------------------------
 
       socket.on('scroll', function(pattern) { patt = pattern })
       socket.on('scroll_html', function(pos) {

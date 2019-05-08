@@ -1,6 +1,7 @@
 
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="keymaster.js"></script>
 
 <script>
 
@@ -54,6 +55,11 @@ socket.on('maxdiap', function(text){ diapo_max = text })    // number max of dia
 $( document ).keydown(function() {
     diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
 });
+key('ctrl+d', function(){
+    socket.emit('make_new_diap', '')
+    alert('adding a new diapo !!!!!');
+    return false
+  });
 
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
@@ -66,6 +72,8 @@ $('#content').css({'margin-left':'200px',
                    'height' : '790px'
                    })
 $('li li').hide() // hide the Mémos
+$('.help').hide() // hide the help
+$('#gobottom').hide() // hide the help
 
 
 function remove_patt_change_css(elem,txt,patt,dic_css){
@@ -152,36 +160,36 @@ make_eq()    //-----------------------------  Equation
 
 //-----------------------------  Mémos
 
-var tag_infos = $('<div>').attr('id','infos')
-tag_infos.css({'position':'absolute',
-              'top': '50px', 'left':'10px',
-              'padding-top' : '50px',
-              'width': '400px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'})
-
-//tag_infos.draggable()
-
-$('#content').append(tag_infos.hide())
-$('li').click(function(){                    // clicking on li to have the corresponding Memo infos
-
-    tag_infos.html('<h1> Mémo </h1>')
-    var clone = $(this).clone()
-    var diccss = {'font-size':'16px', 'margin':'20px 20px'}
-    clone.css(diccss)
-    clone.find('*').css(diccss)
-    tag_infos.append(clone)
-    clone.find("li").show()
-    tag_infos.toggle()
-
-})
-
-tag_infos.click(function(){
-    $(this).toggle()
-})
+// var tag_infos = $('<div>').attr('id','infos')
+// tag_infos.css({'position':'absolute',
+//               'top': '50px', 'left':'10px',
+//               'padding-top' : '50px',
+//               'width': '400px','height': '400px',
+//               'font-size' : '16px',
+//               'background-color':'white',
+//               'box-shadow': '8px 8px 12px #aaa',
+//               'opacity':'1',
+//               'z-index': '100'})
+//
+// //tag_infos.draggable()
+//
+// $('#content').append(tag_infos.hide())
+// $('li').click(function(){                    // clicking on li to have the corresponding Memo infos
+//
+//     tag_infos.html('<h1> Mémo </h1>')
+//     var clone = $(this).clone()
+//     var diccss = {'font-size':'16px', 'margin':'20px 20px'}
+//     clone.css(diccss)
+//     clone.find('*').css(diccss)
+//     tag_infos.append(clone)
+//     clone.find("li").show()
+//     tag_infos.toggle()
+//
+// })
+//
+// tag_infos.click(function(){
+//     $(this).toggle()
+// })
 
 
 //-----------------------------

@@ -43,14 +43,6 @@ function add_commands(dict, func){
       }); // end for each
 }
 
-// var dic_simple =  {
-//         indexes: ['table des matière'],
-//         action: function() {
-//             artyom.say("change le toc");
-//             $('#toc').toggle()
-//             }
-//     }
-
 function go_to_diapo(i){
 
       /*
@@ -75,13 +67,22 @@ socket.on('maxdiap', function(text){
 
 //artyom.addCommands(dic_simple);     // Add the command with addCommands method. Now
 
-dct_return = {
-    indexes:['toutes les diapos'], // These spoken words will trigger the execution of the command
+dct_synopt = {
+    indexes:['vue globale'], // These spoken words will trigger the execution of the command
     action: function(){
             location.replace("all")
             //socket.emit('numdiap', '0')
      }
   }
-artyom.addCommands(dct_return); // Add the command with addCommands method. Now
+artyom.addCommands(dct_synopt);
+
+dct_new_diap = {
+    indexes:['ajouter une diapo'], // These spoken words will trigger the execution of the command
+    action: function(){
+            location.replace("all")
+            //socket.emit('numdiap', '0')
+     }
+  }
+artyom.addCommands(dct_synopt);
 
 </script>
