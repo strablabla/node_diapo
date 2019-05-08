@@ -1,0 +1,42 @@
+{% include 'begin.html' %}
+{% include 'header.html' %}
+{% include 'iframe_mini.html' %}
+
+<h1> All the slides </h1>
+
+<br><br><br><br>
+
+
+{% for i in range(0, 5) -%}
+
+        <iframe id="frame{{i}}" src="d{{i}}"  > diapo {{i}} </iframe>
+        <span class="name_diap" id="d{{i}}"> diapo {{i}} </span>
+
+{% endfor %}
+
+<script>
+
+for (var i=0; i < 5; i++){
+
+    var posframe =  -450*i //+ 'px'
+    var posh2 =  515*i+160 //+ 'px'
+    //alert(pos)
+    $('#frame'+i).css({'top':posframe, 'left':'400px'})
+    $('#d'+i).css({'top':posh2, 'left':'300px', 'font-size':'20px'})
+
+}
+
+
+$('.name_diap').click(function(){
+      //alert($(this).attr('id'))
+      location.replace($(this).attr('id'))
+})
+
+
+</script>
+
+<!-- {% include 'voice.html' %} -->
+{% include 'diapo.html' %}
+{% include 'math.html' %}
+{% include 'scroll_socket.html' %}
+{% include 'end.html' %}

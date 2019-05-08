@@ -1,8 +1,4 @@
-<!DOCTYPE html>
 
-<html>
-
-<meta charset="UTF-8">
 
 <script src="artyom.window.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -47,13 +43,13 @@ function add_commands(dict, func){
       }); // end for each
 }
 
-var dic_simple =  {
-        indexes: ['table des matière'],
-        action: function() {
-            artyom.say("change le toc");
-            $('#toc').toggle()
-            }
-    }
+// var dic_simple =  {
+//         indexes: ['table des matière'],
+//         action: function() {
+//             artyom.say("change le toc");
+//             $('#toc').toggle()
+//             }
+//     }
 
 function go_to_diapo(i){
 
@@ -77,8 +73,15 @@ socket.on('maxdiap', function(text){
 
  })    // number max of diap
 
-artyom.addCommands(dic_simple);     // Add the command with addCommands method. Now
+//artyom.addCommands(dic_simple);     // Add the command with addCommands method. Now
+
+dct_return = {
+    indexes:['toutes les diapos'], // These spoken words will trigger the execution of the command
+    action: function(){
+            location.replace("all")
+            //socket.emit('numdiap', '0')
+     }
+  }
+artyom.addCommands(dct_return); // Add the command with addCommands method. Now
 
 </script>
-
-</html>

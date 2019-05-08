@@ -43,7 +43,6 @@ function addget(app,i){
 
 }
 
-
 // ----------------  Make the Routage
 numdiap = null
 
@@ -58,7 +57,8 @@ var stats = countFiles('views/diapos', function (err, results) {
 })
 
 app.get('/text', function(req, res){ res.render('text.html') });
-app.get('/synopt', function(req, res){ res.render('diapo_synopt.html') });
+app.get('/all', function(req, res){ res.render('diapo_all.html') });
+//app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
 
 //--------------  static addresses
 
