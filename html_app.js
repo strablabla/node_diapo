@@ -102,7 +102,7 @@ io.sockets.on('connection', function (socket) {
 
 var port = 3000
 server.listen(port);
-var addr = 'http://127.0.0.1:{}/d5'.format(port)
-diapo_index = 5;
+var addr = 'http://127.0.0.1:{}/d0'.format(port)
+//diapo_index = 5;
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");

@@ -29,6 +29,7 @@ for (var i=0; i < 5; i++){
 
 $('.name_diap').click(function(){
       //alert($(this).attr('id'))
+      socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
       location.replace($(this).attr('id'))
 })
 
