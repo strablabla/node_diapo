@@ -208,9 +208,11 @@ function replace_color(elem, txt, col){
 
       */
 
+      //alert('color')
       dic_col = {'r':'red', 'b':'blue', 'y':'#ffe066', 'g':'#8cd98c', 'o':'orange', 'm':'#cc0066'}
       var re = new RegExp('\"[^"]+\"', 'g')
       var new_txt = txt.match(re)[0].slice(1,-1)
+      //alert(new_txt)
       var replspan =  $('<span/>').text(new_txt).css({'color':dic_col[col]})
       elem.html(replspan)
 
@@ -221,13 +223,18 @@ function modif_between_quotes(elem,kind,arg){
       /*
 
       find regular expression and modify it..
+      Becareful to put a space after the last character !!!!!!!
+      "aeaeaaeae"cr + "  "  !!!
 
       */
 
       elem.each(function(){
            var re = new RegExp('\"[^"]+\"'+ kind + arg, 'g')   // case color
            var txt = $(this).text()
+           //alert(txt)
+
            if (txt.match(re)){
+               //alert("text first match is " + txt)
                if (kind == 'c'){ replace_color($(this), txt, arg) }
                if (kind == 'u'){ replace_bold_underline($(this), txt, kind) }
 
@@ -236,10 +243,11 @@ function modif_between_quotes(elem,kind,arg){
 
 }
 
-// color, bold and underline for p and li.. 
+// color, bold and underline for p and li..
 
 modif_between_quotes($('p'),'c','b')
 modif_between_quotes($('li'),'c','b')
+// modif_between_quotes($('li li'),'c','b')
 
 //-----------------------------
 
