@@ -1,7 +1,7 @@
 
-
 <script src="artyom.window.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="keymaster.js"></script>
 
 <script>
 
@@ -23,11 +23,14 @@ artyom.initialize({
   listen:true
 })
 
+// ----------------- Generic add commands
+
 function add_commands(dict, func){
 
       /*
       Add commands to Artyom
-      dict : {target: sound}
+      dict : {target0: sound0, target1: sound1 ... }
+      func : dictionary of functions..
       */
 
       var dctools = {}
@@ -43,13 +46,15 @@ function add_commands(dict, func){
       }); // end for each
 }
 
+// ----------------- Voice navigation in the slides..
+
 function go_to_diapo(i){
 
       /*
       Go to the diapo num i..
       */
 
-      location.replace("d{}".format(i))
+      location.replace("d{}".format(i))  // change web address..
       socket.emit('numdiap', i)
 
 }
@@ -65,10 +70,11 @@ socket.on('maxdiap', function(text){
 
  })    // number max of diap
 
-//artyom.addCommands(dic_simple);     // Add the command with addCommands method. Now
+
+// --------------------  Global view of all the slides..
 
 dct_synopt = {
-    indexes:['vue globale'], // These spoken words will trigger the execution of the command
+    indexes:['vue globale', 'voir toutes les diapos', 'toutes les diapos'], // These spoken words will trigger the execution of the command
     action: function(){
             location.replace("all")
             //socket.emit('numdiap', '0')
@@ -76,13 +82,17 @@ dct_synopt = {
   }
 artyom.addCommands(dct_synopt);
 
+
+// ----------------------- Create a new slide
+
 dct_new_diap = {
-    indexes:['ajouter une diapo'], // These spoken words will trigger the execution of the command
-    action: function(){
-            location.replace("all")
-            //socket.emit('numdiap', '0')
+    indexes:['ajoute une diapo'], // These spoken words will trigger the execution of the command
+    action: function(){  // Ctrl + D
+          socket.emit('make_new_diap', '')
+          //location.replace('d{}'.format(diapo_max+1))
      }
   }
-artyom.addCommands(dct_synopt);
+
+artyom.addCommands(dct_new_diap);
 
 </script>

@@ -53,7 +53,6 @@ function concat_diapos(i){
               }
           });   // end fs.readFile
 
-
 }
 
 function addget(app,i){  // add Routes
