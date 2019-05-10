@@ -101,7 +101,11 @@ function p_match__inject_css(patt, dic_css){
       $("p").each(function(){
            var txt = $(this).text()
            if (txt.match(patt)){
+
                remove_patt_change_css($(this),txt,patt,dic_css)
+               var class_added = patt.toString().slice(3,-1)
+               //alert("class_added " + class_added)
+               $(this).attr('class',class_added) // adding Class
                if (txt.match(/\!eq/)){                                // if equation..
                   $(this).text('$$' + $(this).text() + '$$')
                }
@@ -154,9 +158,64 @@ function make_eq(){
 
 }
 
+function make_title(){
+
+      /*
+      Place the title
+      */
+      $('h1').hide()
+      $('li').hide()
+      var dictit= {'position':'relative','font-size':'300%',
+                  'text-align':'center', 'top':'100px',
+                  'background-color':'orange', 'color':'white'}
+      p_match__inject_css(/\!title/, dictit)
+
+}
+
+function make_author(){
+
+      /*
+      Place the author
+      */
+
+      var dicauth= {'position':'relative','font-size':'250%',
+                  'text-align':'center', 'top':'250px',
+                   'margin': 'auto'}
+      p_match__inject_css(/\!author/, dicauth)
+
+}
+
+function make_date(){
+
+      /*
+      place the date
+      */
+
+      var dicdate= {'position':'relative','font-size':'200%',
+                  'text-align':'center', 'top':'300px'}
+      p_match__inject_css(/\!date/, dicdate)
+
+}
+
 make_head()  //-----------------------------  Header
 make_foot()  //-----------------------------  Footer
 make_eq()    //-----------------------------  Equation
+
+$("p").each(function(){
+     var txt = $(this).text()
+     if (txt.match(/\!title/)){
+
+       make_title()    //-----------------------------  Title
+       make_author()    //-----------------------------  Author
+       make_date()    //-----------------------------  Date
+
+     }
+  })
+
+  $('.title').attr('align', 'center')
+  $('.title').css({'line-height':'150%'})
+  $('.author').wrap( "<div style='text-align:center;'></div>" )
+  $('.date').attr('align', 'center')
 
 //-----------------------------  Mémos
 
