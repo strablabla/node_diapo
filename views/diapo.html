@@ -1,5 +1,4 @@
 
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="keymaster.js"></script>
 
@@ -31,12 +30,12 @@ function change_diapo(diapo_index, diapo_max, event, socket){
       Change diapo with arrow left or right
       */
 
-      if (event.keyCode == 39){
+      if (event.keyCode == 39){                                   // Increment
             if ((diapo_index+1) < diapo_max){ diapo_index += 1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)
             }
-      if (event.keyCode == 37){
+      if (event.keyCode == 37){                                   // Decrement
             if ((diapo_index-1) > -1){ diapo_index += -1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)
@@ -46,16 +45,17 @@ function change_diapo(diapo_index, diapo_max, event, socket){
 }
 
 var socket = io.connect();
+//---------------
 $('h1').css({'right':'5%'})
 var diapo_index = null
 socket.on('numdiap', function(text){ diapo_index = text })  // index of current diap
 var diapo_max = null
 socket.on('maxdiap', function(text){ diapo_max = text })    // number max of diap
 
-$( document ).keydown(function() {
+$( document ).keydown(function() {                              // pass to a new diapo
     diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
 });
-key('ctrl+d', function(){
+key('ctrl+d', function(){                      // Add a new diapo
     socket.emit('make_new_diap', '')
     alert('adding a new diapo !!!!!');
     return false
@@ -71,9 +71,9 @@ $('#content').css({'margin-left':'200px',
                    'padding-top':'50px',
                    'height' : '790px'
                    })
-$('li li').hide() // hide the Mémos
-$('.help').hide() // hide the help
-$('#gobottom').hide() // hide the help
+$('li li').hide()         // hide the Mémos
+$('.help').hide()         // hide the help
+$('#gobottom').hide()     // hide go to bottom
 
 
 function remove_patt_change_css(elem,txt,patt,dic_css){

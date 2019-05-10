@@ -6,7 +6,6 @@
 
 <br><br><br><br>
 
-
 {% for i in range(0, 5) -%}
 
         <iframe id="frame{{i}}" src="d{{i}}"  > diapo {{i}} </iframe>
@@ -26,13 +25,11 @@ for (var i=0; i < 5; i++){
 
 }
 
-
-$('.name_diap').click(function(){
+$('.name_diap').click(function(){        // return to the full view diapo
       //alert($(this).attr('id'))
       socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
       location.replace($(this).attr('id'))
 })
-
 
 </script>
 

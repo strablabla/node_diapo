@@ -19,6 +19,7 @@ var patt = '' // pattern for scroll position
 var scroll_html_pos = 0 //
 var comment = false;
 diapo_index = 0;
+all_diap = ''
 
 String.prototype.format = function () {
   var i = 0, args = arguments;
@@ -34,18 +35,44 @@ nunjucks.configure('views', {
     // echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 });
 
-function addget(app,i){
+
+function concat_diapos(i){
+
+
+      fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
+              if (err) { return console.log(err); }
+              all_diap += txt + '\n ---------------------------------- \n'
+
+              if ( i == numdiap-1 ){
+                  console.log(all_diap)
+                  dest = 'views/saved/all_diap.md'
+                  fs.writeFile( dest, all_diap, function(err) {
+                        if(err) { return console.log(err); }
+                        console.log("all_diap saved in {}".format(dest));
+                  });    // end writeFile
+              }
+          });   // end fs.readFile
+
+
+}
+
+function addget(app,i){  // add Routes
 
       var addrd = '/d{}'.format(i)
       var adddiap = 'diapos/diapo{}.html'.format(i)
       console.log(addrd + '__' + adddiap)
       app.get(addrd, function(req, res){ res.render(adddiap)});
+      concat_diapos(i)              // concatenate all the diapo in one file
 
 }
 
 // ----------------  Make the Routage
 
-function make_main_routage(){
+function main_init(){
+
+      /*
+      Routage and concatenation
+      */
 
       numdiap = null
 
@@ -53,15 +80,16 @@ function make_main_routage(){
             console.log('done counting')
             console.log(results) // { files: 10, dirs: 2, bytes: 234 }
             numdiap = parseInt(results.files/2)
-            console.log(numdiap)
-            var list_diap = _.range(numdiap).map((nb) => (nb))
-            list_diap.forEach(function(i){ addget(app,i) }) // Routage
-
-      })
-
+            console.log('numdiap is ' + numdiap)
+            for (var i=0; i < numdiap; i++){
+                  addget(app,i)      // Routage
+                } // end for
+      }) // end countFiles
 }
 
-make_main_routage()
+//------------------- Routage
+
+main_init()
 app.get('/text', function(req, res){ res.render('text.html') });
 app.get('/all', function(req, res){ res.render('diapo_all.html') });
 //app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
@@ -101,9 +129,9 @@ io.sockets.on('connection', function (socket) {
 
       //---------------------------------------- Make a new diapo..
 
-      socket.on('make_new_diap', function(){
+      socket.on('make_new_diap', function(){  // Ctrl + D
             modify.modify_html_with_newtext(socket, fs, util, ' ', numdiap)
-            make_main_routage()
+            main_init()
       })
 
       //---------------------------------
