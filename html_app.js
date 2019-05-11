@@ -91,7 +91,7 @@ function main_init(){
 
 main_init()
 app.get('/text', function(req, res){ res.render('text.html') });
-app.get('/all', function(req, res){ res.render('diapo_all.html') });
+app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
 //app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
 
 //--------------  static addresses

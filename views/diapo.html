@@ -49,9 +49,15 @@ function change_diapo(diapo_index, diapo_max, event, socket){
 
 function set_page_num(diapo_index){
 
-  if (diapo_index!=0){
-        $('#content').append($('</p>').attr('id', 'num').text(diapo_index))
-        $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px'})
+      /*
+      Set the page number
+      */
+
+      if (diapo_index!=0){
+            //var loc = location.href.split('/')[3]
+            $('#content').append($('</p>').attr('id', 'num').text(diapo_index))
+            $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px'})
+
         }
 
 }
@@ -61,7 +67,7 @@ function set_page_num(diapo_index){
 $('h1').css({'right':'5%'})
 var diapo_index = null
 socket.on('numdiap', function(text){
-      diapo_index = text
+      diapo_index = parseInt(text)
       set_page_num(diapo_index)
      })  // index of current diap
 var diapo_max = null
@@ -84,6 +90,12 @@ key('ctrl+m', function(){                      // activate deactivate the memos
         $('.memo').css({'background-color':'#ffe6e6'})
       }else{$('.memo').css({'background-color':'#ffffff'})}
 
+  });
+
+key('ctrl+a', function(){         // go to the global view of the slides..
+      diapo_index = 0
+      location.replace("all")
+      socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
   });
 
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
