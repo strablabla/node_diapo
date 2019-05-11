@@ -4,6 +4,8 @@
 
 <script>
 
+var socket = io.connect();
+
 String.prototype.format = function () {
   var i = 0, args = arguments;
   return this.replace(/{}/g, function () {
@@ -44,11 +46,24 @@ function change_diapo(diapo_index, diapo_max, event, socket){
       return diapo_index
 }
 
-var socket = io.connect();
+
+function set_page_num(diapo_index){
+
+  if (diapo_index!=0){
+        $('#content').append($('</p>').attr('id', 'num').text(diapo_index))
+        $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px'})
+        }
+
+}
+
 //---------------
+
 $('h1').css({'right':'5%'})
 var diapo_index = null
-socket.on('numdiap', function(text){ diapo_index = text })  // index of current diap
+socket.on('numdiap', function(text){
+      diapo_index = text
+      set_page_num(diapo_index)
+     })  // index of current diap
 var diapo_max = null
 socket.on('maxdiap', function(text){ diapo_max = text })    // number max of diap
 
@@ -63,6 +78,7 @@ key('ctrl+d', function(){                      // Add a new diapo
 
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
+$('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
 $('.effect2').css({'box-shadow':'0 0 0 0'})
 $('.navbar-inner').hide()
 $('#toc').hide()
@@ -71,10 +87,9 @@ $('#content').css({'margin-left':'200px',
                    'padding-top':'50px',
                    'height' : '790px'
                    })
-$('li li').hide()         // hide the Mémos
+//$('li li').hide()         // hide the Mémos
 $('.help').hide()         // hide the help
 $('#gobottom').hide()     // hide go to bottom
-
 
 function remove_patt_change_css(elem,txt,patt,dic_css){
 
@@ -113,6 +128,64 @@ function p_match__inject_css(patt, dic_css){
        })
 }
 
+function p_match_memos(elem){
+
+      /*
+      Handle the memos
+      */
+
+      var reg = /\!memo\d+/
+      var num_memo = {}
+      elem.each(function(){
+           var txt = $(this).text()
+           if (txt.match(reg)){
+               //alert(txt)
+               var match_txt = txt.match(reg)[0]
+               var num_memo = match_txt.split('memo')[1]
+               //alert("num_memo is " + num_memo)
+               $(this).attr('memo', num_memo)
+               $(this).addClass('memo')
+               var memo_short = match_txt.slice(1,-1) + num_memo
+               var newreg = '\\$' + memo_short
+               $('p').each(function(){
+                   var regdoll = new RegExp( newreg );
+                   if ( $(this).text().match(regdoll)){
+                        // alert('found !!! $memo0')
+                        // alert($(this).next().html())
+                        $(this).next().attr('id', 'targ_memo' + num_memo)
+                        $(this).next().hide()     // hide the list after
+                        $(this).hide()         // hide the tag $memo
+                   }
+
+               })
+
+           }
+       })
+}
+
+p_match_memos($("p"))
+p_match_memos($("li"))
+
+$('.memo').click(function(){
+
+    //alert('yeppppp')
+    var num_memo = $(this).attr('memo')
+
+    tag_infos.html('<h1> Mémo ' + num_memo + ' </h1>')
+    var targ_memo = '#targ_memo' + num_memo
+    var clone = $(targ_memo).clone()
+    clone.show()
+    var diccss = {'font-size':'11px', 'margin':'10px 10px'}
+    clone.css(diccss)
+    //clone.find('*').css(diccss)
+    tag_infos.append(clone)
+    //clone.find("li").show()
+    tag_infos.toggle()
+
+    //alert("num_memo after click is " + num_memo)
+
+})
+
 function make_head(){
 
       /*
@@ -120,7 +193,7 @@ function make_head(){
       syntax : !head blablabla..
       */
 
-      var dichead = {'position':'absolute','top':'90px',
+      var dichead = {'position':'absolute','top':'80px',
                      'font-size':'120%', 'right':'250px'}
       p_match__inject_css(/\!head/, dichead)
       $('#content').append($('</p>').attr('id','footlim'))
@@ -136,7 +209,7 @@ function make_foot(){
       syntax : !foot blablabla..
       */
 
-      var dicfoot = {'position':'absolute','top':'800px','font-size':'110%'}
+      var dicfoot = {'position':'absolute','top':'820px','font-size':'110%'}
       p_match__inject_css(/\!foot/, dicfoot)
 
       $('#content').append($('</p>').attr('id','footlim'))
@@ -163,6 +236,7 @@ function make_title(){
       /*
       Place the title
       */
+
       $('h1').hide()
       $('li').hide()
       var dictit= {'position':'relative','font-size':'300%',
@@ -219,36 +293,26 @@ $("p").each(function(){
 
 //-----------------------------  Mémos
 
-// var tag_infos = $('<div>').attr('id','infos')
-// tag_infos.css({'position':'absolute',
-//               'top': '50px', 'left':'10px',
-//               'padding-top' : '50px',
-//               'width': '400px','height': '400px',
-//               'font-size' : '16px',
-//               'background-color':'white',
-//               'box-shadow': '8px 8px 12px #aaa',
-//               'opacity':'1',
-//               'z-index': '100'})
-//
-// //tag_infos.draggable()
-//
-// $('#content').append(tag_infos.hide())
-// $('li').click(function(){                    // clicking on li to have the corresponding Memo infos
-//
-//     tag_infos.html('<h1> Mémo </h1>')
-//     var clone = $(this).clone()
-//     var diccss = {'font-size':'16px', 'margin':'20px 20px'}
-//     clone.css(diccss)
-//     clone.find('*').css(diccss)
-//     tag_infos.append(clone)
-//     clone.find("li").show()
-//     tag_infos.toggle()
-//
-// })
-//
-// tag_infos.click(function(){
-//     $(this).toggle()
-// })
+var tag_infos = $('<div>').attr('id','infos')
+tag_infos.css({'position':'absolute',
+              'top': '50px', 'left':'10px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+tag_infos.draggable()
+
+$('#content').append(tag_infos.hide())
+tag_infos.click(function(){
+    $(this).toggle()
+})
 
 
 //-----------------------------

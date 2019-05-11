@@ -41,7 +41,8 @@ function concat_diapos(i){
 
       fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
               if (err) { return console.log(err); }
-              all_diap += txt + '\n ---------------------------------- \n'
+
+              all_diap +=  '\n --------------- diap{} ----------------- \n\n '.format(i) + txt + '\n'
 
               if ( i == numdiap-1 ){
                   console.log(all_diap)

@@ -1,4 +1,7 @@
 
+ --------------- diap0 ----------------- 
+
+ 
 # aaeae
 
 !title les supraconducteurs de type I et II, l'histoire continue !!!
@@ -12,28 +15,42 @@
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
- ---------------------------------- 
-# diap d1
+
+ --------------- diap1 ----------------- 
+
+ # diap d1
 
 ## diapo 1
 
 !head example d'autre en-tête, vérification du placement
 
-* Le rêve "de la supraconductivité"cb 
-* "zaaaammm zooom zuumm "cg 
+* Le rêve "de la supraconductivité"cb !memo0
+* "zaaaammm zooom zuumm "cg
     * ziiipp
 * 1987: la révolution aa  aa a aa a
-    * "ziberwinger.."u
-* 10 "ans plus tard"cr, le mystère plane toujours
-* Les électrons fortement corrélés
+    * "ziberwinger.."u ..
+* 10 "ans plus tard"co , le mystère plane toujours
+* Les électrons fortement corrélés !memo1
 
 $post aakekaheak cg
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
- ---------------------------------- 
+$memo0
 
+* Depuis quand est-ce un rêve??
+    * beaucoup d'idées d'application..
+
+$memo1
+
+* ziber..
+    * qu'est ce que ziber vraiment ?
+
+
+ --------------- diap2 ----------------- 
+
+ 
 # A general intro stuff blabla
 
 ## diapo 2
@@ -41,11 +58,8 @@ $post aakekaheak cg
 !head tête ou pas..
 
 * Rêve ou réalité?
-    * eaeaea
-    * eaeae bibopa llulula
 * la révolution des "Siths"co  
-    * eaeaea
-    * un commentaire pour aider..
+
 
 !['turner' 400x400 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
@@ -56,8 +70,10 @@ $post aakekaheak cg
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
- ---------------------------------- 
 
+ --------------- diap3 ----------------- 
+
+ 
 # Inspection des travaux finis
 
 ## diapo 3
@@ -65,11 +81,9 @@ $post aakekaheak cg
 !head tête ou pas..
 
 * This is another day in Paradise
-    * Rem 1
-    * Rem 2
-* La saga des sagouins
+* La saga des sagouins 
 
-!['magno' 200x200 %magnolia%](magnolia.jpg)
+!['magno' 200x200 %example of magnolia%](magnolia.jpg)
 
 !eq ax^2+bx+c =
 a
@@ -80,8 +94,10 @@ a
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
- ---------------------------------- 
-# Rappel
+
+ --------------- diap4 ----------------- 
+
+ # Rappel
 
 ## diapo 4
 
@@ -110,14 +126,14 @@ Pb de parallaxe, au-delà des planètes
 
 Pas de variation saisonnière
 
-Galilée et la lunette (1610) :
 
-“la Galaxie n'est rien d'autre
 
-qu'un amas d'étoiles innombrables”
+!foot Il était une fois un petit chaperon rouge.. 
 
- ---------------------------------- 
-# Rappel
+
+ --------------- diap5 ----------------- 
+
+ # Rappel
 
 * Les "Météorologiques"u d'Aristote (384-322 BC)
 
@@ -140,10 +156,29 @@ nous paraissent former une masse unie.
 * ici je refais "encore une ligne"b .. 
 * "aeaeae aeaea  encore une ligne"cg ..  
 
- ---------------------------------- 
- 
- ---------------------------------- 
- 
- ---------------------------------- 
- 
- ---------------------------------- 
+!foot Besoin d'un pied de page.. 
+
+
+ --------------- diap6 ----------------- 
+
+  # idée de mettre du Bokeh..
+
+ ## voir comment faire..
+
+* blabla
+* deuxième point.. 
+* troisième point
+* Utilisation de Mathpix.. 
+
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
+
+
+
+
+ --------------- diap7 ----------------- 
+
+  
+
+ --------------- diap8 ----------------- 
+
+  
