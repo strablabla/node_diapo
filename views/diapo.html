@@ -57,9 +57,7 @@ function set_page_num(diapo_index){
             //var loc = location.href.split('/')[3]
             $('#content').append($('</p>').attr('id', 'num').text(diapo_index))
             $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px'})
-
         }
-
 }
 
 //---------------
@@ -98,6 +96,10 @@ key('ctrl+a', function(){         // go to the global view of the slides..
       socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
   });
 
+key('alt+t', function(){         // pass to text..
+    window.location.href = 'text';                    // flip from html to textarea
+  });
+
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
@@ -116,7 +118,7 @@ $('#gobottom').hide()     // hide go to bottom
 function remove_patt_change_css(elem,txt,patt,dic_css){
 
       /*
-      Remove the pattern and modiy the css
+      Remove the pattern and modify the css
       patt : pattern
       dic_css : dictionary of the css parameters..
       */
@@ -165,7 +167,6 @@ function find_target_memo(match_txt, num_memo){
                $(this).next().hide()     // hide the list after
                $(this).hide()         // hide the tag $memo
           }
-
       })
 
 }
@@ -200,6 +201,31 @@ function p_match_memos(elem){
            }
        })
 }
+
+function change_pos(elem){
+
+      /*
+      Change the position of the element
+      */
+
+      var reg0 = /\!pos/
+      var reg1 = /\!pos\d+\.\d+\/\d+\.\d+/
+
+      elem.each(function(){
+           var txt = $(this).text()
+           var htm = $(this).html()
+           if (txt.match(reg1)){
+                  regmatch = txt.match(reg1)
+                  var coord = regmatch[0].split('!pos')[1].split('/')
+                  var x = parseFloat(coord[1])*500
+                  var y = parseFloat(coord[0])*700
+                  $(this).css({'position':'absolute','right':x + 'px', 'top':y + 'px'})
+                  $(this).html(htm.replace(regmatch,''))
+           }
+      });
+}
+
+change_pos($('p'))
 
 function make_head(){
 

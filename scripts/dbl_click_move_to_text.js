@@ -14,7 +14,7 @@ function dblclick_to_text(socket, elem, index){
 
       elem.dblclick(function(e){  // when clicking right go back to html
             e.preventDefault();
-            pattern_and_flip(socket, $(this),index)
+            pattern_and_flip(socket, $(this), index)
             return false;
             });
 }
@@ -27,7 +27,7 @@ function pattern_and_flip(socket, elem, take_elem){
     */
 
     // ------------ find the pattern
-    
+
     if (elem.is('li')){ var patt = elem.text().split('\n')[0] }
     else if (elem.is('.date')){ var patt = elem.attr('id').split('_')[take_elem] }
 

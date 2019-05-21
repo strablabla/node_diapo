@@ -58,13 +58,16 @@ $memo1
 !head tête ou pas..
 
 * Rêve ou réalité?
-* la révolution des "Siths"co  
+* la révolution des "Siths"co 
 
+!pos0.3/0.6
+!['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!['turner' 400x400 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
+!pos0.7/0.8
+!['turner' 200x200 %magnolia%](magnolia.jpg)
 
-
-!eq e^{i\pi}=-1 
+!pos0.0/0.6
+!eq e^{i\pi}=-1
 
 
 
@@ -177,7 +180,12 @@ nous paraissent former une masse unie.
 
  --------------- diap7 ----------------- 
 
-  
+  # nouvelle diapo..
+
+ ## Diapo 7
+
+ * Il était une fois dans la ville de Foi
+
 
  --------------- diap8 ----------------- 
 
