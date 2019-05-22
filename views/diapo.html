@@ -6,6 +6,8 @@
 
 var socket = io.connect();
 
+var stp=0;
+
 String.prototype.format = function () {
   var i = 0, args = arguments;
   return this.replace(/{}/g, function () {
@@ -45,7 +47,6 @@ function change_diapo(diapo_index, diapo_max, event, socket){
 
       return diapo_index
 }
-
 
 function set_page_num(diapo_index){
 
@@ -87,7 +88,6 @@ key('ctrl+m', function(){                      // activate deactivate the memos
       if (show_memos){
         $('.memo').css({'background-color':'#ffe6e6'})
       }else{$('.memo').css({'background-color':'#ffffff'})}
-
   });
 
 key('ctrl+a', function(){         // go to the global view of the slides..
@@ -99,8 +99,6 @@ key('ctrl+a', function(){         // go to the global view of the slides..
 key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
-
-
 
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
@@ -116,6 +114,51 @@ $('#content').css({'margin-left':'200px',
 //$('li li').hide()         // hide the Mémos
 $('.help').hide()         // hide the help
 $('#gobottom').hide()     // hide go to bottom
+
+function match__inject_stop(elem, patt){
+
+      /*
+      Generic match replace
+      patt : pattern
+      */
+
+      elem.each(function(){
+           var htm = $(this).html()
+           if (htm.match(patt)){
+               pattern = htm.match(patt)
+               //alert(pattern)
+               var class_added = pattern.slice(1,-1)
+               //alert(class_added)
+               $(this).attr('class', 'stop')                  // adding Class
+           }
+       })
+}
+
+//p_match__inject_class(/\!stp\d/)
+match__inject_stop($('li'), /\!stp\d/)
+key('alt+s', function(){
+    stp+=1
+    //alert(stp)
+    var count = 0;
+    var reg = /\!stp/
+    var showline = true;
+
+    $('li, p').each(function(){
+         var txt = $(this).text()
+         //alert(htm)
+         if (txt.match(reg)){
+           count += 1
+           //alert(txt)
+           if (count > stp-1){
+                showline = false
+           }
+         }
+         if ((!showline & !$(this).hasClass('foot'))
+                       | $(this).hasClass('targ_memo')){ $(this).hide() }
+
+         else{ $(this).show() }
+    })
+})
 
 function remove_patt_change_css(elem,txt,patt,dic_css){
 
@@ -142,7 +185,6 @@ function p_match__inject_css(patt, dic_css){
       $("p").each(function(){
            var txt = $(this).text()
            if (txt.match(patt)){
-
                remove_patt_change_css($(this),txt,patt,dic_css)
                var class_added = patt.toString().slice(3,-1)
                //alert("class_added " + class_added)
@@ -168,9 +210,9 @@ function find_target_memo(match_txt, num_memo){
                $(this).next().attr('id', 'targ_memo' + num_memo)
                $(this).next().hide()     // hide the list after
                $(this).hide()         // hide the tag $memo
+               $(this).addClass('targ_memo')
           }
       })
-
 }
 
 function tag_for_memo(elem,txt,reg){
@@ -181,10 +223,10 @@ function tag_for_memo(elem,txt,reg){
 
       var match_txt = txt.match(reg)[0]
       var num_memo = match_txt.split('!memo')[1]
-      elem.html(txt.split('!memo')[0])    // remove the pattern at the end..
-      elem.attr('memo', num_memo)  // add the memo attribute..
-      elem.addClass('memo')         // add the class memo
-      find_target_memo(match_txt, num_memo)  // tag the target
+      elem.html(  txt.replace(/!memo\d/,'') )   // remove the pattern memo
+      elem.attr('memo', num_memo)               // add the memo attribute..
+      elem.addClass('memo')                     // add the class memo
+      find_target_memo(match_txt, num_memo)     // tag the target
 
 }
 
@@ -374,30 +416,9 @@ tag_infos.click(function(){
     $(this).toggle()
 })
 
-//--------------------------------  Help
+//-------------------------------
 
-var help_keys = $('<div>').attr('id','help_keys')
-help_keys.css({'position':'absolute',
-              'top': '50px', 'left':'10px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
-              'width': '600px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'
-            })
-
-help_keys.draggable()
-$('#content').append(help_keys.hide())
-help_keys.click(function(){
-    $(this).toggle()
-})
-
-
-simple_md = function(text){ // mini markdown for the help
+simple_md = function(text){               // mini markdown for the help
      var all_text = text.split('\n')
      var htm = $('<div/>')
      var ul = $('<ul/>').css({'padding-left':'150px'})
@@ -422,17 +443,69 @@ simple_md = function(text){ // mini markdown for the help
      return htm.html()
  } // end function
 
+//--------------------------------  Help keys
+
+var help_keys = $('<div>').attr('id','help_keys')
+help_keys.css({'position':'absolute',
+              'top': '50px', 'left':'10px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+help_keys.draggable()
+$('#content').append(help_keys.hide())
+help_keys.click(function(){
+    $(this).toggle()
+})
+
 var keys = function(){/*
 
 # Keys
-
 
 * Keys ::
     * alt + h : help
     * ctrl + d : create new slide
     * ctrl + a : view all the slides
-    * alt + m : show memos..
+    * ctrl + m : show memos..
 
+*/}.toString().slice(14,-3)
+
+$('#help_keys').html(simple_md(keys))
+
+key('alt+k', function(){         // Show the help
+    $('#help_keys').toggle()
+  });
+
+//--------------------------------  Help voice commands
+
+var help_voice_cmds = $('<div>').attr('id','help_voice_cmds')
+help_voice_cmds.css({'position':'absolute',
+              'top': '50px', 'left':'10px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+help_voice_cmds.draggable()
+$('#content').append(help_voice_cmds.hide())
+help_voice_cmds.click(function(){
+    $(this).toggle()
+})
+
+var voice_cmds = function(){/*
 
 # Voice commands
 
@@ -445,12 +518,10 @@ var keys = function(){/*
 
 */}.toString().slice(14,-3)
 
-$('#help_keys').html(simple_md(keys))
+$('#help_voice_cmds').html(simple_md(voice_cmds))
 
-key('alt+h', function(){         // Show the help
-    $('#help_keys').toggle()
+key('alt+v', function(){         // Show the help
+    $('#help_voice_cmds').toggle()
   });
-
-//-----------------------------
 
 </script>

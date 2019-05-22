@@ -27,10 +27,12 @@
 * Le rêve de la "supraconductivité"cb !memo0
 * "zaaaammm zooom zuumm "cg 
     * ziiipp
-* 1987: la révolution aa  aa a aa a
+* 1987: la révolution aa  aa a aa a !stp0
     * "ziberwinger.."u ..
-* 10 "ans plus tard"co , le mystère plane toujours 
+* 10 "ans plus tard"co , le mystère plane toujours !stp1
+	* par le passé c'était déjà assez obscur..
 * Les électrons fortement corrélés !memo1
+
 
 $post aakekaheak cg
 
@@ -63,7 +65,7 @@ $memo1
 !pos0.3/0.6
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos0.7/0.82
+!pos0.7/0.90
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
 !pos0.0/0.6
@@ -172,6 +174,7 @@ nous paraissent former une masse unie.
 * deuxième point.. 
 * troisième point
 * Utilisation de Mathpix.. 
+	* Ceci se fait de manière très simple en sélectionnant une partie du texte.. blabla
 
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
@@ -185,6 +188,11 @@ nous paraissent former une masse unie.
  ## Diapo 7
 
  * Il était une fois dans la ville de Foi
+ * [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+ * dans cette contrée reculée, en plein milieu de rien.. 
+ 	* ```
+    	bizmuth et belzébuth.. 
+        ```
 
 
  --------------- diap8 ----------------- 
