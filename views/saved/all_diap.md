@@ -63,7 +63,7 @@ $memo1
 !pos0.3/0.6
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos0.7/0.8
+!pos0.7/0.82
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
 !pos0.0/0.6

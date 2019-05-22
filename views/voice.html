@@ -95,6 +95,17 @@ dct_new_diap = {
 
 artyom.addCommands(dct_new_diap);
 
+// ----------------------- Show help
+
+dct_help = {
+    indexes:['aide'], //
+    action: function(){         // Alt + H
+        $('#help_keys').toggle()
+     }
+  }
+
+artyom.addCommands(dct_help);
+
 // ----------------------- Activate deactivate memos..
 
 // dct_memos = {

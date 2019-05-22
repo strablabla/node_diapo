@@ -100,6 +100,8 @@ key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
+
+
 $('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
@@ -372,6 +374,82 @@ tag_infos.click(function(){
     $(this).toggle()
 })
 
+//--------------------------------  Help
+
+var help_keys = $('<div>').attr('id','help_keys')
+help_keys.css({'position':'absolute',
+              'top': '50px', 'left':'10px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+help_keys.draggable()
+$('#content').append(help_keys.hide())
+help_keys.click(function(){
+    $(this).toggle()
+})
+
+
+simple_md = function(text){ // mini markdown for the help
+     var all_text = text.split('\n')
+     var htm = $('<div/>')
+     var ul = $('<ul/>').css({'padding-left':'150px'})
+     for (i in all_text){
+         var text_insert = all_text[i].trim().slice(1) // prepare text
+         if (all_text[i].match(/^\s{4}\*/)){    // detect list first level
+             ul.append($('<li/>').text(text_insert).css({"font-weight": "bold"}))
+             } // end if
+         if (all_text[i].match(/^\s{8}\*/)){  // detect list second level
+                 var interm1 = $('<ul/>').append($('<li/>').text(text_insert))
+                 ul.append(interm1)
+                 } // end if
+         if (all_text[i].match(/^\s{12}\*/)){  // detect list third level
+                 var interm2 = $('<ul/>').append($('<li/>').text(text_insert))
+                 interm1.append(interm2)
+                 } // end if
+         if (all_text[i].match(/\s*\#/)){ // detect #
+             htm.append( $('<h1/>').html(text_insert + '<br>' + '<br>') )
+             } // end if
+     } // end for
+     htm.append(ul);
+     return htm.html()
+ } // end function
+
+var keys = function(){/*
+
+# Keys
+
+
+* Keys ::
+    * alt + h : help
+    * ctrl + d : create new slide
+    * ctrl + a : view all the slides
+    * alt + m : show memos..
+
+
+# Voice commands
+
+* Voice ::
+    * aide : help
+    * nouvelle diapo : create new slide
+    * toutes les diapos : view all the slides
+    * memos : show memos..
+    * diapo num.. : go to diapo num ..
+
+*/}.toString().slice(14,-3)
+
+$('#help_keys').html(simple_md(keys))
+
+key('alt+h', function(){         // Show the help
+    $('#help_keys').toggle()
+  });
 
 //-----------------------------
 
