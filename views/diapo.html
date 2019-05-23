@@ -135,10 +135,14 @@ function match__inject_stop(elem, patt){
 }
 
 //p_match__inject_class(/\!stp\d/)
-match__inject_stop($('li'), /\!stp\d/)
-key('alt+s', function(){
-    stp+=1
-    //alert(stp)
+match__inject_stop($('li'), /\!stp/)
+
+function progressive_visualization(stp){
+
+    /*
+    Show the li or p one after another according to tags !stp .. 
+    */
+
     var count = 0;
     var reg = /\!stp/
     var showline = true;
@@ -146,18 +150,24 @@ key('alt+s', function(){
     $('li, p').each(function(){
          var txt = $(this).text()
          //alert(htm)
-         if (txt.match(reg)){
-           count += 1
-           //alert(txt)
-           if (count > stp-1){
-                showline = false
-           }
+         if ($(this).hasClass('stop')){
+             count += 1
+             if (count > stp){ showline = false }
          }
          if ((!showline & !$(this).hasClass('foot'))
                        | $(this).hasClass('targ_memo')){ $(this).hide() }
-
-         else{ $(this).show() }
+         else if (showline & ( count > 0 )){
+           $(this).show()
+           $(this).find('li').show()
+           $(this).html($(this).html().replace(reg,''))
+          }
     })
+}
+
+progressive_visualization(stp)
+key('alt+s', function(){
+  stp += 1;
+  progressive_visualization(stp)
 })
 
 function remove_patt_change_css(elem,txt,patt,dic_css){

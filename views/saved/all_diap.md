@@ -24,14 +24,14 @@
 
 !head example d'autre en-tête, vérification du placement
 
-* Le rêve de la "supraconductivité"cb !memo0
-* "zaaaammm zooom zuumm "cg 
+* Le rêve de la "supraconductivité"cb !memo0 !stp
+* pinjlap "zaaaammm zooom zuumm "cg !stp
     * ziiipp
-* 1987: la révolution aa  aa a aa a !stp0
+* 1987: la révolution aa  aa a aa a !stp
     * "ziberwinger.."u ..
-* 10 "ans plus tard"co , le mystère plane toujours !stp1
+* 10 "ans plus tard"co , le mystère plane toujours !stp
 	* par le passé c'était déjà assez obscur..
-* Les électrons fortement corrélés !memo1
+* Les électrons fortement corrélés !memo1 !stp
 
 
 $post aakekaheak cg
@@ -110,24 +110,24 @@ a
 
 La Voie Lactée irrégulière appartient au monde sublunaire
 
-Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes
+Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp0
 
 "Démocrite (460-370 BC) et la vision atomiste"cb
 
 Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
 
-nous paraissent former une masse unie.
+nous paraissent former une masse unie. !stp1
 
 
 Lucrèce (99-51 BC)
 
-la juxtaposition et le "mélange des rayons lumineux"cb  
+la juxtaposition et le "mélange des rayons lumineux"cb  !stp2
 
 créent la "Voie Lactée"cy 
 
-Critiques au moyen-âge :
+Critiques au moyen-âge : !stp3
 
-Pb de parallaxe, au-delà des planètes
+Pb de parallaxe, au-delà des planètes !stp4
 
 Pas de variation saisonnière
 
@@ -146,7 +146,7 @@ La Voie "Lactée irrégulière"u appartient au monde sublunaire
 
 Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
 
-"Démocrite (460-370 BC) et la vision atomiste"cb
+"Démocrite (460-370 BC) et la vision atomiste"cb 
 
 Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
 
