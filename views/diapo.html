@@ -137,6 +137,21 @@ function match__inject_stop(elem, patt){
 //p_match__inject_class(/\!stp\d/)
 match__inject_stop($('li'), /\!stp/)
 
+function progressive_visu_hide_show(elem,showline,count,reg){
+
+    /*
+    hide show...
+    */
+
+    if ( !showline  ){ elem.hide() } // hide if after tag !stp..
+    else if (showline & ( count > 0 )){
+        elem.show()
+        elem.find('li').show()
+        elem.html(elem.html().replace(reg,''))
+     }
+
+}
+
 function progressive_visualization(stp){
 
     /*
@@ -154,20 +169,11 @@ function progressive_visualization(stp){
              count += 1
              if (count > stp){ showline = false }
          }
-
-         if ( !showline  ){ $(this).hide() }
-
-         else if (showline & ( count > 0 )){
-             $(this).show()
-             $(this).find('li').show()
-             $(this).html($(this).html().replace(reg,''))
-          }
-        if ($(this).hasClass('targ_memo')){ $(this).hide() }
-        if ($(this).hasClass('foot')){ $(this).show() }
+        progressive_visu_hide_show($(this),showline,count,reg )
+        if ($(this).hasClass('targ_memo')){ $(this).hide() }   // hide memo tags..
+        if ($(this).hasClass('foot')){ $(this).show() }        // show footer
     })
 }
-
-
 
 function remove_patt_change_css(elem,txt,patt,dic_css){
 
