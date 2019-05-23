@@ -140,7 +140,7 @@ match__inject_stop($('li'), /\!stp/)
 function progressive_visualization(stp){
 
     /*
-    Show the li or p one after another according to tags !stp .. 
+    Show the li or p one after another according to tags !stp ..
     */
 
     var count = 0;
@@ -154,21 +154,20 @@ function progressive_visualization(stp){
              count += 1
              if (count > stp){ showline = false }
          }
-         if ((!showline & !$(this).hasClass('foot'))
-                       | $(this).hasClass('targ_memo')){ $(this).hide() }
+
+         if ( !showline  ){ $(this).hide() }
+
          else if (showline & ( count > 0 )){
-           $(this).show()
-           $(this).find('li').show()
-           $(this).html($(this).html().replace(reg,''))
+             $(this).show()
+             $(this).find('li').show()
+             $(this).html($(this).html().replace(reg,''))
           }
+        if ($(this).hasClass('targ_memo')){ $(this).hide() }
+        if ($(this).hasClass('foot')){ $(this).show() }
     })
 }
 
-progressive_visualization(stp)
-key('alt+s', function(){
-  stp += 1;
-  progressive_visualization(stp)
-})
+
 
 function remove_patt_change_css(elem,txt,patt,dic_css){
 
@@ -403,7 +402,6 @@ $('.memo').click(function(){
           tag_infos.append(clone)
           tag_infos.toggle()
     }
-
 })
 
 var tag_infos = $('<div>').attr('id','infos')
@@ -533,5 +531,12 @@ $('#help_voice_cmds').html(simple_md(voice_cmds))
 key('alt+v', function(){         // Show the help
     $('#help_voice_cmds').toggle()
   });
+
+
+progressive_visualization(stp)
+key('alt+s', function(){
+  stp += 1;
+  progressive_visualization(stp)
+})
 
 </script>
