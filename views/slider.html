@@ -1,0 +1,89 @@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+
+<script>
+
+$('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','top':'750px'}))
+$('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','top':'780px'}))
+$("#slider_value").hide()
+
+var drag_slider = d3.behavior.drag()
+    .origin(function(d) {  return d })
+    .on("dragstart", dragstarted)
+    .on("drag", function(d) {
+        if (d.dir == "x"){
+            d.action(); //
+            return d3.select(this).attr("cx", d.x  = d3.event.x);
+            }
+        else if (d.dir == "y"){
+            $("#slider_value").html(d3.event.y);
+            d.action();
+            return d3.select(this).attr("cy", d.y  = d3.event.y);
+            }
+    })
+    .on("dragend", dragended);
+
+var svg = d3.select("#slider")
+            .append("svg")
+            .attr("width", 1000)
+            .attr("height", 100);
+
+var chgx = function(){$("#slider_value").html(d3.event.x)}
+var chgy = function(){$("#slider_value").html(d3.event.y)}
+
+var slide = function(data, name_svg){ // Vertical or horizontal slider
+
+    slider_line = function(data){
+          var svg_slider_line = name_svg
+            .selectAll("svg_slider_line")
+            .data(data)
+            .enter()
+            .append("line")
+            .attr('x1', function(d){return d.xbar}) //
+            .attr('y1', function(d){return d.ybar})
+            .attr('x2', function(d){if ( d.dir=="x" ){ return d.slength + d.xbar } else { return d.xbar }}) //
+            .attr('y2', function(d){if ( d.dir=="y" ){ return d.slength + d.ybar } else { return d.ybar }})
+            .attr('stroke', function(d){return d.col})
+            .attr('stroke-width', '4px')
+        }
+
+    slider_button = function(data){
+
+        var slider_butt = name_svg
+          .selectAll("svg_slider_button")
+          .data(data)
+          .enter()
+          .append("ellipse")       // attach an ellipse
+          .attr("cx", function(d){return d.x})           // position the x-centre
+          .attr("cy", function(d){return d.y})           // position the y-centre
+          .attr("rx", 7)           // set the x radius
+          .attr("ry", 7)           // set the y radius
+          .attr("fill", function(d){return d.col})
+          .attr("class", "slide")
+          .call(drag_slider);
+        }
+    slider_line(data);
+    slider_button(data);
+}
+
+function dragstarted(d) {
+  d3.event.sourceEvent.stopPropagation();
+  d3.select(this).classed("dragging", true);
+}
+
+function dragended(d) {
+  d3.select(this).classed("dragging", false);
+    }
+
+</script>
+
+
+<script>
+
+var param_slider_x = [{'xbar':10, 'x':10,'ybar':50, 'y':50, 'col': 'violet', 'dir':'x', 'slength': 2000, 'action':chgx}]
+//var param_slider_y = [{'xbar':50, 'x':50, 'ybar':50, 'y':50, 'col': 'green', 'dir':'y', 'slength': 200, 'action':chgy}]
+slide(param_slider_x, svg)
+//slide(param_slider_y, svg)
+
+</script>
