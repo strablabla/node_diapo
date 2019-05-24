@@ -20,7 +20,7 @@
 
  # diap d1
 
-## diapo 1
+## diapo 1 !fb
 
 !head example d'autre en-tête, vérification du placement
 
@@ -33,8 +33,6 @@
 	* par le passé c'était déjà assez obscur..
 * Les électrons fortement corrélés !memo1 !stp
 
-
-$post aakekaheak cg
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
@@ -55,12 +53,12 @@ $memo1
  
 # A general intro stuff blabla
 
-## diapo 2
+## diapo 2 !fb
 
 !head tête ou pas..
 
 * Rêve ou réalité?
-* la révolution des "Siths"co 
+* la révolution des "Siths"co
 
 !pos0.3/0.6
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
@@ -110,24 +108,24 @@ a
 
 La Voie Lactée irrégulière appartient au monde sublunaire
 
-Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp0
+Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
 
 "Démocrite (460-370 BC) et la vision atomiste"cb
 
 Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
 
-nous paraissent former une masse unie. !stp1
+nous paraissent former une masse unie. !stp
 
 
 Lucrèce (99-51 BC)
 
-la juxtaposition et le "mélange des rayons lumineux"cb  !stp2
+la juxtaposition et le "mélange des rayons lumineux"cb  !stp
 
 créent la "Voie Lactée"cy 
 
-Critiques au moyen-âge : !stp3
+Critiques au moyen-âge : !stp
 
-Pb de parallaxe, au-delà des planètes !stp4
+Pb de parallaxe, au-delà des planètes !stp
 
 Pas de variation saisonnière
 

@@ -15,6 +15,21 @@ String.prototype.format = function () {
   });
 };
 
+var keymap = {
+    backspace: 8, tab: 9, clear: 12,
+    enter: 13, 'return': 13,
+    esc: 27, escape: 27, space: 32,
+    left: 37, up: 38,
+    right: 39, down: 40,
+    del: 46, 'delete': 46,
+    home: 36, end: 35,
+    pageup: 33, pagedown: 34,
+    ',': 188, '.': 190, '/': 191,
+    '`': 192, '-': 189, '=': 187,
+    ';': 186, '\'': 222,
+    '[': 219, ']': 221, '\\': 220
+  }
+
 var keyev = function(key, event){
 
         /*
@@ -100,7 +115,7 @@ key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
-$('h2').css({'border':'3px solid blue', 'display':'inline-block', 'padding':' 7px 7px 7px 7px'})
+
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
 $('.effect2').css({'box-shadow':'0 0 0 0'})
@@ -183,13 +198,32 @@ function remove_patt_change_css(elem,txt,patt,dic_css){
       dic_css : dictionary of the css parameters..
       */
 
-      var new_txt = txt.split(patt)[1]
+      //var new_txt = txt.split(patt)[1]
+      var new_txt = txt.replace(patt,'')
       elem.text(new_txt)
       elem.css(dic_css)
 
 }
 
-function p_match__inject_css(patt, dic_css){
+function frame_col(){
+
+      var dic_col = {'b':'blue','r':'red','g':'green','o':'orange'}
+      var tags = ['h1','h2','h3']
+      var reg = /\!f\w/
+      for (var i in tags){
+            $(tags[i]).each(function(){
+                var regmatch = $(this).text().match(reg)
+                if (regmatch){
+                      var cssfb = {'border':'3px solid ' + col, 'display':'inline-block', 'padding':' 7px 7px 7px 7px'}
+                      elem_match__inject_css($(this), reg, cssfb)
+                }
+            })
+      }
+}
+
+frame_col() // frame with color around the tag..
+
+function elem_match__inject_css(elem, patt, dic_css){
 
       /*
       Generic match replace
@@ -197,7 +231,8 @@ function p_match__inject_css(patt, dic_css){
       dic_css : dictionary of the css parameters..
       */
 
-      $("p").each(function(){
+      if (patt==/\!fb/){alert('patt is fb')}
+      elem.each(function(){
            var txt = $(this).text()
            if (txt.match(patt)){
                remove_patt_change_css($(this),txt,patt,dic_css)
@@ -209,6 +244,18 @@ function p_match__inject_css(patt, dic_css){
                }
            }
        })
+}
+
+function p_match__inject_css(patt, dic_css){
+
+      /*
+      Generic match replace
+      patt : pattern
+      dic_css : dictionary of the css parameters..
+      */
+
+      elem_match__inject_css($("p"), patt, dic_css)
+
 }
 
 function find_target_memo(match_txt, num_memo){
@@ -538,11 +585,13 @@ key('alt+v', function(){         // Show the help
     $('#help_voice_cmds').toggle()
   });
 
-
 progressive_visualization(stp)
 key('alt+s', function(){
   stp += 1;
   progressive_visualization(stp)
 })
-
+// key('alt+' + keymap.up, function(){
+//   stp += -1;
+//   progressive_visualization(stp)
+// })
 </script>
