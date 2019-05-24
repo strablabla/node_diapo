@@ -214,6 +214,7 @@ function frame_col(){
             $(tags[i]).each(function(){
                 var regmatch = $(this).text().match(reg)
                 if (regmatch){
+                      var col = dic_col[regmatch[0].slice(-1)] // find color.. 
                       var cssfb = {'border':'3px solid ' + col, 'display':'inline-block', 'padding':' 7px 7px 7px 7px'}
                       elem_match__inject_css($(this), reg, cssfb)
                 }

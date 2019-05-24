@@ -20,7 +20,7 @@
 
  # diap d1
 
-## diapo 1 !fb
+## diapo 1 !fo
 
 !head example d'autre en-tête, vérification du placement
 
@@ -79,7 +79,7 @@ $memo1
  
 # Inspection des travaux finis
 
-## diapo 3
+## diapo 3 !fg
 
 !head tête ou pas..
 
