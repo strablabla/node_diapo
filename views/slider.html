@@ -1,12 +1,11 @@
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-
 
 <script>
 
 $('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','top':'750px'}))
 $('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','top':'780px'}))
-$("#slider_value").hide()
+$('#content').append($('<div/>').attr('id','current_diapo'))
+$("#slider_value").hide() //
 
 var drag_slider = d3.behavior.drag()
     .origin(function(d) {  return d })
@@ -14,7 +13,9 @@ var drag_slider = d3.behavior.drag()
     .on("drag", function(d) {
         if (d.dir == "x"){
             d.action(); //
-            return d3.select(this).attr("cx", d.x  = d3.event.x);
+            $('#current_diapo').text(numdiap())
+            $('#current_diapo').css({'position':'absolute','top':'760px','left': d3.event.x + 290})
+            return d3.select(this).attr("cx", d.x  = d3.event.x ) ;
             }
         else if (d.dir == "y"){
             $("#slider_value").html(d3.event.y);
@@ -49,7 +50,6 @@ var slide = function(data, name_svg){ // Vertical or horizontal slider
         }
 
     slider_button = function(data){
-
         var slider_butt = name_svg
           .selectAll("svg_slider_button")
           .data(data)
@@ -68,16 +68,22 @@ var slide = function(data, name_svg){ // Vertical or horizontal slider
 }
 
 function dragstarted(d) {
-  d3.event.sourceEvent.stopPropagation();
-  d3.select(this).classed("dragging", true);
+    d3.event.sourceEvent.stopPropagation();
+    d3.select(this).classed("dragging", true);
 }
 
 function dragended(d) {
-  d3.select(this).classed("dragging", false);
+    d3.select(this).classed("dragging", false);
+
+    window.location.href = numdiap();
     }
 
-</script>
+function numdiap(){
+    var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/1000*diapo_max)
+    return name_diap
+}
 
+</script>
 
 <script>
 

@@ -166,7 +166,7 @@ nous paraissent former une masse unie.
 
   # idée de mettre du Bokeh..
 
- ## voir comment faire..
+ ## voir comment faire..!fo 
 
 * blabla
 * deuxième point.. 
