@@ -25,9 +25,11 @@ var drag_slider = d3.behavior.drag()
     })
     .on("dragend", dragended);
 
+var length_slider = 1000
+
 var svg = d3.select("#slider")
             .append("svg")
-            .attr("width", 1000)
+            .attr("width", length_slider)
             .attr("height", 100);
 
 var chgx = function(){$("#slider_value").html(d3.event.x)}
@@ -74,22 +76,15 @@ function dragstarted(d) {
 
 function dragended(d) {
     d3.select(this).classed("dragging", false);
-
+    socket.emit('numdiap', numdiap().slice('d')[1]) // send new num of diap..
     window.location.href = numdiap();
     }
 
 function numdiap(){
-    var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/1000*diapo_max)
+    var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
     return name_diap
 }
 
-</script>
 
-<script>
-
-var param_slider_x = [{'xbar':10, 'x':10,'ybar':50, 'y':50, 'col': 'violet', 'dir':'x', 'slength': 2000, 'action':chgx}]
-//var param_slider_y = [{'xbar':50, 'x':50, 'ybar':50, 'y':50, 'col': 'green', 'dir':'y', 'slength': 200, 'action':chgy}]
-slide(param_slider_x, svg)
-//slide(param_slider_y, svg)
 
 </script>

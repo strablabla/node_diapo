@@ -70,9 +70,29 @@ function set_page_num(diapo_index){
       */
 
       if (diapo_index!=0){
-            //var loc = location.href.split('/')[3]
-            $('#content').append($('</p>').attr('id', 'num').text(diapo_index))
-            $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px'})
+            var numpage = diapo_index+'/'+(parseInt(diapo_max)-1)
+            //alert(numpage)
+            $('#content').append($('</p>').attr('id', 'num').text(numpage))
+            $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px','z-index':'100'})
+
+            var param_slider_x = [{'xbar':10,
+                                  'x': diapo_index*1000/diapo_max,
+                                  'ybar':50, 'y':50,
+                                  'col': 'violet', 'dir':'x',
+                                  'slength': 2000, 'action':chgx}]
+            slide(param_slider_x, svg)
+
+        }
+}
+
+function set_page_cursor(diapo_index){
+
+      /*
+      Set the page cursor
+      */
+
+      if (diapo_index!=0){
+          socket.emit('pos_cursor',diapo_index)
         }
 }
 
@@ -83,6 +103,7 @@ var diapo_index = null
 socket.on('numdiap', function(text){
       diapo_index = parseInt(text)
       set_page_num(diapo_index)
+      set_page_cursor(diapo_index)
      })  // index of current diap
 var diapo_max = null
 socket.on('maxdiap', function(text){ diapo_max = text })    // number max of diap
