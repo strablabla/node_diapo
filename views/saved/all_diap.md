@@ -58,15 +58,15 @@ $memo1
 !head tête ou pas..
 
 * Rêve ou réalité?
-* la révolution des "Siths"co
+* la révolution des "Siths"co  
 
-!pos0.3/0.6
+!pos281/407
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos0.7/0.85
+!pos1142/99
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
-!pos0.0/0.6
+!pos0/500
 !eq e^{i\pi}=-1
 
 
@@ -105,16 +105,11 @@ a
 ## diapo 4
 
 * Les "Météorologiques"u d'Aristote (384-322 BC)
-
-La Voie Lactée irrégulière appartient au monde sublunaire
-
-Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-
-"Démocrite (460-370 BC) et la vision atomiste"cb
-
-Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-
-nous paraissent former une masse unie. !stp
+* La Voie Lactée irrégulière appartient au monde sublunaire
+* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
+* "Démocrite (460-370 BC) et la vision atomiste"cb
+* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
+* nous paraissent former une masse unie. !stp
 
 
 Lucrèce (99-51 BC)
@@ -194,5 +189,13 @@ nous paraissent former une masse unie.
 
 
  --------------- diap8 ----------------- 
+
+  # diap eight.. 
+ 
+ ## some texxxxtttt !fo
+ 
+ * a list element. 
+
+ --------------- diap9 ----------------- 
 
   

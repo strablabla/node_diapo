@@ -63,10 +63,10 @@ function change_diapo(diapo_index, diapo_max, event, socket){
       return diapo_index
 }
 
-function set_page_num(diapo_index){
+function set_page_num_and_slider(diapo_index){
 
       /*
-      Set the page number
+      Set the page number and position in the slider
       */
 
       if (diapo_index!=0){
@@ -85,32 +85,21 @@ function set_page_num(diapo_index){
         }
 }
 
-function set_page_cursor(diapo_index){
-
-      /*
-      Set the page cursor
-      */
-
-      if (diapo_index!=0){
-          socket.emit('pos_cursor',diapo_index)
-        }
-}
-
 //---------------
 
 $('h1').css({'right':'5%'})
 var diapo_index = null
 socket.on('numdiap', function(text){
       diapo_index = parseInt(text)
-      set_page_num(diapo_index)
-      set_page_cursor(diapo_index)
+      set_page_num_and_slider(diapo_index)
      })  // index of current diap
 var diapo_max = null
 socket.on('maxdiap', function(text){ diapo_max = text })    // number max of diap
-
 $( document ).keydown(function() {                              // pass to a new diapo
     diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
 });
+
+//------------------
 
 key('ctrl+d', function(){                      // Add a new diapo
       socket.emit('make_new_diap', '')
@@ -136,6 +125,7 @@ key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
+//-----------------------
 
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
@@ -162,15 +152,12 @@ function match__inject_stop(elem, patt){
            var htm = $(this).html()
            if (htm.match(patt)){
                pattern = htm.match(patt)
-               //alert(pattern)
                var class_added = pattern.slice(1,-1)
-               //alert(class_added)
                $(this).attr('class', 'stop')                  // adding Class
            }
        })
 }
 
-//p_match__inject_class(/\!stp\d/)
 match__inject_stop($('li'), /\!stp/)
 
 function progressive_visu_hide_show(elem,showline,count,reg){
@@ -219,7 +206,6 @@ function remove_patt_change_css(elem,txt,patt,dic_css){
       dic_css : dictionary of the css parameters..
       */
 
-      //var new_txt = txt.split(patt)[1]
       var new_txt = txt.replace(patt,'')
       elem.text(new_txt)
       elem.css(dic_css)
@@ -227,6 +213,11 @@ function remove_patt_change_css(elem,txt,patt,dic_css){
 }
 
 function frame_col(){
+
+      /*
+      Frame with color around tag element
+      eg: !fb  for blue frame ..
+      */
 
       var dic_col = {'b':'blue','r':'red','g':'green','o':'orange'}
       var tags = ['h1','h2','h3']
@@ -337,7 +328,8 @@ function change_pos(elem){
       */
 
       var reg0 = /\!pos/
-      var reg1 = /\!pos\d+\.\d+\/\d+\.\d+/
+      //var reg1 = /\!pos\d+\.\d+\/\d+\.\d+/
+      var reg1 = /\!pos\d+\/\d+/
 
       elem.each(function(){
            var txt = $(this).text()
@@ -345,9 +337,9 @@ function change_pos(elem){
            if (txt.match(reg1)){
                   regmatch = txt.match(reg1)
                   var coord = regmatch[0].split('!pos')[1].split('/')
-                  var x = parseFloat(coord[1])*500
-                  var y = parseFloat(coord[0])*700
-                  $(this).css({'position':'absolute','right':x + 'px', 'top':y + 'px'})
+                  var x = parseFloat(coord[0])
+                  var y = parseFloat(coord[1])
+                  $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px'})
                   $(this).html(htm.replace(regmatch,''))
            }
       });
@@ -612,6 +604,19 @@ key('alt+s', function(){
   stp += 1;
   progressive_visualization(stp)
 })
+
+$('p figure').each(function(){
+    $(this).draggable()
+})
+key('ctrl+i', function(){
+  $('p figure').each(function(){
+      var pos = $(this).offset()
+      //alert(pos.left +'_'+ pos.top)
+      socket.emit('pos_img',$(this).attr('id').slice(0,-3) + '§§' + JSON.stringify(pos)) // see why addition of a number of three cifers..
+
+  })
+})
+
 
 
 </script>

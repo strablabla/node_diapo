@@ -38,6 +38,9 @@ nunjucks.configure('views', {
 
 function concat_diapos(i){
 
+      /*
+      Concatenate the content of all the slides..
+      */
 
       fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
               if (err) { return console.log(err); }
@@ -140,6 +143,42 @@ io.sockets.on('connection', function (socket) {
       socket.on('scroll_html', function(pos) {
             scroll_html_pos = pos
        })
+
+      //---------------------------------
+
+      socket.on('pos_img', function(infos) {
+          console.log(infos)
+          var id = infos.split('§§')[0]
+          var pos = JSON.parse(infos.split('§§')[1])
+          console.log(id)
+          console.log(pos)
+          var new_txt = ''
+          fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
+                  if (err) { return console.log(err); }
+                  console.log(txt)
+                  list_lines = txt.split('\n')
+                  console.log(list_lines[i])
+                  for (var i=0; i<list_lines.length; i++){
+                        if (list_lines[i].match(id)){
+                            console.log('the pattern was found at line  ' + i)
+                            if (list_lines[i-1].match(/\!pos/)){
+                                console.log("found a pos " + list_lines[i-1])
+                                list_lines[i-1] = '!pos' + pos.left + '/' + pos.top
+                            } // end if
+                        } // end if
+                      } // end for
+                new_txt = list_lines.join('\n')
+                console.log('######## after joining ########### \n'+ new_txt)
+                dest = 'views/diapos/d{}.html'.format(diapo_index)
+                fs.writeFile(dest , new_txt, function(err) {
+                      if(err) { return console.log(err); }
+                      console.log("saved {}".format(dest));
+                      });    // end writeFile
+                }) // end readFile
+          // console.log('#########################################')
+          // console.log(new_txt)
+       })
+
 
 }); // sockets.on connection
 
