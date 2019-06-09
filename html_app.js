@@ -9,6 +9,9 @@ var count = require('./static/js/count_lines');
 var util = require('./static/js/util');
 var re = require('./static/js/read_emit');
 var modify = require('./static/js/modify_html');
+var domtoimage = require('dom-to-image');
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 //--------------  Server
 
@@ -36,12 +39,51 @@ nunjucks.configure('views', {
 });
 
 
+function make_png(i){
+
+  // load from an external file
+  options = {
+    runScripts: 'dangerously',
+    resources: "usable"
+    };
+  console.log('current index is ' + i)
+  JSDOM.fromFile('views/diapos/d1.html', options).then(function (dom) {
+
+      console.log('######## inside jsdom #########')
+      let window = dom.window,
+      document = window.document;
+      //console.log(dom.serialize())
+      //console.log(document.getElementById('num').value)
+      content = window.document.documentElement.outerHTML
+      console.log(content)
+      console.log('#########################')
+
+      //console.log(document.querySelectorAll('h1')[0].innerHTML);
+
+      // domtoimage.toBlob( document.body )
+      //   .then(function (blob) {
+      //       window.saveAs(blob, 'my-node{}.png'.format(i));
+      //       console.log('################# save image {} '.format(i))
+      //   });
+
+    }).catch (function (e) {
+
+        console.log(e);
+
+    });
+
+}
+
+
+
+
+
 function concat_diapos(i){
 
       /*
       Concatenate the content of all the slides..
       */
-
+      make_png(i)
       fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
               if (err) { return console.log(err); }
 
@@ -153,6 +195,7 @@ io.sockets.on('connection', function (socket) {
           console.log(id)
           console.log(pos)
           var new_txt = ''
+          console.log('#### will change the diapo.. ')
           fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
                   if (err) { return console.log(err); }
                   console.log(txt)
@@ -182,7 +225,7 @@ io.sockets.on('connection', function (socket) {
 
 }); // sockets.on connection
 
-var port = 3000
+var port = 3067
 server.listen(port);
 var addr = 'http://127.0.0.1:{}/d0'.format(port)
 //diapo_index = 5;

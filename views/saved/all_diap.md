@@ -60,13 +60,13 @@ $memo1
 * Rêve ou réalité?
 * la révolution des "Siths"co  
 
-!pos281/407
+!pos314/411
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos1142/99
+!pos785/390
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
-!pos0/500
+!pos0/300
 !eq e^{i\pi}=-1
 
 
@@ -86,7 +86,8 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!['magno' 200x200 %example of magnolia%](magnolia.jpg)
+!pos1130/125
+!['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
 
 !eq ax^2+bx+c =
 a
@@ -176,16 +177,19 @@ nous paraissent former une masse unie.
 
  --------------- diap7 ----------------- 
 
-  # nouvelle diapo..
+ # nouvelle diapo..
 
- ## Diapo 7
+## Diapo 7
 
- * Il était une fois dans la ville de Foi
- * [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
- * dans cette contrée reculée, en plein milieu de rien.. 
- 	* ```
-    	bizmuth et belzébuth.. 
-        ```
+* Il était une fois dans la ville de Foi
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  	bizmuth et belzébuth..
+      ```
+* Catalan equation
+
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
 
 
  --------------- diap8 ----------------- 

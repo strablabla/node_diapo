@@ -608,7 +608,11 @@ key('alt+s', function(){
 $('p figure').each(function(){
     $(this).draggable()
 })
+
 key('ctrl+i', function(){
+  /*
+  Fix image position.. 
+  */
   $('p figure').each(function(){
       var pos = $(this).offset()
       //alert(pos.left +'_'+ pos.top)

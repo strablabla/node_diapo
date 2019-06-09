@@ -12,9 +12,18 @@ var drag_slider = d3.behavior.drag()
     .on("dragstart", dragstarted)
     .on("drag", function(d) {
         if (d.dir == "x"){
-            d.action(); //
-            $('#current_diapo').text(numdiap())
-            $('#current_diapo').css({'position':'absolute','top':'760px','left': d3.event.x + 290})
+            d.action();
+            var frame_part = '<iframe  id="frame0" src="{}" style="width:1600px;height:950px" >  </iframe>'.format(numdiap())
+            var title_part = '<br><br><br><br><center><h1>{}</h1></center>'.format(numdiap())
+            $('#current_diapo').html(frame_part + title_part)
+            $('#current_diapo').css({'position':'absolute',
+                                      'top':'450px',
+                                      'left': d3.event.x + 60,
+                                      '-webkit-transform': 'scale(0.3)',
+                                      'transform': 'scale(0.3)',
+                                      '-webkit-transform-origin': '0 0',
+                                      'transform-origin': '0 0'
+                                    })
             return d3.select(this).attr("cx", d.x  = d3.event.x ) ;
             }
         else if (d.dir == "y"){
@@ -81,6 +90,9 @@ function dragended(d) {
     }
 
 function numdiap(){
+    /*
+    Return the num of the current diapo..
+    */
     var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
     return name_diap
 }
