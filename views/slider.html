@@ -2,6 +2,10 @@
 
 <script>
 
+/*
+d3.js slider.. 
+*/
+
 $('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','top':'750px'}))
 $('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','top':'780px'}))
 $('#content').append($('<div/>').attr('id','current_diapo'))
@@ -96,7 +100,5 @@ function numdiap(){
     var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
     return name_diap
 }
-
-
 
 </script>

@@ -94,7 +94,7 @@ socket.on('numdiap', function(text){
       set_page_num_and_slider(diapo_index)
      })  // index of current diap
 var diapo_max = null
-socket.on('maxdiap', function(text){ diapo_max = text })    // number max of diap
+socket.on('maxdiap', function(text){ diapo_max = text })        // number max of diap
 $( document ).keydown(function() {                              // pass to a new diapo
     diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
 });
@@ -108,11 +108,15 @@ key('ctrl+d', function(){                      // Add a new diapo
   });
 
 var show_memos = false;
+function color_memos(show_memos){
+    if (show_memos){
+          $('.memo').css({'background-color':'#ffe6e6'})
+    }else{$('.memo').css({'background-color':'#ffffff'})}
+}
 key('ctrl+m', function(){                      // activate deactivate the memos
       show_memos = !show_memos
-      if (show_memos){
-        $('.memo').css({'background-color':'#ffe6e6'})
-      }else{$('.memo').css({'background-color':'#ffffff'})}
+      //alert('memo')
+      color_memos(show_memos)
   });
 
 key('ctrl+a', function(){         // go to the global view of the slides..
@@ -457,19 +461,37 @@ $("p").each(function(){
 p_match_memos($("p"))
 p_match_memos($("li"))
 
-$('.memo').click(function(){
+
+function memo(cls){
+      /*
+      */
+      var num_memo = cls.attr('memo')       // index of the memo $(this)
+      tag_infos.html('<h1> Mémo ' + num_memo + ' </h1>')
+      var targ_memo = '#targ_memo' + num_memo
+      var clone = $(targ_memo).clone()
+      clone.show()
+      var diccss = {'font-size':'11px', 'margin':'10px 10px'}
+      clone.css(diccss)
+      tag_infos.append(clone)
+      tag_infos.toggle()
+}
+
+$('.memo').click(function(){   // if click on the horizontal memo tag..
+    /*
+    click on colored memo bars.. 
+    */
     if (show_memos){
-          var num_memo = $(this).attr('memo')       // index of the memo
-          tag_infos.html('<h1> Mémo ' + num_memo + ' </h1>')
-          var targ_memo = '#targ_memo' + num_memo
-          var clone = $(targ_memo).clone()
-          clone.show()
-          var diccss = {'font-size':'11px', 'margin':'10px 10px'}
-          clone.css(diccss)
-          tag_infos.append(clone)
-          tag_infos.toggle()
+        memo($(this))
     }
 })
+
+socket.on('trigger_memos', function(){
+      /*
+      triggering memos vocally..
+      */
+      show_memos = !show_memos
+      color_memos(show_memos)
+ })
 
 var tag_infos = $('<div>').attr('id','infos')
 tag_infos.css({'position':'absolute',
@@ -545,10 +567,13 @@ var keys = function(){/*
 # Keys
 
 * Keys ::
-    * alt + h : help
-    * ctrl + d : create new slide
     * ctrl + a : view all the slides
+    * ctrl + d : create new slide
+    * alt + h : help
+    * ctrl + i : save the position of the picture..
     * ctrl + m : show memos..
+    * alt + s : show text sequentially
+    * alt + t : show markdown
 
 */}.toString().slice(14,-3)
 
@@ -601,8 +626,8 @@ key('alt+v', function(){         // Show the help
 
 progressive_visualization(stp)
 key('alt+s', function(){
-  stp += 1;
-  progressive_visualization(stp)
+    stp += 1;
+    progressive_visualization(stp)
 })
 
 $('p figure').each(function(){
@@ -611,7 +636,7 @@ $('p figure').each(function(){
 
 key('ctrl+i', function(){
   /*
-  Fix image position.. 
+  Fix image position..
   */
   $('p figure').each(function(){
       var pos = $(this).offset()

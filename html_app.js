@@ -75,14 +75,12 @@ function make_png(i){
 }
 
 
-
-
-
 function concat_diapos(i){
 
       /*
       Concatenate the content of all the slides..
       */
+
       make_png(i)
       fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
               if (err) { return console.log(err); }
@@ -162,31 +160,39 @@ io.sockets.on('connection', function (socket) {
       fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,text) {
               if (err) { return console.log(err); }
               re.emit_from_read(socket, count, patt, text, scroll_html_pos)
-          }); // end fs.readFile
-      util.save_regularly() // save the regularly the text..
+          });                        // end fs.readFile
+      util.save_regularly()          // save the regularly the text..
       socket.on('join', function(data) { socket.emit('scroll', patt) }); // end socket.on join
 
       //-------------------------------- From textarea to html
 
-      socket.on('return', function(new_text) { // change html with textarea
+      socket.on('return', function(new_text) {       // change html with textarea
             modify.modify_html_with_newtext(socket, fs, util, new_text, diapo_index)
         }); // end socket.on return
 
       //---------------------------------------- Make a new diapo..
 
-      socket.on('make_new_diap', function(){  // Ctrl + D
+      socket.on('make_new_diap', function(){           // Ctrl + D
             modify.modify_html_with_newtext(socket, fs, util, ' ', numdiap)
             main_init()
       })
 
-      //---------------------------------
+      //---------------------------------------- Show the memos
+
+      socket.on('show_memos', function(){             // Ctrl + M
+            console.log('#####################  received show memos !!!! ')
+            //socket.emit('trigger_memos', '')
+            io.emit('trigger_memos', '');
+      })
+
+      //---------------------------------  Scroll
 
       socket.on('scroll', function(pattern) { patt = pattern })
       socket.on('scroll_html', function(pos) {
             scroll_html_pos = pos
        })
 
-      //---------------------------------
+      //---------------------------------   Image position..
 
       socket.on('pos_img', function(infos) {
           console.log(infos)
@@ -222,8 +228,7 @@ io.sockets.on('connection', function (socket) {
           // console.log(new_txt)
        })
 
-
-}); // sockets.on connection
+}); // end sockets.on connection
 
 var port = 3067
 server.listen(port);

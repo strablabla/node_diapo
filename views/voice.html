@@ -23,7 +23,9 @@ artyom.initialize({
   listen:true
 })
 
+
 // ----------------- Generic add commands
+
 
 function add_commands(dict, func){
 
@@ -46,7 +48,21 @@ function add_commands(dict, func){
       }); // end for each
 }
 
+//------------------ Implemented commands ..
+
+/*
+
+1) go to slide..
+2) all the slides..
+3) new slide
+4) help for keyboard shortcuts..
+5)
+
+
+*/
+
 // ----------------- Voice navigation in the slides..
+
 
 function go_to_diapo(i){
 
@@ -73,6 +89,7 @@ socket.on('maxdiap', function(text){
 
 // --------------------  Global view of all the slides..
 
+
 dct_synopt = {
     indexes:['vue globale', 'voir toutes les diapos', 'toutes les diapos'], // These spoken words will trigger the execution of the command
     action: function(){
@@ -86,19 +103,23 @@ artyom.addCommands(dct_synopt);
 // ----------------------- Create a new slide
 
 dct_new_diap = {
-    indexes:['ajoute une diapo'], // These spoken words will trigger the execution of the command
-    action: function(){  // Ctrl + D
+    indexes:['ajoute une diapo',
+               'créer nouvelle diapo',
+               'faire nouvelle diapo',
+               'nouvelle diapo'],            // These spoken words will trigger the execution of the command
+    action: function(){                      // Ctrl + D
           socket.emit('make_new_diap', '')
-          //location.replace('d{}'.format(diapo_max+1))
      }
   }
 
 artyom.addCommands(dct_new_diap);
 
+
 // ----------------------- Show help
 
+
 dct_help = {
-    indexes:['aide'], //
+    indexes:['aide', 'commandes'], //
     action: function(){         // Alt + H
         $('#help_keys').toggle()
      }
@@ -106,16 +127,35 @@ dct_help = {
 
 artyom.addCommands(dct_help);
 
+
 // ----------------------- Activate deactivate memos..
 
-// dct_memos = {
-//     indexes:['montre les mémos'], // These spoken words will trigger the execution of the command
-//     action: function(){  // Ctrl + D
-//           socket.emit('show_memos', '')
-//           //location.replace('d{}'.format(diapo_max+1))
-//      }
-//   }
-//
-// artyom.addCommands(dct_memos);
+
+//var show_memos = false;
+
+dct_memos = {                                 // Ctrl + M
+    indexes: ['mémo'],                        // These spoken words will trigger the execution of the command
+    action: function(){
+                socket.emit('show_memos', '')
+            }
+
+    // function(){                      // activate deactivate the memos
+    //       key('ctrl+m')
+    //       // show_memos = !show_memos
+    //       // //alert('memo')
+    //       // if (show_memos){
+    //       //       $('.memo').css({'background-color':'#ffe6e6'})
+    //       // }else{$('.memo').css({'background-color':'#ffffff'})}
+    //
+    //   }
+
+
+  }
+
+artyom.addCommands(dct_memos);
+
+
+
+
 
 </script>

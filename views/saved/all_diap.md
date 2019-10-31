@@ -33,8 +33,6 @@
 	* par le passé c'était déjà assez obscur..
 * Les électrons fortement corrélés !memo1 !stp
 
-
-
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 $memo0
@@ -63,7 +61,7 @@ $memo1
 !pos314/411
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos785/390
+!pos735/172
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
 !pos0/300
@@ -72,6 +70,8 @@ $memo1
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
 
 
  --------------- diap3 ----------------- 
@@ -99,6 +99,7 @@ a
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
+
  --------------- diap4 ----------------- 
 
  # Rappel
@@ -121,9 +122,6 @@ créent la "Voie Lactée"cy
 
 Critiques au moyen-âge : !stp
 
-Pb de parallaxe, au-delà des planètes !stp
-
-Pas de variation saisonnière
 
 
 
@@ -198,8 +196,39 @@ nous paraissent former une masse unie.
  
  ## some texxxxtttt !fo
  
- * a list element. 
+ * a list element. !memo0
+ * aeaeaea !memo1
+ 
+ 
+$memo0
+
+* mem0
+
+$memo1
+
+* mem1..
 
  --------------- diap9 ----------------- 
+
+  # diap 9
+ 
+## Broadband EPR Spectroscopy in Diverse Field Conditions Using Optically Detected Nitrogen-Vacancy Centers in Diamond
+## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
+
+* [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
+
+ --------------- diap10 ----------------- 
+
+  # diapo 10
+
+ --------------- diap11 ----------------- 
+
+  
+
+ --------------- diap12 ----------------- 
+
+  # diapo 12
+
+ --------------- diap13 ----------------- 
 
   
