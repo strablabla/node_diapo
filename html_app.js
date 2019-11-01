@@ -36,7 +36,6 @@ nunjucks.configure('views', {
     autoescape: true,
     express: app,
     watch:true
-    // echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 });
 
 
@@ -129,7 +128,6 @@ main_init()
 app.get('/text', function(req, res){ res.render('text.html') });
 app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
 app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
-//app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
 
 //--------------  static addresses
 
@@ -200,6 +198,13 @@ io.sockets.on('connection', function (socket) {
       socket.on('syntax', function(){             //
             console.log('###### syntax!!!! ')
             io.emit('syntax', ''); //
+      })
+
+      //---------------------------------------- show config
+
+      socket.on('config', function(){             //
+            console.log('###### config!!!! ')
+            io.emit('config', ''); //
       })
 
       //---------------------------------  Scroll

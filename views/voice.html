@@ -203,6 +203,17 @@ dct_syntax = {                                 //
 
 artyom.addCommands(dct_syntax);
 
+// ----------------------- Config
+
+dct_config = {                                 //
+    indexes: ['configuration'],                        // These spoken words will trigger the execution of the command
+    action: function(){
+            socket.emit('config', '')
+            }
+  }
+
+artyom.addCommands(dct_config);
+
 
 
 </script>

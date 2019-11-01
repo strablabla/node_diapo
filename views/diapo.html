@@ -767,6 +767,57 @@ key('alt+s', function(){         // show syntax
     $('#help_syntax').toggle()
 })
 
+//--------------------------------  Configuration
+
+var config = $('<div>').attr('id','config')
+config.css({'position':'absolute',
+              'top': '50px', 'left':'100px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+config.draggable()
+$('#content').append(config.hide())
+config.click(function(){
+    $(this).toggle()
+})
+
+//------------------------ available voice commands
+
+var config_content = function(){/*
+
+# Configuration
+
+* Config ::
+    * blabla
+
+*/}.toString().slice(14,-3)
+
+$('#config').html(simple_md(config_content))
+
+//-------  show config
+
+socket.on('config', function(){
+
+     /*
+     toggle config
+     */
+     alert("configuration !!!!!!!!!!!")
+     $('#config').toggle()
+
+    })
+
+key('alt+c', function(){         // show config
+    $('#config').toggle()
+})
+
 // var scrfull = false
 // key('space', function(){
 //

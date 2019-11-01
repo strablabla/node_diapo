@@ -1,8 +1,6 @@
 {% include 'begin.html' %}
 {% include 'header.html' %}
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="keymaster.js"></script>
+{% include 'voice.html' %}
 
 {% include 'iframe_mini_small.html' %}
 
@@ -10,21 +8,18 @@
 
 <br><br><br><br>
 
-
 {% for i in range(0, number_diapos) -%}
 
-        <iframe id="frame{{i}}" src="d{{i}}"  > diapo {{i}} </iframe>
+        <iframe id="frame{{i}}" src="d{{i}}" sandbox="allow-scripts" > diapo {{i}} </iframe>
         <span class="name_diap" id="d{{i}}"> diapo {{i}} </span>
 
 {% endfor %}
-
 
 <script>
 
 var socket = io.connect();
 var nbcol = 5    // nb of columns in the mosaic
 var nblines = {{number_diapos}}%nbcol  // nb of lines in the mosaic
-//alert("nblines is " + nblines)
 
 for (var i=0; i < nblines; i++){
     for (var j=0; j < nbcol; j++){
@@ -53,7 +48,7 @@ $('.name_diap').click(function(){        // return to the full view diapo
 
 </script>
 
-<!-- {% include 'voice.html' %} -->
+
 {% include 'diapo.html' %}
 {% include 'math.html' %}
 {% include 'scroll_socket.html' %}

@@ -61,7 +61,7 @@ $memo1
 !pos314/411
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos735/172
+!pos893/380
 !['turner' 200x200 %magnolia%](magnolia.jpg)
 
 !pos0/300
@@ -112,17 +112,10 @@ a
 * "Démocrite (460-370 BC) et la vision atomiste"cb
 * Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
 * nous paraissent former une masse unie. !stp
-
-
-Lucrèce (99-51 BC)
-
-la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-
-créent la "Voie Lactée"cy 
-
-Critiques au moyen-âge : !stp
-
-
+* Lucrèce (99-51 BC)
+* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
+* créent la "Voie Lactée"cy 
+* Critiques au moyen-âge : !stp
 
 
 !foot Il était une fois un petit chaperon rouge.. 
