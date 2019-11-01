@@ -1,6 +1,8 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="keymaster.js"></script>
+<script src="screenfull.js"></script>
+
 
 <script>
 
@@ -53,11 +55,13 @@ function change_diapo(diapo_index, diapo_max, event, socket){
             if ((diapo_index+1) < diapo_max){ diapo_index += 1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)
+            //screenfull.request();
             }
       if (event.keyCode == 37){                                   // Decrement
             if ((diapo_index-1) > -1){ diapo_index += -1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)
+            //screenfull.request();
             }
 
       return diapo_index
@@ -99,13 +103,15 @@ $( document ).keydown(function() {                              // pass to a new
     diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
 });
 
-//------------------
+//------------------ New diapo
 
 key('ctrl+d', function(){                      // Add a new diapo
       socket.emit('make_new_diap', '')
       alert('adding a new diapo !!!!!');
       return false
   });
+
+//------------------ memos indicators
 
 var show_memos = false;
 function color_memos(show_memos){
@@ -119,17 +125,21 @@ key('ctrl+m', function(){                      // activate deactivate the memos
       color_memos(show_memos)
   });
 
+//------------------ view of all the diapos
+
 key('ctrl+a', function(){         // go to the global view of the slides..
       diapo_index = 0
       location.replace("all")
       socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
   });
 
+//------------------ go to markdown
+
 key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
-//-----------------------
+//----------------------- general configuration
 
 $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
@@ -383,6 +393,8 @@ function make_foot(){
 
 }
 
+//----------- equation
+
 function make_eq(){
 
       /*
@@ -395,6 +407,8 @@ function make_eq(){
       p_match__inject_css(/\!eq/, diceq)
 
 }
+
+//----------- title
 
 function make_title(){
 
@@ -411,6 +425,8 @@ function make_title(){
 
 }
 
+//----------- author
+
 function make_author(){
 
       /*
@@ -423,6 +439,8 @@ function make_author(){
       p_match__inject_css(/\!author/, dicauth)
 
 }
+
+//----------- date
 
 function make_date(){
 
@@ -456,6 +474,31 @@ $("p").each(function(){
   $('.author').wrap( "<div style='text-align:center;'></div>" )
   $('.date').attr('align', 'center')
 
+//-----------------------------  Full screen
+
+socket.on('full_screen', function(){
+
+    /*
+    trigger full screen
+    */
+
+    //alert ('FUUUULLL SCREENNNN')
+
+   })
+
+//-----------------------------  go to markdown by voice
+
+socket.on('markdown', function(){
+
+     /*
+     trigger markdown view
+     */
+
+     //alert('go to markdown !!! ')
+     window.location.href = 'text'   // flip from html to textarea
+
+    })
+
 //-----------------------------  Mémos
 
 p_match_memos($("p"))
@@ -463,9 +506,12 @@ p_match_memos($("li"))
 
 
 function memo(cls){
+
       /*
+      memo html
       */
-      var num_memo = cls.attr('memo')       // index of the memo $(this)
+
+      var num_memo = cls.attr('memo')       // memo's index
       tag_infos.html('<h1> Mémo ' + num_memo + ' </h1>')
       var targ_memo = '#targ_memo' + num_memo
       var clone = $(targ_memo).clone()
@@ -476,21 +522,29 @@ function memo(cls){
       tag_infos.toggle()
 }
 
+//------ click on memo..
+
 $('.memo').click(function(){   // if click on the horizontal memo tag..
+
     /*
-    click on colored memo bars.. 
+    click on colored memo bars..
     */
+
     if (show_memos){
         memo($(this))
     }
 })
 
+//------ indicate by voice memo with color..
+
 socket.on('trigger_memos', function(){
+
       /*
       triggering memos vocally..
       */
+
       show_memos = !show_memos
-      color_memos(show_memos)
+      color_memos(show_memos)  // color zone fr accessing memos
  })
 
 var tag_infos = $('<div>').attr('id','infos')
@@ -513,7 +567,7 @@ tag_infos.click(function(){
     $(this).toggle()
 })
 
-//-------------------------------
+//-------------------- Simple mardown..
 
 simple_md = function(text){               // mini markdown for the help
      var all_text = text.split('\n')
@@ -562,6 +616,8 @@ help_keys.click(function(){
     $(this).toggle()
 })
 
+//--------------------- available keys
+
 var keys = function(){/*
 
 # Keys
@@ -579,6 +635,8 @@ var keys = function(){/*
 
 $('#help_keys').html(simple_md(keys))
 
+//--------------------- Show the help
+
 key('alt+k', function(){         // Show the help
     $('#help_keys').toggle()
   });
@@ -587,7 +645,7 @@ key('alt+k', function(){         // Show the help
 
 var help_voice_cmds = $('<div>').attr('id','help_voice_cmds')
 help_voice_cmds.css({'position':'absolute',
-              'top': '50px', 'left':'10px',
+              'top': '50px', 'left':'100px',
               'padding-left': '10px',
               'padding-right': '10px',
               'padding-top' : '50px',
@@ -605,6 +663,8 @@ help_voice_cmds.click(function(){
     $(this).toggle()
 })
 
+//------------------------ available voice commands
+
 var voice_cmds = function(){/*
 
 # Voice commands
@@ -614,38 +674,117 @@ var voice_cmds = function(){/*
     * nouvelle diapo : create new slide
     * toutes les diapos : view all the slides
     * memos : show memos..
-    * diapo num.. : go to diapo num ..
+    * diapo + num : go to diapo num ..
 
 */}.toString().slice(14,-3)
 
 $('#help_voice_cmds').html(simple_md(voice_cmds))
 
+//----------- voice commands
+
 key('alt+v', function(){         // Show the help
     $('#help_voice_cmds').toggle()
   });
 
+//------------------------------- Progressive visualization..
+
 progressive_visualization(stp)
-key('alt+s', function(){
+
+key('alt+n', function(){  // next
     stp += 1;
     progressive_visualization(stp)
 })
+
+//---------------------------------
 
 $('p figure').each(function(){
     $(this).draggable()
 })
 
+//------------------------- fixing image's position
+
 key('ctrl+i', function(){
+
   /*
-  Fix image position..
+  Fixing image position..
   */
+
   $('p figure').each(function(){
       var pos = $(this).offset()
-      //alert(pos.left +'_'+ pos.top)
       socket.emit('pos_img',$(this).attr('id').slice(0,-3) + '§§' + JSON.stringify(pos)) // see why addition of a number of three cifers..
 
   })
 })
 
+//--------------------------------  Help syntax
+
+var help_syntax = $('<div>').attr('id','help_syntax')
+help_syntax.css({'position':'absolute',
+              'top': '50px', 'left':'100px',
+              'padding-left': '10px',
+              'padding-right': '10px',
+              'padding-top' : '50px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
+
+help_syntax.draggable()
+$('#content').append(help_syntax.hide())
+help_syntax.click(function(){
+    $(this).toggle()
+})
+
+//------------------------ available voice commands
+
+var syntax = function(){/*
+
+# syntax
+
+* Syntax ::
+    * blabla
+
+*/}.toString().slice(14,-3)
+
+$('#help_syntax').html(simple_md(syntax))
+
+//-------  show syntax
+
+socket.on('syntax', function(){
+
+     /*
+     toggle syntax
+     */
+
+     $('#help_syntax').toggle()
+
+    })
+
+key('alt+s', function(){         // show syntax
+    $('#help_syntax').toggle()
+})
+
+// var scrfull = false
+// key('space', function(){
+//
+//     /*
+//     Pass to full screen
+//     */
+//
+//     scrfull = !scrfull
+//     socket.emit('full_screen')
+//
+// })
+//
+// socket.on('fullscreen',function(){
+//       alert('oooooooo')
+//       if ( screenfull ) {
+//           screenfull.request();
+//       }
+// })
 
 
 </script>

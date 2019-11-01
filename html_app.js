@@ -23,6 +23,7 @@ var scroll_html_pos = 0 //
 var comment = false;
 diapo_index = 0;
 all_diap = ''
+var fullscreen = false
 
 String.prototype.format = function () {
   var i = 0, args = arguments;
@@ -58,13 +59,6 @@ function make_png(i){
       console.log(content)
       console.log('#########################')
 
-      //console.log(document.querySelectorAll('h1')[0].innerHTML);
-
-      // domtoimage.toBlob( document.body )
-      //   .then(function (blob) {
-      //       window.saveAs(blob, 'my-node{}.png'.format(i));
-      //       console.log('################# save image {} '.format(i))
-      //   });
 
     }).catch (function (e) {
 
@@ -73,7 +67,6 @@ function make_png(i){
     });
 
 }
-
 
 function concat_diapos(i){
 
@@ -99,7 +92,7 @@ function concat_diapos(i){
 
 }
 
-function addget(app,i){  // add Routes
+function addget(app,i){           // add Routes
 
       var addrd = '/d{}'.format(i)
       var adddiap = 'diapos/diapo{}.html'.format(i)
@@ -135,6 +128,7 @@ function main_init(){
 main_init()
 app.get('/text', function(req, res){ res.render('text.html') });
 app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
+app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
 //app.get('/d555', function(req, res){ res.render('diapos/diapo555.html') });
 
 //--------------  static addresses
@@ -146,6 +140,7 @@ app.use(express.static('lib'));
 //--------------  websocket
 
 // Loading socket.io
+
 var io = require('socket.io')(server);
 
 io.sockets.on('connection', function (socket) {
@@ -156,6 +151,7 @@ io.sockets.on('connection', function (socket) {
       socket.on('numdiap', function(text){
             diapo_index = text
             console.log('in html_apps, numdiap is ' + diapo_index)
+            //io.emit('fullscreen','')
           })
       fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,text) {
               if (err) { return console.log(err); }
@@ -181,8 +177,29 @@ io.sockets.on('connection', function (socket) {
 
       socket.on('show_memos', function(){             // Ctrl + M
             console.log('#####################  received show memos !!!! ')
-            //socket.emit('trigger_memos', '')
-            io.emit('trigger_memos', '');
+            io.emit('trigger_memos', ''); // triggers memos in diapo.html..
+      })
+
+      //---------------------------------------- Full screen
+
+      socket.on('full_screen', function(){             //
+            console.log('#####################  full screen !!!! ')
+            fullscreen = !fullscreen
+            io.emit('fullscreen', ''); //
+      })
+
+      //---------------------------------------- go to md
+
+      socket.on('markdown', function(){             //
+            console.log('###### go to md !!!! ')
+            io.emit('markdown', ''); //
+      })
+
+      //---------------------------------------- show syntax
+
+      socket.on('syntax', function(){             //
+            console.log('###### syntax!!!! ')
+            io.emit('syntax', ''); //
       })
 
       //---------------------------------  Scroll

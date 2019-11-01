@@ -91,13 +91,28 @@ socket.on('maxdiap', function(text){
 
 
 dct_synopt = {
-    indexes:['vue globale', 'voir toutes les diapos', 'toutes les diapos'], // These spoken words will trigger the execution of the command
+    indexes:['vue globale',
+              'voir toutes les diapos',
+              'toutes les diapos'], // These spoken words will trigger the execution of the command
     action: function(){
+            //alert("medium size slides !!!")
             location.replace("all")
             //socket.emit('numdiap', '0')
      }
   }
 artyom.addCommands(dct_synopt);
+
+// --------------------  Global view of all the slides in miniature
+
+
+dct_mosaic = {
+    indexes:['mosaïque'], // These spoken words will trigger the execution of the command
+    action: function(){
+            //alert("small slides !!!")
+            location.replace("all_mini")
+     }
+  }
+artyom.addCommands(dct_mosaic);
 
 
 // ----------------------- Create a new slide
@@ -127,34 +142,66 @@ dct_help = {
 
 artyom.addCommands(dct_help);
 
+// ----------------------- Show help for voice commands
+
+
+dct_help_voice = {
+    indexes:['voix'], //
+    action: function(){         // Alt + V
+        //alert('cmds vocales..')
+        $('#help_voice_cmds').toggle()
+     }
+  }
+
+artyom.addCommands(dct_help_voice);
+
 
 // ----------------------- Activate deactivate memos..
 
-
-//var show_memos = false;
 
 dct_memos = {                                 // Ctrl + M
     indexes: ['mémo'],                        // These spoken words will trigger the execution of the command
     action: function(){
                 socket.emit('show_memos', '')
             }
-
-    // function(){                      // activate deactivate the memos
-    //       key('ctrl+m')
-    //       // show_memos = !show_memos
-    //       // //alert('memo')
-    //       // if (show_memos){
-    //       //       $('.memo').css({'background-color':'#ffe6e6'})
-    //       // }else{$('.memo').css({'background-color':'#ffffff'})}
-    //
-    //   }
-
-
   }
 
 artyom.addCommands(dct_memos);
 
+// ----------------------- Full screen
 
+
+dct_screen = {                                 //
+    indexes: ['plein écran'],                        // These spoken words will trigger the execution of the command
+    action: function(){
+            socket.emit('full_screen', '')
+            }
+  }
+
+artyom.addCommands(dct_screen);
+
+
+// ----------------------- go to markdown
+
+dct_md = {                                 //
+    indexes: ['texte'],                        // These spoken words will trigger the execution of the command
+    action: function(){
+            socket.emit('markdown', '')
+            }
+  }
+
+artyom.addCommands(dct_md);
+
+// ----------------------- Syntax
+
+dct_syntax = {                                 //
+    indexes: ['syntaxe'],                        // These spoken words will trigger the execution of the command
+    action: function(){
+            socket.emit('syntax', '')
+            }
+  }
+
+artyom.addCommands(dct_syntax);
 
 
 

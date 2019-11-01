@@ -86,7 +86,7 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos1130/125
+!pos1126/314
 !['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
 
 !eq ax^2+bx+c =
