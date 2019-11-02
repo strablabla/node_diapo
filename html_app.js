@@ -151,6 +151,14 @@ io.sockets.on('connection', function (socket) {
             console.log('in html_apps, numdiap is ' + diapo_index)
             //io.emit('fullscreen','')
           })
+
+      fs.readFile("views/config/config.json", 'utf8', function (err,contents) {
+              if (err) { return console.log(err); }
+              var config_params = JSON.parse(contents);
+              //console.log(config_params)
+              io.emit('config_params',contents)
+          });                        // end fs.readFile
+
       fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,text) {
               if (err) { return console.log(err); }
               re.emit_from_read(socket, count, patt, text, scroll_html_pos)

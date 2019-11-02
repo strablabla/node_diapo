@@ -3,7 +3,7 @@
 <script>
 
 /*
-d3.js slider.. 
+d3.js slider..
 */
 
 $('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','top':'750px'}))
@@ -48,7 +48,7 @@ var svg = d3.select("#slider")
 var chgx = function(){$("#slider_value").html(d3.event.x)}
 var chgy = function(){$("#slider_value").html(d3.event.y)}
 
-var slide = function(data, name_svg){ // Vertical or horizontal slider
+var slide = function(data, name_svg){              // Vertical or horizontal slider
 
     slider_line = function(data){
           var svg_slider_line = name_svg
@@ -89,15 +89,20 @@ function dragstarted(d) {
 
 function dragended(d) {
     d3.select(this).classed("dragging", false);
-    socket.emit('numdiap', numdiap().slice('d')[1]) // send new num of diap..
+    socket.emit('numdiap', numdiap().slice(1)) // send new num of diap.. 
     window.location.href = numdiap();
     }
 
 function numdiap(){
+
     /*
     Return the num of the current diapo..
     */
-    var name_diap = 'd' + parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
+
+    val_denom = parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
+    var name_diap = 'd' + val_denom
+    //console.log("val_denom " + val_denom)
+
     return name_diap
 }
 

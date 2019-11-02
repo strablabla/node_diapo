@@ -134,17 +134,14 @@ Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
 "Démocrite (460-370 BC) et la vision atomiste"cb 
 
 Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-
 nous paraissent former une masse unie.
 
 # titre quelconque
 
 ## deuxième étage..
 
-* prem ligne..
-	* sec
 * ici je refais "encore une ligne"b .. 
-* "aeaeae aeaea  encore une ligne"cg ..  
+
 
 !foot Besoin d'un pied de page.. 
 

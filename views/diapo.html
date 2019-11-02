@@ -54,18 +54,23 @@ function change_diapo(diapo_index, diapo_max, event, socket){
       if (event.keyCode == 39){                                   // Increment
             if ((diapo_index+1) < diapo_max){ diapo_index += 1 }
             location.replace("d{}".format(diapo_index))
-            socket.emit('numdiap', diapo_index)
+            socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
             //screenfull.request();
             }
       if (event.keyCode == 37){                                   // Decrement
             if ((diapo_index-1) > -1){ diapo_index += -1 }
             location.replace("d{}".format(diapo_index))
-            socket.emit('numdiap', diapo_index)
+            socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
             //screenfull.request();
             }
 
       return diapo_index
 }
+
+//------------------------
+
+
+//color_bar = 'violet'
 
 function set_page_num_and_slider(diapo_index){
 
@@ -74,19 +79,28 @@ function set_page_num_and_slider(diapo_index){
       */
 
       if (diapo_index!=0){
+
             var numpage = diapo_index+'/'+(parseInt(diapo_max)-1)
             //alert(numpage)
             $('#content').append($('</p>').attr('id', 'num').text(numpage))
             $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px','z-index':'100'})
 
-            var param_slider_x = [{'xbar':10,
-                                  'x': diapo_index*1000/diapo_max,
-                                  'ybar':50, 'y':50,
-                                  'col': 'violet', 'dir':'x',
-                                  'slength': 2000, 'action':chgx}]
-            slide(param_slider_x, svg)
+            socket.on('config_params',function(config_params){
+              
+                var params = JSON.parse(config_params)
+                color_bar = params.color_bar
 
-        }
+                var param_slider_x = [{'xbar':10,
+                                      'x': diapo_index*1000/diapo_max,
+                                      'ybar':50, 'y':50,
+                                      'col': color_bar, 'dir':'x',
+                                      'slength': 2000, 'action':chgx}]
+                slide(param_slider_x, svg)  // 'violet'
+
+             }) // end socket
+
+        } // end if
+
 }
 
 //---------------
@@ -809,7 +823,7 @@ socket.on('config', function(){
      /*
      toggle config
      */
-     alert("configuration !!!!!!!!!!!")
+     //alert("configuration !!!!!!!!!!!")
      $('#config').toggle()
 
     })
