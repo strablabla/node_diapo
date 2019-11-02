@@ -57,12 +57,8 @@ function make_png(i){
       content = window.document.documentElement.outerHTML
       console.log(content)
       console.log('#########################')
-
-
     }).catch (function (e) {
-
         console.log(e);
-
     });
 
 }
@@ -75,19 +71,19 @@ function concat_diapos(i){
 
       make_png(i)
       fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
-              if (err) { return console.log(err); }
+            if (err) { return console.log(err); }
 
-              all_diap +=  '\n --------------- diap{} ----------------- \n\n '.format(i) + txt + '\n'
+            all_diap +=  '\n --------------- diap{} ----------------- \n\n '.format(i) + txt + '\n'
 
-              if ( i == numdiap-1 ){
-                  console.log(all_diap)
-                  dest = 'views/saved/all_diap.md'
-                  fs.writeFile( dest, all_diap, function(err) {
-                        if(err) { return console.log(err); }
-                        console.log("all_diap saved in {}".format(dest));
-                  });    // end writeFile
-              }
-          });   // end fs.readFile
+            if ( i == numdiap-1 ){
+                //console.log(all_diap)
+                dest = 'views/saved/all_diap.md'
+                fs.writeFile( dest, all_diap, function(err) {
+                      if(err) { return console.log(err); }
+                      //console.log("all_diap saved in {}".format(dest));
+                });    // end writeFile
+            }
+        });   // end fs.readFile
 
 }
 
@@ -96,9 +92,12 @@ function addget(app,i){           // add Routes
       var addrd = '/d{}'.format(i)
       var adddiap = 'diapos/diapo{}.html'.format(i)
       console.log(addrd + '__' + adddiap)
-      app.get(addrd, function(req, res){ res.render(adddiap)});
+      fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+          if (err) { return console.log(err); }
+          config_params = JSON.parse(config_contents);
+          app.get(addrd, function(req, res){ res.render(adddiap, config_params)});
+      });
       concat_diapos(i)              // concatenate all the diapo in one file
-
 }
 
 // ----------------  Make the Routage
@@ -120,6 +119,7 @@ function main_init(){
                   addget(app,i)      // Routage
                 } // end for
       }) // end countFiles
+
 }
 
 //------------------- Routage
@@ -135,6 +135,31 @@ app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('lib'));
 
+
+//-----------------
+
+function findpos_modif_txt(txt, pos, id){
+
+      /*
+      */
+
+      list_lines = txt.split('\n')
+      console.log(list_lines[i])
+      for (var i=0; i < list_lines.length; i++){
+            if (list_lines[i].match(id)){
+                console.log('the pattern was found at line  ' + i)
+                if (list_lines[i-1].match(/\!pos/)){
+                    console.log("found a pos " + list_lines[i-1])
+                    list_lines[i-1] = '!pos' + pos.left + '/' + pos.top
+                } // end if
+            } // end if
+          } // end for
+      new_txt = list_lines.join('\n')
+      return new_txt
+}
+
+
+
 //--------------  websocket
 
 // Loading socket.io
@@ -144,26 +169,26 @@ var io = require('socket.io')(server);
 io.sockets.on('connection', function (socket) {
 
       console.log('A client is connected!');
+
       socket.emit('numdiap', diapo_index)
-      socket.emit('maxdiap', numdiap)
+      socket.emit('maxdiap', numdiap) // diapo_max
+
+      fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+          if (err) { return console.log(err); }
+          config_params = JSON.parse(config_contents);
+      });
+
       socket.on('numdiap', function(text){
             diapo_index = text
-            console.log('in html_apps, numdiap is ' + diapo_index)
-            //io.emit('fullscreen','')
-          })
+            console.log('in html_apps, diapo_index is ' + diapo_index)
 
-      fs.readFile("views/config/config.json", 'utf8', function (err,contents) {
-              if (err) { return console.log(err); }
-              var config_params = JSON.parse(contents);
-              //console.log(config_params)
-              io.emit('config_params',contents)
-          });                        // end fs.readFile
+          })
 
       fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,text) {
               if (err) { return console.log(err); }
               re.emit_from_read(socket, count, patt, text, scroll_html_pos)
           });                        // end fs.readFile
-      util.save_regularly()          // save the regularly the text..
+      util.save_regularly()          // save regularly the text..
       socket.on('join', function(data) { socket.emit('scroll', patt) }); // end socket.on join
 
       //-------------------------------- From textarea to html
@@ -218,9 +243,21 @@ io.sockets.on('connection', function (socket) {
       //---------------------------------  Scroll
 
       socket.on('scroll', function(pattern) { patt = pattern })
-      socket.on('scroll_html', function(pos) {
-            scroll_html_pos = pos
-       })
+      socket.on('scroll_html', function(pos) { scroll_html_pos = pos })
+
+      //---------------------------------  Delete
+
+      socket.on('delete', function(namediap) {
+
+          console.log('#################  /d{}'.format(namediap))
+          fs.unlink('views/diapos/d{}.html'.format(namediap), function (err) { if (err) throw err; })
+          fs.unlink('views/diapos/diapo{}.html'.format(namediap), function (err) { if (err) throw err; console.log('File deleted!'); })
+          main_init()
+          app.get('/text', function(req, res){ res.render('text.html') });
+          app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
+          app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
+
+      }); // end delete
 
       //---------------------------------   Image position..
 
@@ -228,34 +265,15 @@ io.sockets.on('connection', function (socket) {
           console.log(infos)
           var id = infos.split('§§')[0]
           var pos = JSON.parse(infos.split('§§')[1])
-          console.log(id)
-          console.log(pos)
-          var new_txt = ''
-          console.log('#### will change the diapo.. ')
           fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
                   if (err) { return console.log(err); }
-                  console.log(txt)
-                  list_lines = txt.split('\n')
-                  console.log(list_lines[i])
-                  for (var i=0; i<list_lines.length; i++){
-                        if (list_lines[i].match(id)){
-                            console.log('the pattern was found at line  ' + i)
-                            if (list_lines[i-1].match(/\!pos/)){
-                                console.log("found a pos " + list_lines[i-1])
-                                list_lines[i-1] = '!pos' + pos.left + '/' + pos.top
-                            } // end if
-                        } // end if
-                      } // end for
-                new_txt = list_lines.join('\n')
-                console.log('######## after joining ########### \n'+ new_txt)
-                dest = 'views/diapos/d{}.html'.format(diapo_index)
-                fs.writeFile(dest , new_txt, function(err) {
+                  new_txt = findpos_modif_txt(txt, pos, id)
+                  dest = 'views/diapos/d{}.html'.format(diapo_index)
+                  fs.writeFile(dest , new_txt, function(err) {
                       if(err) { return console.log(err); }
                       console.log("saved {}".format(dest));
                       });    // end writeFile
                 }) // end readFile
-          // console.log('#########################################')
-          // console.log(new_txt)
        })
 
 }); // end sockets.on connection

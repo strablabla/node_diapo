@@ -11,23 +11,45 @@ $('#content').append($('<div/>').attr('id','slider_value').css({'position':'abso
 $('#content').append($('<div/>').attr('id','current_diapo'))
 $("#slider_value").hide() //
 
+
+function css_miniature(elem){
+
+      /*
+      Css for miniature
+      */
+
+      elem.css({'position':'absolute',
+                'top':'450px',
+                'left': d3.event.x + 60,
+                '-webkit-transform': 'scale(0.3)',
+                'transform': 'scale(0.3)',
+                '-webkit-transform-origin': '0 0',
+                'transform-origin': '0 0'
+              })
+
+}
+
+function show_target_diapo(d3){
+
+      /*
+      Miniature of the target diapo
+      */
+
+      var frame_part = '<iframe  id="frame0" src="{}" style="width:1600px;height:950px" > sandbox </iframe>'.format(numdiap())
+      var title_part = '<br><br><br><br><center><h1>{}</h1></center>'.format(numdiap())
+      elem = $('#current_diapo')
+      elem.html(frame_part + title_part)
+      css_miniature(elem)
+
+}
+
 var drag_slider = d3.behavior.drag()
-    .origin(function(d) {  return d })
+    .origin(function(d) { return d })
     .on("dragstart", dragstarted)
     .on("drag", function(d) {
         if (d.dir == "x"){
             d.action();
-            var frame_part = '<iframe  id="frame0" src="{}" style="width:1600px;height:950px" >  </iframe>'.format(numdiap())
-            var title_part = '<br><br><br><br><center><h1>{}</h1></center>'.format(numdiap())
-            $('#current_diapo').html(frame_part + title_part)
-            $('#current_diapo').css({'position':'absolute',
-                                      'top':'450px',
-                                      'left': d3.event.x + 60,
-                                      '-webkit-transform': 'scale(0.3)',
-                                      'transform': 'scale(0.3)',
-                                      '-webkit-transform-origin': '0 0',
-                                      'transform-origin': '0 0'
-                                    })
+            show_target_diapo(d3)
             return d3.select(this).attr("cx", d.x  = d3.event.x ) ;
             }
         else if (d.dir == "y"){
@@ -65,6 +87,8 @@ var slide = function(data, name_svg){              // Vertical or horizontal sli
         }
 
     slider_button = function(data){
+        //alert(data)
+        //data = data.slice(-1)
         var slider_butt = name_svg
           .selectAll("svg_slider_button")
           .data(data)
@@ -89,8 +113,10 @@ function dragstarted(d) {
 
 function dragended(d) {
     d3.select(this).classed("dragging", false);
-    socket.emit('numdiap', numdiap().slice(1)) // send new num of diap.. 
-    window.location.href = numdiap();
+    var newdiap = numdiap()
+    //alert("ooooooopsssss")
+    socket.emit('numdiap', newdiap.slice(1)) // send new num of diap..
+    window.location.href = newdiap;  // passes to another slide.. 
     }
 
 function numdiap(){
@@ -101,7 +127,6 @@ function numdiap(){
 
     val_denom = parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
     var name_diap = 'd' + val_denom
-    //console.log("val_denom " + val_denom)
 
     return name_diap
 }

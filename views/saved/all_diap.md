@@ -24,8 +24,8 @@
 
 !head example d'autre en-tête, vérification du placement
 
-* Le rêve de la "supraconductivité"cb !memo0 !stp
-* pinjlap "zaaaammm zooom zuumm "cg !stp
+* Le rêve de la "supraconductivité"cb !memo0 
+* pinjlap "zaaaammm zooom zuumm "cg 
     * ziiipp
 * 1987: la révolution aa  aa a aa a !stp
     * "ziberwinger.."u ..
@@ -217,8 +217,16 @@ $memo1
 
  --------------- diap12 ----------------- 
 
-  # diapo 12
+  
 
  --------------- diap13 ----------------- 
+
+  
+
+ --------------- diap14 ----------------- 
+
+  
+
+ --------------- diap15 ----------------- 
 
   

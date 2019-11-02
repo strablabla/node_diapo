@@ -1,5 +1,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
+
 <script src="keymaster.js"></script>
 <script src="screenfull.js"></script>
 
@@ -18,18 +19,18 @@ String.prototype.format = function () {
 };
 
 var keymap = {
-    backspace: 8, tab: 9, clear: 12,
-    enter: 13, 'return': 13,
-    esc: 27, escape: 27, space: 32,
-    left: 37, up: 38,
-    right: 39, down: 40,
-    del: 46, 'delete': 46,
-    home: 36, end: 35,
-    pageup: 33, pagedown: 34,
-    ',': 188, '.': 190, '/': 191,
-    '`': 192, '-': 189, '=': 187,
-    ';': 186, '\'': 222,
-    '[': 219, ']': 221, '\\': 220
+        backspace: 8, tab: 9, clear: 12,
+        enter: 13, 'return': 13,
+        esc: 27, escape: 27, space: 32,
+        left: 37, up: 38,
+        right: 39, down: 40,
+        del: 46, 'delete': 46,
+        home: 36, end: 35,
+        pageup: 33, pagedown: 34,
+        ',': 188, '.': 190, '/': 191,
+        '`': 192, '-': 189, '=': 187,
+        ';': 186, '\'': 222,
+        '[': 219, ']': 221, '\\': 220
   }
 
 var keyev = function(key, event){
@@ -45,20 +46,21 @@ var keyev = function(key, event){
 
       } // end keyev
 
-function change_diapo(diapo_index, diapo_max, event, socket){
+function change_diapo(event, socket){
 
       /*
       Change diapo with arrow left or right
       */
 
       if (event.keyCode == 39){                                   // Increment
-            if ((diapo_index+1) < diapo_max){ diapo_index += 1 }
+            if ( (diapo_index + 1) < diapo_max ){ diapo_index += 1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
             //screenfull.request();
             }
+
       if (event.keyCode == 37){                                   // Decrement
-            if ((diapo_index-1) > -1){ diapo_index += -1 }
+            if ( (diapo_index - 1) > -1 ){ diapo_index += -1 }
             location.replace("d{}".format(diapo_index))
             socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
             //screenfull.request();
@@ -69,8 +71,7 @@ function change_diapo(diapo_index, diapo_max, event, socket){
 
 //------------------------
 
-
-//color_bar = 'violet'
+color_bar = "{{color_bar}}" //'violet'
 
 function set_page_num_and_slider(diapo_index){
 
@@ -78,26 +79,19 @@ function set_page_num_and_slider(diapo_index){
       Set the page number and position in the slider
       */
 
-      if (diapo_index!=0){
+      if (diapo_index != 0){
 
-            var numpage = diapo_index+'/'+(parseInt(diapo_max)-1)
+            var numpage = diapo_index + '/' + (parseInt(diapo_max)-1)
             //alert(numpage)
             $('#content').append($('</p>').attr('id', 'num').text(numpage))
             $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px','z-index':'100'})
 
-            socket.on('config_params',function(config_params){
-              
-                var params = JSON.parse(config_params)
-                color_bar = params.color_bar
-
-                var param_slider_x = [{'xbar':10,
-                                      'x': diapo_index*1000/diapo_max,
-                                      'ybar':50, 'y':50,
-                                      'col': color_bar, 'dir':'x',
-                                      'slength': 2000, 'action':chgx}]
-                slide(param_slider_x, svg)  // 'violet'
-
-             }) // end socket
+            param_slider_x = [{'xbar': 10,
+                               'x': diapo_index*1000/diapo_max,
+                               'ybar': 50, 'y': 50,
+                               'col': color_bar, 'dir': 'x',
+                               'slength': 2000, 'action': chgx}]
+            slide(param_slider_x, svg)  // 'violet'
 
         } // end if
 
@@ -107,19 +101,23 @@ function set_page_num_and_slider(diapo_index){
 
 $('h1').css({'right':'5%'})
 var diapo_index = null
-socket.on('numdiap', function(text){
-      diapo_index = parseInt(text)
+socket.on('numdiap', function(numdiap){
+      diapo_index = parseInt(numdiap)
       set_page_num_and_slider(diapo_index)
      })  // index of current diap
 var diapo_max = null
-socket.on('maxdiap', function(text){ diapo_max = text })        // number max of diap
+socket.on('maxdiap', function(text){
+  diapo_max = text
+  socket.emit('params','')
+ })        // number max of diapo
+
 $( document ).keydown(function() {                              // pass to a new diapo
-    diapo_index = change_diapo(diapo_index, diapo_max, event, socket)
+    diapo_index = change_diapo(event, socket)
 });
 
 //------------------ New diapo
 
-key('ctrl+d', function(){                      // Add a new diapo
+key('ctrl+p', function(){                      // Add a new diapo
       socket.emit('make_new_diap', '')
       alert('adding a new diapo !!!!!');
       return false
@@ -152,6 +150,14 @@ key('ctrl+a', function(){         // go to the global view of the slides..
 key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
+
+//------------------ delete the slide
+
+key('ctrl+x', function(){
+    pos_before = diapo_index-1   //
+    // window.location.href = 'd' + pos_before;
+    // socket.emit('delete', diapo_index)
+    });
 
 //----------------------- general configuration
 
@@ -719,15 +725,15 @@ $('p figure').each(function(){
 
 key('ctrl+i', function(){
 
-  /*
-  Fixing image position..
-  */
+      /*
+      Fixing image position..
+      */
 
-  $('p figure').each(function(){
-      var pos = $(this).offset()
-      socket.emit('pos_img',$(this).attr('id').slice(0,-3) + '§§' + JSON.stringify(pos)) // see why addition of a number of three cifers..
+      $('p figure').each(function(){
+          var pos = $(this).offset()
+          socket.emit('pos_img', $(this).attr('id').slice(0,-3) + '§§' + JSON.stringify(pos)) // see why addition of a number of three cifers..
 
-  })
+      })
 })
 
 //--------------------------------  Help syntax
