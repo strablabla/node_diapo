@@ -38,7 +38,6 @@ nunjucks.configure('views', {
     watch:true
 });
 
-
 function make_png(i){
 
   // load from an external file
@@ -176,7 +175,7 @@ io.sockets.on('connection', function (socket) {
       fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
           if (err) { return console.log(err); }
           config_params = JSON.parse(config_contents);
-      });
+        });
 
       socket.on('numdiap', function(text){
             diapo_index = text
@@ -195,21 +194,21 @@ io.sockets.on('connection', function (socket) {
 
       socket.on('return', function(new_text) {       // change html with textarea
             modify.modify_html_with_newtext(socket, fs, util, new_text, diapo_index)
-        }); // end socket.on return
+         }); // end socket.on return
 
       //---------------------------------------- Make a new diapo..
 
       socket.on('make_new_diap', function(){           // Ctrl + D
             modify.modify_html_with_newtext(socket, fs, util, ' ', numdiap)
             main_init()
-      })
+          })
 
       //---------------------------------------- Show the memos
 
       socket.on('show_memos', function(){             // Ctrl + M
             console.log('#####################  received show memos !!!! ')
             io.emit('trigger_memos', ''); // triggers memos in diapo.html..
-      })
+          })
 
       //---------------------------------------- Full screen
 
@@ -217,28 +216,28 @@ io.sockets.on('connection', function (socket) {
             console.log('#####################  full screen !!!! ')
             fullscreen = !fullscreen
             io.emit('fullscreen', ''); //
-      })
+          })
 
       //---------------------------------------- go to md
 
       socket.on('markdown', function(){             //
             console.log('###### go to md !!!! ')
             io.emit('markdown', ''); //
-      })
+          })
 
       //---------------------------------------- show syntax
 
       socket.on('syntax', function(){             //
             console.log('###### syntax!!!! ')
             io.emit('syntax', ''); //
-      })
+          })
 
       //---------------------------------------- show config
 
       socket.on('config', function(){             //
             console.log('###### config!!!! ')
             io.emit('config', ''); //
-      })
+          })
 
       //---------------------------------  Scroll
 
@@ -252,12 +251,25 @@ io.sockets.on('connection', function (socket) {
           console.log('#################  /d{}'.format(namediap))
           fs.unlink('views/diapos/d{}.html'.format(namediap), function (err) { if (err) throw err; })
           fs.unlink('views/diapos/diapo{}.html'.format(namediap), function (err) { if (err) throw err; console.log('File deleted!'); })
+
+          //------------------- rename
+
+          for (i = parseInt(namediap) + 1; i < numdiap ; i++ ){
+
+              fs.rename('views/diapos/d{}.html'.format(i),'views/diapos/d{}.html'.format(i-1), (err) => { if (err) throw err; });
+              fs.rename('views/diapos/diapo{}.html'.format(i),'views/diapos/diapo{}.html'.format(i-1), (err) => { if (err) throw err; });
+              if (i == numdiap){console.log('Renamed the slides !')}
+
+          }
+
+          //------------------ reroute
+
           main_init()
           app.get('/text', function(req, res){ res.render('text.html') });
           app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
           app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
 
-      }); // end delete
+        }); // end delete
 
       //---------------------------------   Image position..
 

@@ -151,12 +151,19 @@ key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
+//------------------ go to markdown
+
+key('alt+m', function(){         // pass to text..
+    window.location.href = 'all_mini';                    // flip from html to textarea
+  });
+
 //------------------ delete the slide
 
-key('ctrl+x', function(){
+key('alt+ctrl+x', function(){
     pos_before = diapo_index-1   //
-    // window.location.href = 'd' + pos_before;
-    // socket.emit('delete', diapo_index)
+    //alert('delete')
+    window.location.href = 'd' + pos_before;
+    socket.emit('delete', diapo_index)
     });
 
 //----------------------- general configuration
@@ -614,21 +621,25 @@ simple_md = function(text){               // mini markdown for the help
      return htm.html()
  } // end function
 
+//------------------------------- Generic css dict
+
+infos_css_dict = { 'position':'absolute',
+  'top': '50px', 'left':'10px',
+  'padding-left': '10px',
+  'padding-right': '10px',
+  'padding-top' : '50px',
+  'width': '600px','height': '400px',
+  'font-size' : '16px',
+  'background-color':'white',
+  'box-shadow': '8px 8px 12px #aaa',
+  'opacity':'1',
+  'z-index': '100'
+}
+
 //--------------------------------  Help keys
 
 var help_keys = $('<div>').attr('id','help_keys')
-help_keys.css({'position':'absolute',
-              'top': '50px', 'left':'10px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
-              'width': '600px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'
-            })
+help_keys.css(infos_css_dict)
 
 help_keys.draggable()
 $('#content').append(help_keys.hide())
@@ -644,12 +655,16 @@ var keys = function(){/*
 
 * Keys ::
     * ctrl + a : view all the slides
-    * ctrl + d : create new slide
     * alt + h : help
     * ctrl + i : save the position of the picture..
     * ctrl + m : show memos..
+    * alt+m : miniatures
+    * ctrl + p : create new slide
     * alt + s : show text sequentially
     * alt + t : show markdown
+    * alt+ctrl+x : delete slide
+    * > : slide + 1
+    * < : slide - 1
 
 */}.toString().slice(14,-3)
 
@@ -664,18 +679,7 @@ key('alt+k', function(){         // Show the help
 //--------------------------------  Help voice commands
 
 var help_voice_cmds = $('<div>').attr('id','help_voice_cmds')
-help_voice_cmds.css({'position':'absolute',
-              'top': '50px', 'left':'100px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
-              'width': '600px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'
-            })
+help_voice_cmds.css(infos_css_dict)
 
 help_voice_cmds.draggable()
 $('#content').append(help_voice_cmds.hide())
@@ -739,18 +743,7 @@ key('ctrl+i', function(){
 //--------------------------------  Help syntax
 
 var help_syntax = $('<div>').attr('id','help_syntax')
-help_syntax.css({'position':'absolute',
-              'top': '50px', 'left':'100px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
-              'width': '600px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'
-            })
+help_syntax.css(infos_css_dict)
 
 help_syntax.draggable()
 $('#content').append(help_syntax.hide())
@@ -790,18 +783,7 @@ key('alt+s', function(){         // show syntax
 //--------------------------------  Configuration
 
 var config = $('<div>').attr('id','config')
-config.css({'position':'absolute',
-              'top': '50px', 'left':'100px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
-              'width': '600px','height': '400px',
-              'font-size' : '16px',
-              'background-color':'white',
-              'box-shadow': '8px 8px 12px #aaa',
-              'opacity':'1',
-              'z-index': '100'
-            })
+config.css(infos_css_dict)
 
 config.draggable()
 $('#content').append(config.hide())
