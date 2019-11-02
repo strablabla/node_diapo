@@ -257,7 +257,10 @@ io.sockets.on('connection', function (socket) {
           for (i = parseInt(namediap) + 1; i < numdiap ; i++ ){
 
               fs.rename('views/diapos/d{}.html'.format(i),'views/diapos/d{}.html'.format(i-1), (err) => { if (err) throw err; });
-              fs.rename('views/diapos/diapo{}.html'.format(i),'views/diapos/diapo{}.html'.format(i-1), (err) => { if (err) throw err; });
+              //fs.rename('views/diapos/diapo{}.html'.format(i),'views/diapos/diapo{}.html'.format(i-1), (err) => { if (err) throw err; });
+              fs.unlink('views/diapos/diapo{}.html'.format(i), function (err) { if (err) throw err; })
+              modify.new_jinja(fs,i-1)
+              //new_jinja(fs, diapo_index)
               if (i == numdiap){console.log('Renamed the slides !')}
 
           }
