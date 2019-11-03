@@ -86,7 +86,7 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos1126/314
+!pos1123/120
 !['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
 
 !eq ax^2+bx+c =
@@ -213,8 +213,16 @@ $memo1
 
  --------------- diap11 ----------------- 
 
-  # diapo 11
+  
 
  --------------- diap12 ----------------- 
 
-  # diapo 12
+  
+
+ --------------- diap13 ----------------- 
+
+  
+
+ --------------- diap14 ----------------- 
+
+  

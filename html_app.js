@@ -92,10 +92,10 @@ function addget(app,i){           // add Routes
       var adddiap = 'diapos/diapo{}.html'.format(i)
       console.log(addrd + '__' + adddiap)
       fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
-          if (err) { return console.log(err); }
-          config_params = JSON.parse(config_contents);
-          app.get(addrd, function(req, res){ res.render(adddiap, config_params)});
-      });
+            if (err) { return console.log(err); }
+            config_params = JSON.parse(config_contents);
+            app.get(addrd, function(req, res){ res.render(adddiap, config_params) });
+        });
       concat_diapos(i)              // concatenate all the diapo in one file
 }
 
@@ -121,19 +121,49 @@ function main_init(){
 
 }
 
+function other_routes(){
+
+      /*
+      Routing text, all and all_mini..
+      */
+
+      fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+            if (err) { return console.log(err); }
+            //-----------
+            json_params = JSON.parse(config_contents);
+            var dict_numdiap = { "number_diapos" : numdiap }
+            var config_params = Object.assign({}, json_params, dict_numdiap);
+            //-----------
+            app.get('/text', function(req, res){ res.render('text.html', config_params) });
+            app.get('/all', function(req, res){ res.render('diapo_all.html', config_params) });
+            app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', config_params) });
+        });
+
+}
+
+//-------------------- Make all the routings..
+
+function route_all(){
+
+  /*
+  Routing all
+  */
+
+  main_init()
+  other_routes()
+
+}
+
+
 //------------------- Routage
 
-main_init()
-app.get('/text', function(req, res){ res.render('text.html') });
-app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
-app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
+route_all()
 
 //--------------  static addresses
 
 app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('lib'));
-
 
 //-----------------
 
@@ -157,7 +187,59 @@ function findpos_modif_txt(txt, pos, id){
       return new_txt
 }
 
+//------------------ Save image position
 
+function save_image_position(infos){
+
+      /*
+      Image position is saved when ctrl+i is executed..
+      */
+
+      console.log(infos)
+      var id = infos.split('§§')[0]
+      var pos = JSON.parse(infos.split('§§')[1])
+      fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
+              if (err) { return console.log(err); }
+              new_txt = findpos_modif_txt(txt, pos, id)
+              dest = 'views/diapos/d{}.html'.format(diapo_index)
+              fs.writeFile(dest , new_txt, function(err) {
+                  if(err) { return console.log(err); }
+                  console.log("saved {}".format(dest));
+                  });    // end writeFile
+            }) // end readFile
+
+
+}
+
+//------------------------ Delete slide
+
+function delete_slide(namediap){
+
+    /*
+    Delete
+    */
+
+    console.log('#################  /d{}'.format(namediap))
+    fs.unlink('views/diapos/d{}.html'.format(namediap), function (err) { if (err) throw err; })
+    fs.unlink('views/diapos/diapo{}.html'.format(namediap), function (err) { if (err) throw err; console.log('File deleted!'); })
+
+}
+
+//----------------------- Shift and rename slides after delete ..
+
+function shift_rename_slides(i){
+
+      /*
+      Shift and rename
+      */
+
+      fs.rename('views/diapos/d{}.html'.format(i),'views/diapos/d{}.html'.format(i-1), (err) => { if (err) throw err; });
+      fs.unlink('views/diapos/diapo{}.html'.format(i), function (err) { if (err) throw err; })
+      modify.new_jinja(fs,i-1)
+      //new_jinja(fs, diapo_index)
+      if (i == numdiap){console.log('Renamed the slides !')}
+
+}
 
 //--------------  websocket
 
@@ -172,10 +254,10 @@ io.sockets.on('connection', function (socket) {
       socket.emit('numdiap', diapo_index)
       socket.emit('maxdiap', numdiap) // diapo_max
 
-      fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
-          if (err) { return console.log(err); }
-          config_params = JSON.parse(config_contents);
-        });
+      // fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+      //     if (err) { return console.log(err); }
+      //     config_params = JSON.parse(config_contents);
+      //   });
 
       socket.on('numdiap', function(text){
             diapo_index = text
@@ -248,54 +330,33 @@ io.sockets.on('connection', function (socket) {
 
       socket.on('delete', function(namediap) {
 
-          console.log('#################  /d{}'.format(namediap))
-          fs.unlink('views/diapos/d{}.html'.format(namediap), function (err) { if (err) throw err; })
-          fs.unlink('views/diapos/diapo{}.html'.format(namediap), function (err) { if (err) throw err; console.log('File deleted!'); })
+          delete_slide(namediap)
 
           //------------------- rename
 
           for (i = parseInt(namediap) + 1; i < numdiap ; i++ ){
 
-              fs.rename('views/diapos/d{}.html'.format(i),'views/diapos/d{}.html'.format(i-1), (err) => { if (err) throw err; });
-              //fs.rename('views/diapos/diapo{}.html'.format(i),'views/diapos/diapo{}.html'.format(i-1), (err) => { if (err) throw err; });
-              fs.unlink('views/diapos/diapo{}.html'.format(i), function (err) { if (err) throw err; })
-              modify.new_jinja(fs,i-1)
-              //new_jinja(fs, diapo_index)
-              if (i == numdiap){console.log('Renamed the slides !')}
+              shift_rename_slides(i)
 
           }
 
-          //------------------ reroute
+          //------------------ reroute all after delete
 
-          main_init()
-          app.get('/text', function(req, res){ res.render('text.html') });
-          app.get('/all', function(req, res){ res.render('diapo_all.html', { number_diapos : numdiap }) });
-          app.get('/all_mini', function(req, res){ res.render('diapo_all_small.html', { number_diapos : numdiap }) });
+          route_all()
 
         }); // end delete
 
       //---------------------------------   Image position..
 
-      socket.on('pos_img', function(infos) {
-          console.log(infos)
-          var id = infos.split('§§')[0]
-          var pos = JSON.parse(infos.split('§§')[1])
-          fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
-                  if (err) { return console.log(err); }
-                  new_txt = findpos_modif_txt(txt, pos, id)
-                  dest = 'views/diapos/d{}.html'.format(diapo_index)
-                  fs.writeFile(dest , new_txt, function(err) {
-                      if(err) { return console.log(err); }
-                      console.log("saved {}".format(dest));
-                      });    // end writeFile
-                }) // end readFile
-       })
+      socket.on('pos_img', function(infos){
+          save_image_position(infos)
+      })
+
 
 }); // end sockets.on connection
 
 var port = 3067
 server.listen(port);
 var addr = 'http://127.0.0.1:{}/d0'.format(port)
-//diapo_index = 5;
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");

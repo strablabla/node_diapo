@@ -11,7 +11,8 @@
 <script src="codemirror.js"></script>
 <link rel="stylesheet" href="highlight.css">
 {% include 'textarea.html' %}
- <script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="keymaster.js"></script>
 
  <script>
 
@@ -44,13 +45,18 @@
 
             code_mirror_add_func(editor) // add various functionnalities to code mirror
 
-             //------------- from textarea to html
+             //------------- return from textarea to html
 
-             $('#submit').click(function(){               // submit new text.. from text to html
+             $('#submit').click(function(){          // submit new text.. from text to html
                    var new_text = editor.getValue()
                    socket.emit('return', new_text);
                  }) // end click
-      })
+
+             key('alt+t', function(){                 // return with alt+t key
+                 var new_text = editor.getValue()
+                 socket.emit('return', new_text);
+             })
+      }) // end socket.on("scroll")
 
     socket.on('scroll_html', function(pos) {  // save html position of scroll
             scroll_html_pos = pos
@@ -72,9 +78,9 @@
 
     //-------------  pattern
 
-    socket.on('pattern', function(patt) {
-          pattern = patt
-      })
+    socket.on('pattern', function(patt) { pattern = patt })
+
+    //--------------- Mouse binding for returning to html
 
     $('.form-group').bind('contextmenu', function(e){  // when clicking right go back to html
           e.preventDefault();
@@ -82,10 +88,14 @@
           return false;
           });
 
+    //--------------- retrieve diapo index..
+
    var diapo_index = null
    socket.on('numdiap', function(text){       // retrieve diapo index
             diapo_index = text
           })
+
+    //--------------- return to diapo of current index.
 
     socket.on('page_return_to_html', function(){
           socket.emit('scroll_html', scroll_html_pos);
@@ -93,10 +103,6 @@
           location.replace("d{}".format(diapo_index))
 
     })
-
-  key('alt+t', function(){
-    alert('TTTTT')
-  })
 
 
 </script>
