@@ -154,7 +154,6 @@ function route_all(){
 
 }
 
-
 //------------------- Routage
 
 route_all()
@@ -165,7 +164,7 @@ app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('lib'));
 
-//-----------------
+//-----------------  modify the value of position in the slide..
 
 function findpos_modif_txt(txt, pos, id){
 
@@ -207,7 +206,6 @@ function save_image_position(infos){
                   console.log("saved {}".format(dest));
                   });    // end writeFile
             }) // end readFile
-
 
 }
 
@@ -254,11 +252,6 @@ io.sockets.on('connection', function (socket) {
       socket.emit('numdiap', diapo_index)
       socket.emit('maxdiap', numdiap) // diapo_max
 
-      // fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
-      //     if (err) { return console.log(err); }
-      //     config_params = JSON.parse(config_contents);
-      //   });
-
       socket.on('numdiap', function(text){
             diapo_index = text
             console.log('in html_apps, diapo_index is ' + diapo_index)
@@ -271,6 +264,15 @@ io.sockets.on('connection', function (socket) {
           });                        // end fs.readFile
       util.save_regularly()          // save regularly the text..
       socket.on('join', function(data) { socket.emit('scroll', patt) }); // end socket.on join
+
+      //-----------------  Read the file all_diap.md
+
+      fs.readFile('views/saved/all_diap.md', 'utf8', function (err,txt) {
+            if (err) { return console.log(err); }
+            //console.log(txt)
+            io.emit('tags_voice',txt)
+
+            }) // end readFile
 
       //-------------------------------- From textarea to html
 

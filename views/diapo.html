@@ -361,6 +361,17 @@ function p_match_memos(elem){
        })
 }
 
+//------------------------ hiding voice tag
+
+$('p').each(function(){
+    var regtagv = new RegExp( '!tagv' );
+    if ( $(this).text().match(regtagv) ){
+         $(this).hide()         // hide the tag $memo
+    }
+})
+
+//------------------------
+
 function change_pos(elem){
 
       /*

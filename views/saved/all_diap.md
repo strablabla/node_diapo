@@ -94,6 +94,8 @@ a
 \left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
 \left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
 
+!tagv ballon
+
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
@@ -161,7 +163,7 @@ nous paraissent former une masse unie.
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
 
-
+!tagv car
 
  --------------- diap7 ----------------- 
 
@@ -224,5 +226,17 @@ $memo1
   
 
  --------------- diap14 ----------------- 
+
+  
+
+ --------------- diap15 ----------------- 
+
+  
+
+ --------------- diap16 ----------------- 
+
+  
+
+ --------------- diap17 ----------------- 
 
   

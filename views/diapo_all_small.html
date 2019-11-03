@@ -18,9 +18,12 @@
 <script>
 
 var socket = io.connect();
-var nbcol = {{mosaic_width}}    // nb of columns in the mosaic
+var nbcol = {{nb_horiz_mosaic}}    // nb of columns in the mosaic
 var nblines = Math.round({{number_diapos}}/nbcol)  // nb of lines in the mosaic //
+var modulo = {{number_diapos}}%nbcol
+if ( modulo != 0 ){nblines += 1}
 make_the_mosaic(nblines,nbcol)
+alert(nblines + ' ' + nbcol)
 
 function one_diap(currdiap,i,j){
 
@@ -50,7 +53,7 @@ function make_the_mosaic(nblines,nbcol){
                var currdiap = i*nbcol + j
                if (currdiap < {{number_diapos}}){
 
-                  one_diap(currdiap,i,j)
+                    one_diap(currdiap,i,j)
 
               } // if
           } // j

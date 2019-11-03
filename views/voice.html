@@ -184,6 +184,34 @@ artyom.addCommands(dct_del_diap);
 //
 // }
 
+// ----------------------- Voice tags
+
+
+socket.on('tags_voice', function(text){
+
+     txtcut = text.split('--------------- diap')
+
+     var dic_tag_voice_diapo =  {}
+
+     var regtagv = /\!tagv\s\w+/
+     for (i in txtcut){
+          var tm = txtcut[i].match(regtagv)
+          if (tm){
+              //alert(i-1)
+              var name_tag = tm[0].split('!tagv')[1].trim()
+              //alert(name_tag + ' at position ' + (i-1))
+              var numd = parseInt(i-1)
+              dic_tag_voice_diapo[numd] = name_tag
+
+          }
+
+     }
+
+     add_commands(dic_tag_voice_diapo, go_to_diapo)
+
+
+ })
+
 // ----------------------- Show help
 
 
