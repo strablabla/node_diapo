@@ -19,25 +19,43 @@
 
 var socket = io.connect();
 var nbcol = 5    // nb of columns in the mosaic
-var nblines = {{number_diapos}}%nbcol  // nb of lines in the mosaic
+var nblines = Math.round({{number_diapos}}/nbcol)  // nb of lines in the mosaic //
+make_the_mosaic(nblines,nbcol)
 
-for (var i=0; i < nblines; i++){
-    for (var j=0; j < nbcol; j++){
-         var currdiap = i*nbcol+j
-         if (currdiap < {{number_diapos}}){
+function one_diap(currdiap,i,j){
 
-              var posx=  50 + 300*j     // pos x for iframe
-              var posy=  150 + 250*i    // pos y for iframe
-              //------
-              var posxd =  posx + 150  // pos x for name
-              var posyd =  posy -3     // pos y for name
-              //-------
-              $('#frame' + currdiap).css({'top' : posy, 'left' : posx})
-              $('#d'+currdiap).css({'top' : posyd, 'left' : posxd, 'font-size' : '10px'})
+      /*
+      Create one diapo
+      */
 
-      }
-  }
+      var posx=  50 + 300*j     // pos x for iframe
+      var posy=  150 + 250*i    // pos y for iframe
+      //------
+      var posxd =  posx + 150  // pos x for name
+      var posyd =  posy -3     // pos y for name
+      //-------
+      $('#frame' + currdiap).css({'top' : posy, 'left' : posx})
+      $('#d' + currdiap).css({'top' : posyd, 'left' : posxd, 'font-size' : '10px'})
 
+}
+
+function make_the_mosaic(nblines,nbcol){
+
+      /*
+      Build the complete mosaic representation..
+      */
+
+      for (var i=0; i < nblines; i++){    // sweep on the lines
+          for (var j=0; j < nbcol; j++){  // sweep on the columns
+               var currdiap = i*nbcol + j
+               if (currdiap < {{number_diapos}}){
+
+                  one_diap(currdiap,i,j)
+
+              } // if
+          } // j
+
+      } // i
 }
 
 $('.name_diap').click(function(){        // return to the full view diapo

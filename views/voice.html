@@ -87,6 +87,31 @@ socket.on('maxdiap', function(text){
  })    // number max of diap
 
 
+//----------------------
+
+dct_after = {
+    indexes:['diapo suivante'], // These spoken words will trigger the execution of the command
+    action: function(){
+        if ( (diapo_index + 1) < diapo_max ){ diapo_index += 1 }
+        location.replace("d{}".format(diapo_index))
+        socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
+     }
+  }
+artyom.addCommands(dct_after);
+
+//-------------
+
+dct_before = {
+    indexes:['diapo précédente'], // These spoken words will trigger the execution of the command
+    action: function(){
+        if ( (diapo_index - 1) > -1 ){ diapo_index += -1 }
+        location.replace("d{}".format(diapo_index))
+        socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
+     }
+  }
+artyom.addCommands(dct_before);
+
+
 // --------------------  Global view of all the slides..
 
 
@@ -106,7 +131,7 @@ artyom.addCommands(dct_synopt);
 
 
 dct_mosaic = {
-    indexes:['mosaïque'], // These spoken words will trigger the execution of the command
+    indexes:['mosaïque', 'miniatures'], // These spoken words will trigger the execution of the command
     action: function(){
             //alert("small slides !!!")
             location.replace("all_mini")
@@ -129,6 +154,35 @@ dct_new_diap = {
 
 artyom.addCommands(dct_new_diap);
 
+//------------------------ Delete a slide
+
+dct_del_diap = {
+    indexes:['efface la diapo'],            // These spoken words will trigger the execution of the command
+    action: function(){                      // alt+ctrl+x
+        pos_before = diapo_index-1   //
+        window.location.href = 'd' + pos_before;
+        socket.emit('delete', diapo_index)
+     }
+  }
+
+artyom.addCommands(dct_del_diap);
+
+// ----------------------- Reinitialize sequential view..
+
+// function progressive_visu_hide_show(elem,showline,count,reg){
+//
+//     /*
+//     hide show...
+//     */
+//
+//     if ( !showline  ){ elem.hide() } // hide if after tag !stp..
+//     else if (showline & ( count > 0 )){
+//         elem.show()
+//         elem.find('li').show()
+//         elem.html(elem.html().replace(reg,''))
+//      }
+//
+// }
 
 // ----------------------- Show help
 

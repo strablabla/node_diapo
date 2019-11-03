@@ -185,8 +185,7 @@ $('#gobottom').hide()     // hide go to bottom
 function match__inject_stop(elem, patt){
 
       /*
-      Generic match replace
-      patt : pattern
+      Inject class stop
       */
 
       elem.each(function(){
@@ -199,7 +198,7 @@ function match__inject_stop(elem, patt){
        })
 }
 
-match__inject_stop($('li'), /\!stp/)
+match__inject_stop($('li'), /\!stp/) // inject Class stop
 
 function progressive_visu_hide_show(elem,showline,count,reg){
 
@@ -239,17 +238,17 @@ function progressive_visualization(stp){
     })
 }
 
-function remove_patt_change_css(elem,txt,patt,dic_css){
+function remove_patt_change_css(elem,txt,patt,dict_css){
 
       /*
       Remove the pattern and modify the css
       patt : pattern
-      dic_css : dictionary of the css parameters..
+      dict_css : dictionary of the css parameters..
       */
 
       var new_txt = txt.replace(patt,'')
       elem.text(new_txt)
-      elem.css(dic_css)
+      elem.css(dict_css)
 
 }
 
@@ -277,19 +276,19 @@ function frame_col(){
 
 frame_col() // frame with color around the tag..
 
-function elem_match__inject_css(elem, patt, dic_css){
+function elem_match__inject_css(elem, patt, dict_css){
 
       /*
       Generic match replace
       patt : pattern
-      dic_css : dictionary of the css parameters..
+      dict_css : dictionary of the css parameters..
       */
 
       if (patt==/\!fb/){alert('patt is fb')}
       elem.each(function(){
            var txt = $(this).text()
            if (txt.match(patt)){
-               remove_patt_change_css($(this),txt,patt,dic_css)
+               remove_patt_change_css($(this),txt,patt,dict_css)
                var class_added = patt.toString().slice(3,-1)
                //alert("class_added " + class_added)
                $(this).attr('class',class_added) // adding Class
@@ -300,15 +299,15 @@ function elem_match__inject_css(elem, patt, dic_css){
        })
 }
 
-function p_match__inject_css(patt, dic_css){
+function p_match__inject_css(patt, dict_css){
 
       /*
       Generic match replace
       patt : pattern
-      dic_css : dictionary of the css parameters..
+      dict_css : dictionary of the css parameters..
       */
 
-      elem_match__inject_css($("p"), patt, dic_css)
+      elem_match__inject_css($("p"), patt, dict_css)
 
 }
 
@@ -621,7 +620,22 @@ simple_md = function(text){               // mini markdown for the help
      return htm.html()
  } // end function
 
-//------------------------------- Generic css dict
+ //------------------------------- Generic css for alerts
+
+ alerts_css_dict = { 'position':'absolute',
+   'top': '200px', 'left':'100px',
+   'padding-left': '10px',
+   'padding-right': '10px',
+   'padding-top' : '50px',
+   'width': '400px','height': '200px',
+   'font-size' : '16px',
+   'background-color':'grey',
+   'box-shadow': '8px 8px 12px #aaa',
+   'opacity':'1',
+   'z-index': '100'
+ }
+
+//------------------------------- Generic css dict for infos
 
 infos_css_dict = { 'position':'absolute',
   'top': '50px', 'left':'10px',
@@ -672,7 +686,7 @@ $('#help_keys').html(simple_md(keys))
 
 //--------------------- Show the help
 
-key('alt+k', function(){         // Show the help
+key('alt+k', function(){         // Show the help, voice : "aide"
     $('#help_keys').toggle()
   });
 
@@ -714,7 +728,7 @@ key('alt+v', function(){         // Show the help
 
 progressive_visualization(stp)
 
-key('alt+n', function(){  // next
+key('alt+n', function(){  // next lines
     stp += 1;
     progressive_visualization(stp)
 })
@@ -743,22 +757,29 @@ key('ctrl+i', function(){
 //--------------------------------  Help syntax
 
 var help_syntax = $('<div>').attr('id','help_syntax')
+infos_css_dict.height = 700;
+//infos_css_dict['padding-left'] = -50;
 help_syntax.css(infos_css_dict)
-
 help_syntax.draggable()
 $('#content').append(help_syntax.hide())
 help_syntax.click(function(){
     $(this).toggle()
 })
 
-//------------------------ available voice commands
+//------------------------ available Syntax
 
 var syntax = function(){/*
 
 # syntax
 
 * Syntax ::
-    * blabla
+    * diese : title
+    * !head :  header
+    * !foot : footer
+    * blabla !fo, put blabla in orange frame
+    * $memo0 : create a numbered memo..
+    * !memo0 : at the end of a line, indicates where to apply the memo..
+    * !stp : stop the slide undtil this sign..
 
 */}.toString().slice(14,-3)
 
@@ -767,15 +788,11 @@ $('#help_syntax').html(simple_md(syntax))
 //-------  show syntax
 
 socket.on('syntax', function(){
-
      /*
      toggle syntax
      */
-
      $('#help_syntax').toggle()
-
     })
-
 key('alt+s', function(){         // show syntax
     $('#help_syntax').toggle()
 })
