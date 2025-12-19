@@ -16,32 +16,34 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
- --------------- diap3 ----------------- 
+ --------------- diap1 ----------------- 
 
- 
-# Inspection des travaux finis
+ # diap d1
 
-## diapo 3 !fg
+## diapo 1 !fo
 
-!head tête ou pas..
+!head example d'autre en-tête, vérification du placement
 
-* This is another day in Paradise
-* La saga des sagouins 
+* Le rêve de la "supraconductivité"cb !memo0 
+* pinjlap "zaaaammm zooom zuumm "cg 
+    * ziiipp
+* 1987: la révolution aa  aa a aa a !stp
+    * "ziberwinger.."u ..
+* 10 "ans plus tard"co , le mystère plane toujours !stp
+	* par le passé c'était déjà assez obscur..
+* Les électrons fortement corrélés !memo1 !stp
 
-!pos1123/120
-!['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
-!eq ax^2+bx+c =
-a
-\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
-\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
+$memo0
 
-!tagv ballon
+* Depuis quand est-ce un rêve??
+    * beaucoup d'idées d'application..
 
+$memo1
 
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
+* ziber..
+    * qu'est ce que ziber vraiment ?
 
 
  --------------- diap2 ----------------- 
@@ -69,6 +71,34 @@ a
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
+
+
+
+ --------------- diap3 ----------------- 
+
+ 
+# Inspection des travaux finis
+
+## diapo 3 !fg
+
+!head tête ou pas..
+
+* This is another day in Paradise
+* La saga des sagouins 
+
+!pos1123/120
+!['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
+
+!eq ax^2+bx+c =
+a
+\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
+\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
+
+!tagv ballon
+
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
 
@@ -135,36 +165,6 @@ nous paraissent former une masse unie.
 
 !tagv car
 
- --------------- diap1 ----------------- 
-
- # diap d1
-
-## diapo 1 !fo
-
-!head example d'autre en-tête, vérification du placement
-
-* Le rêve de la "supraconductivité"cb !memo0 
-* pinjlap "zaaaammm zooom zuumm "cg 
-    * ziiipp
-* 1987: la révolution aa  aa a aa a !stp
-    * "ziberwinger.."u ..
-* 10 "ans plus tard"co , le mystère plane toujours !stp
-	* par le passé c'était déjà assez obscur..
-* Les électrons fortement corrélés !memo1 !stp
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-$memo0
-
-* Depuis quand est-ce un rêve??
-    * beaucoup d'idées d'application..
-
-$memo1
-
-* ziber..
-    * qu'est ce que ziber vraiment ?
-
-
  --------------- diap7 ----------------- 
 
  # nouvelle diapo..
@@ -217,15 +217,23 @@ $memo1
 
   
 
- --------------- diap13 ----------------- 
-
-  
-
  --------------- diap12 ----------------- 
 
   
 
+ --------------- diap13 ----------------- 
+
+  
+
  --------------- diap14 ----------------- 
+
+  
+
+ --------------- diap15 ----------------- 
+
+  
+
+ --------------- diap16 ----------------- 
 
   
 
