@@ -169,44 +169,154 @@ app.use(express.static('lib'));
 function findpos_modif_txt(txt, pos, id){
 
       /*
+      Find image or equation position marker and update it
+      For images: id is like "Turner-Fire..." from %id% in markdown
+      For equations: id is like "eq-0" indicating the Nth equation
       */
 
+      if (!txt) {
+          console.error('findpos_modif_txt: txt is empty or undefined')
+          return txt
+      }
+
       list_lines = txt.split('\n')
-      console.log(list_lines[i])
-      for (var i=0; i < list_lines.length; i++){
-            if (list_lines[i].match(id)){
-                console.log('the pattern was found at line  ' + i)
-                if (list_lines[i-1].match(/\!pos/)){
-                    console.log("found a pos " + list_lines[i-1])
-                    list_lines[i-1] = '!pos' + pos.left + '/' + pos.top
-                } // end if
-            } // end if
+      console.log('Looking for pattern ID:', id)
+      console.log('Position to save:', pos)
+
+      var found = false;
+
+      // Check if this is an equation (id starts with "eq-")
+      console.log('Checking if ID matches equation pattern /^eq-\\d+$/:', id.match(/^eq-\d+$/))
+      if (id.match(/^eq-\d+$/)) {
+          console.log('This is an equation ID!')
+          var eq_index = parseInt(id.split('-')[1])
+          var eq_count = 0
+          console.log('Looking for equation index:', eq_index)
+
+          for (var i=0; i < list_lines.length; i++){
+              if (list_lines[i].match(/\!eq/)){
+                  console.log('Found !eq at line ' + i + ', eq_count=' + eq_count)
+                  if (eq_count === eq_index) {
+                      console.log('Equation ' + eq_index + ' found at line ' + i + ': ' + list_lines[i])
+                      found = true;
+                      if (i > 0 && list_lines[i-1].match(/\!pos/)){
+                          console.log("Found !pos marker at line " + (i-1) + ": " + list_lines[i-1])
+                          list_lines[i-1] = '!pos' + Math.round(pos.left) + '/' + Math.round(pos.top)
+                          console.log("Updated to: " + list_lines[i-1])
+                      } else {
+                          console.log("No !pos marker found at line " + (i-1))
+                      }
+                      break;
+                  }
+                  eq_count++;
+              }
+          }
+      } else {
+          console.log('This is NOT an equation ID, treating as image')
+          // For images, search for the ID pattern (original behavior)
+          for (var i=0; i < list_lines.length; i++){
+              if (list_lines[i].match(id)){
+                  console.log('Pattern "' + id + '" found at line ' + i + ': ' + list_lines[i])
+                  found = true;
+                  if (i > 0 && list_lines[i-1].match(/\!pos/)){
+                      console.log("Found !pos marker at line " + (i-1) + ": " + list_lines[i-1])
+                      list_lines[i-1] = '!pos' + Math.round(pos.left) + '/' + Math.round(pos.top)
+                      console.log("Updated to: " + list_lines[i-1])
+                  } else {
+                      console.log("No !pos marker found at line " + (i-1) + ", it contains: " + (i > 0 ? list_lines[i-1] : 'N/A'))
+                  }
+              } // end if
           } // end for
+      }
+
+      if (!found) {
+          console.error('Pattern "' + id + '" was NOT found in the file!')
+      }
+
       new_txt = list_lines.join('\n')
+
+      if (!new_txt) {
+          console.error('findpos_modif_txt: new_txt is empty, returning original txt')
+          return txt
+      }
+
       return new_txt
 }
 
-//------------------ Save image position
+//------------------ Save image position with batching
+
+var imagePosQueue = [];
+var imagePosTimer = null;
 
 function save_image_position(infos){
 
       /*
       Image position is saved when ctrl+i is executed..
+      Accumulates positions for 100ms to handle multiple images
       */
 
       console.log(infos)
       var id = infos.split('§§')[0]
       var pos = JSON.parse(infos.split('§§')[1])
+
+      // Add to queue
+      imagePosQueue.push({id: id, pos: pos});
+
+      // Clear existing timer
+      if (imagePosTimer) {
+          clearTimeout(imagePosTimer);
+      }
+
+      // Set timer to process queue after 100ms
+      imagePosTimer = setTimeout(function() {
+          processImagePosQueue();
+      }, 100);
+}
+
+function processImagePosQueue() {
+      if (imagePosQueue.length === 0) {
+          return;
+      }
+
+      console.log('Processing', imagePosQueue.length, 'image positions');
+
       fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
-              if (err) { return console.log(err); }
-              new_txt = findpos_modif_txt(txt, pos, id)
+              if (err) {
+                  console.error('Error reading file:', err);
+                  imagePosQueue = [];
+                  return;
+              }
+
+              if (!txt || txt.trim() === '') {
+                  console.error('File content is empty, aborting save to prevent data loss');
+                  imagePosQueue = [];
+                  return;
+              }
+
+              // Apply all position updates
+              var new_txt = txt;
+              for (var i = 0; i < imagePosQueue.length; i++) {
+                  new_txt = findpos_modif_txt(new_txt, imagePosQueue[i].pos, imagePosQueue[i].id);
+              }
+
+              // Safety check: don't write if new_txt is empty or too short
+              if (!new_txt || new_txt.trim() === '' || new_txt.length < 10) {
+                  console.error('Generated text is empty or too short, aborting save to prevent data loss');
+                  console.error('Original text length:', txt.length, 'New text length:', new_txt ? new_txt.length : 0);
+                  imagePosQueue = [];
+                  return;
+              }
+
               dest = 'views/diapos/d{}.html'.format(diapo_index)
               fs.writeFile(dest , new_txt, function(err) {
-                  if(err) { return console.log(err); }
-                  console.log("saved {}".format(dest));
+                  if(err) {
+                      console.error('Error writing file:', err);
+                      return;
+                  }
+                  console.log("saved {} with {} image position updates".format(dest, imagePosQueue.length));
+                  imagePosQueue = []; // Clear queue after successful save
                   });    // end writeFile
             }) // end readFile
-
 }
 
 //------------------------ Delete slide

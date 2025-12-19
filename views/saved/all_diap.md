@@ -48,7 +48,8 @@ $memo1
 
  --------------- diap2 ----------------- 
 
- 
+ # diapo 2
+
 # A general intro stuff blabla
 
 ## diapo 2 !fb
@@ -56,22 +57,20 @@ $memo1
 !head tête ou pas..
 
 * Rêve ou réalité?
-* la révolution des "Siths"co  
+* la révolution des "Siths"co
 
-!pos314/411
+!pos386/446
 !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos904/235
-!['turner' 200x200 %magnolia%](magnolia.jpg)
+!pos847/276
+!['magno' 200x200 %magnolia%](magnolia.jpg)
 
-!pos0/300
+!pos995/661
 !eq e^{i\pi}=-1
 
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
 
 
  --------------- diap3 ----------------- 
@@ -86,7 +85,7 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos1123/120
+!pos1022/291
 !['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
 
 !eq ax^2+bx+c =
@@ -212,6 +211,28 @@ $memo1
  --------------- diap10 ----------------- 
 
   # diapo 10
+
+ # A general intro stuff blabla
+
+ ## diapo 10 !fg
+
+ !head tête ou pas..
+
+ * la révolution des "Siths"co
+
+!pos314/411
+ !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
+
+!pos921/269
+ !['turner' 200x200 %magnolia%](magnolia.jpg)
+
+!pos452/713
+ !eq e^{i\pi}=-1
+
+
+
+ !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
 
  --------------- diap11 ----------------- 
 

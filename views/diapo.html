@@ -439,9 +439,23 @@ function make_eq(){
       syntax : !eq e^{i\pi}=-1
       */
 
-      var diceq= {'position':'relative','font-size':'150%',
-                  'text-align':' center '}
+      // Don't set position in diceq - let change_pos() handle it for positioned equations
+      var diceq= {'font-size':'150%', 'text-align':' center '}
       p_match__inject_css(/\!eq/, diceq)
+
+      // Assign unique IDs to equations for drag positioning
+      var eq_counter = 0
+      $('p.eq').each(function(){
+          if (!$(this).attr('id')) {
+              $(this).attr('id', 'eq-' + eq_counter)
+              eq_counter++
+          }
+
+          // If equation doesn't have absolute positioning (no !pos marker), set relative
+          if ($(this).css('position') !== 'absolute') {
+              $(this).css('position', 'relative')
+          }
+      })
 
 }
 
@@ -746,22 +760,61 @@ key('alt+n', function(){  // next lines
 
 //---------------------------------
 
-$('p figure').each(function(){
-    $(this).draggable()
+// Make both images (p figure) and equations (p.eq) draggable
+$('p figure, p.eq').each(function(){
+    var $element = $(this);
+    var wasDragged = false;
+
+    $element.draggable({
+        start: function() {
+            wasDragged = false;
+        },
+        drag: function() {
+            wasDragged = true;
+        },
+        stop: function() {
+            // Keep wasDragged true for a moment after stopping
+            setTimeout(function() {
+                wasDragged = false;
+            }, 200);
+        }
+    });
+
+    // Prevent click after dragging
+    $element.on('click', function(e) {
+        if (wasDragged) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        }
+    });
+
+    $element.find('img').on('click', function(e) {
+        if (wasDragged) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        }
+    });
 })
 
-//------------------------- fixing image's position
+//------------------------- fixing image's and equation's position
 
 key('ctrl+i', function(){
 
       /*
-      Fixing image position..
+      Fixing image and equation position..
       */
 
-      $('p figure').each(function(){
+      $('p figure, p.eq').each(function(){
           var pos = $(this).offset()
-          socket.emit('pos_img', $(this).attr('id').slice(0,-3) + '§§' + JSON.stringify(pos)) // see why addition of a number of three cifers..
-
+          var id = $(this).attr('id')
+          if (id) {
+              // For images, remove the -## suffix (slice 0,-3)
+              // For equations, use the id as-is
+              var cleanId = id.match(/\d{2}$/) ? id.slice(0,-3) : id
+              socket.emit('pos_img', cleanId + '§§' + JSON.stringify(pos))
+          }
       })
 })
 
