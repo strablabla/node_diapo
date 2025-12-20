@@ -60,12 +60,12 @@ $memo1
 * la révolution des "Siths"co
 
 !pos386/446
-!['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
+!['fire in London tower' 300x300 %fire-in-London-tower%](imgs/fire-in-London-tower.jpg)
 
 !pos847/276
-!['magno' 200x200 %magnolia%](magnolia.jpg)
+!['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos995/661
+!pos683/267
 !eq e^{i\pi}=-1
 
 
@@ -85,9 +85,10 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos1022/291
-!['magno' 200x200 %example_of_magnolia%](magnolia.jpg)
+!pos584/488
+!['magno' 200x200 %example_of_magnolia%](imgs/magnolia.jpg)
 
+!pos489/411
 !eq ax^2+bx+c =
 a
 \left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
@@ -159,10 +160,18 @@ nous paraissent former une masse unie.
 * Utilisation de Mathpix.. 
 	* Ceci se fait de manière très simple en sélectionnant une partie du texte.. blabla
 
+!pos799/342
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
+simple texte en format p pour être déplacé.. 
+
+!pos690/552
+!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
 !tagv car
+
+
+
 
  --------------- diap7 ----------------- 
 
@@ -174,11 +183,15 @@ nous paraissent former une masse unie.
 * [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
 * dans cette contrée reculée, en plein milieu de rien..
 	 * ```
-  	bizmuth et belzébuth..
-      ```
+  		bizmuth et belzébuth..
+       ```
 * Catalan equation
 
+!pos790/569
 !eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
+
+!pos1159/86
+!['sapin de Noël' 200x200 %noël%](imgs/20181201_003-1766231418504.jpg)
 
 
  --------------- diap8 ----------------- 
@@ -189,6 +202,8 @@ nous paraissent former une masse unie.
  
  * a list element. !memo0
  * aeaeaea !memo1
+ 
+ !eq E=mc^2
  
  
 $memo0
@@ -221,10 +236,10 @@ $memo1
  * la révolution des "Siths"co
 
 !pos314/411
- !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
+ !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](imgs/Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
 !pos921/269
- !['turner' 200x200 %magnolia%](magnolia.jpg)
+ !['turner' 200x200 %magnolia%](imgs/magnolia.jpg)
 
 !pos452/713
  !eq e^{i\pi}=-1
