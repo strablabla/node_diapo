@@ -1,15 +1,13 @@
 
 <script src="/socket.io/socket.io.js"></script>
 
-<script src="keymaster.js"></script>
-<script src="screenfull.js"></script>
-
-
 <script>
 
 var socket = io.connect();
 
 var stp=0;
+
+console.log('===== DIAPO.HTML SCRIPT STARTING =====');
 
 String.prototype.format = function () {
   var i = 0, args = arguments;
@@ -53,17 +51,18 @@ function change_diapo(event, socket){
       */
 
       if (event.keyCode == 39){                                   // Increment
+            console.log('Arrow RIGHT pressed, diapo_index will be:', diapo_index + 1);
             if ( (diapo_index + 1) < diapo_max ){ diapo_index += 1 }
-            location.replace("d{}".format(diapo_index))
+
+            location.replace("d{}".format(diapo_index));
             socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
-            //screenfull.request();
             }
 
       if (event.keyCode == 37){                                   // Decrement
             if ( (diapo_index - 1) > -1 ){ diapo_index += -1 }
-            location.replace("d{}".format(diapo_index))
+
+            location.replace("d{}".format(diapo_index));
             socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
-            //screenfull.request();
             }
 
       return diapo_index
@@ -81,17 +80,43 @@ function set_page_num_and_slider(diapo_index){
 
       if (diapo_index != 0){
 
-            var numpage = diapo_index + '/' + (parseInt(diapo_max)-1)
-            //alert(numpage)
-            $('#content').append($('</p>').attr('id', 'num').text(numpage))
-            $('#num').css({'position':'absolute','top':'820px','right':'260px', 'font-size':'20px','z-index':'100'})
+            var isInIframe = (window.self !== window.top);
 
-            param_slider_x = [{'xbar': 10,
-                               'x': diapo_index*1000/diapo_max,
-                               'ybar': 50, 'y': 50,
-                               'col': color_bar, 'dir': 'x',
-                               'slength': 2000, 'action': chgx}]
-            slide(param_slider_x, svg)  // 'violet'
+            // In iframe, check if there's a preview parameter in URL
+            var displayIndex = diapo_index;
+            if (isInIframe) {
+                var urlParams = new URLSearchParams(window.location.search);
+                var previewNum = urlParams.get('preview');
+                if (previewNum) {
+                    displayIndex = parseInt(previewNum);
+                }
+            }
+            console.log('isInIframe:', isInIframe, 'diapo_index:', diapo_index, 'displayIndex:', displayIndex);
+
+            // Always show page number (both in main window and iframe)
+            var numpage = displayIndex + '/' + (parseInt(diapo_max) - 1)
+            $('#content').append($('</p>').attr('id', 'num').text(numpage))
+            $('#num').css({
+                'position': 'absolute', 'bottom': '20px',
+                'right': '30px', 'font-size': '20px',
+                'z-index': '100'
+            })
+
+            // Only create slider if not inside an iframe
+            if (!isInIframe) {
+                // Calculate slider length to go up to 100px from right edge
+                var sliderLength = window.innerWidth - 200  // 100px from left + 100px from right
+                var initialSliderX = 100 + diapo_index*1000/diapo_max
+                param_slider_x = [{'xbar': 100,
+                                   'x': initialSliderX,
+                                   'ybar': 50, 'y': 50,
+                                   'col': color_bar, 'dir': 'x',
+                                   'slength': sliderLength, 'action': chgx}]
+                slide(param_slider_x, svg)  // 'violet'
+
+                // Initialize slider_value with the initial position
+                $('#slider_value').html(initialSliderX)
+            }
 
         } // end if
 
@@ -111,9 +136,26 @@ socket.on('maxdiap', function(text){
   socket.emit('params','')
  })        // number max of diapo
 
-$( document ).keydown(function() {                              // pass to a new diapo
-    diapo_index = change_diapo(event, socket)
+// Register arrow key handlers with keymaster
+console.log('===== REGISTERING ARROW/SPACE HANDLERS =====');
+console.log('key function type:', typeof key);
+console.log('socket:', socket);
+
+key('right', function(event){
+    console.log('RIGHT key pressed via keymaster');
+    change_diapo({keyCode: 39}, socket);
+    return false;  // prevent default
 });
+console.log('RIGHT handler registered');
+
+key('left', function(event){
+    console.log('LEFT key pressed via keymaster');
+    change_diapo({keyCode: 37}, socket);
+    return false;  // prevent default
+});
+console.log('LEFT handler registered');
+
+console.log('===== ALL HANDLERS REGISTERED =====');
 
 //------------------ New diapo
 
@@ -151,10 +193,10 @@ key('alt+t', function(){         // pass to text..
     window.location.href = 'text';                    // flip from html to textarea
   });
 
-//------------------ go to markdown
+//------------------ go to miniatures
 
-key('alt+m', function(){         // pass to text..
-    window.location.href = 'all_mini';                    // flip from html to textarea
+key('alt+m', function(){         // show all the slides as miniatures
+    window.location.href = 'all_mini';                    
   });
 
 //------------------ delete the slide
@@ -168,16 +210,29 @@ key('alt+ctrl+x', function(){
 
 //----------------------- general configuration
 
-$('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000'})
+$('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000', 'margin-left':'200px'})
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
+$('h1').css({'margin-left':'100px'})
+$('h2').css({'margin-left':'100px'})
+$('p').css({'margin-left':'100px'})
 $('.effect2').css({'box-shadow':'0 0 0 0'})
 $('.navbar-inner').hide()
 $('#toc').hide()
-$('#content').css({'margin-left':'200px',
-                   'padding-bottom':'20px',
-                   'padding-top':'50px',
-                   'height' : '790px'
+$('#content').css({'margin-left':'0px',
+                   'margin-right':'0px',
+                   'padding-bottom':'0px',
+                   'padding-top':'25px',
+                   'padding-left':'100px',
+                   'height' : 'calc(100vh - 25px)',
+                   'min-height': '790px'
                    })
+$('body').css({'margin': '0', 'padding': '0'})
+$('.container').css({
+    'width': '100%',
+    'max-width': '100%',
+    'margin': '0',
+    'padding': '0'
+})
 //$('li li').hide()         // hide the Mémos
 $('.help').hide()         // hide the help
 $('#gobottom').hide()     // hide go to bottom
@@ -225,7 +280,7 @@ function progressive_visualization(stp){
     var reg = /\!stp/
     var showline = true;
 
-    $('li, p').each(function(){
+    $('li, p').not('#num, #footlim, .foot, .head').each(function(){
          var txt = $(this).text()
          //alert(htm)
          if ($(this).hasClass('stop')){
@@ -406,7 +461,8 @@ function make_head(){
       */
 
       var dichead = {'position':'absolute','top':'80px',
-                     'font-size':'120%', 'right':'250px'}
+                     'font-size':'120%', 'right':'50px',
+                     'white-space':'nowrap'}
       p_match__inject_css(/\!head/, dichead)
       $('#content').append($('</p>').attr('id','footlim'))
       $('#footlim').html('<hr>')
@@ -421,12 +477,12 @@ function make_foot(){
       syntax : !foot blablabla..
       */
 
-      var dicfoot = {'position':'absolute','top':'820px','font-size':'110%'}
+      var dicfoot = {'position':'absolute','bottom':'20px','font-size':'110%'}
       p_match__inject_css(/\!foot/, dicfoot)
 
       $('#content').append($('</p>').attr('id','footlim'))
       $('#footlim').html('<hr>')
-      $('#footlim').css({'position':'absolute','top':'780px'})
+      $('#footlim').css({'position':'absolute','bottom':'70px'})
 
 }
 
@@ -527,15 +583,7 @@ $("p").each(function(){
 
 //-----------------------------  Full screen
 
-socket.on('full_screen', function(){
-
-    /*
-    trigger full screen
-    */
-
-    //alert ('FUUUULLL SCREENNNN')
-
-   })
+// Fullscreen functionality removed - use F11 for native browser fullscreen
 
 //-----------------------------  go to markdown by voice
 
@@ -753,7 +801,7 @@ key('alt+v', function(){         // Show the help
 
 progressive_visualization(stp)
 
-key('alt+n', function(){  // next lines
+key('down', function(){  // next lines
     stp += 1;
     progressive_visualization(stp)
 })
@@ -806,6 +854,7 @@ key('ctrl+i', function(){
       Fixing image and equation position..
       */
 
+      var count = 0
       $('p figure, p.eq').each(function(){
           var pos = $(this).offset()
           var id = $(this).attr('id')
@@ -814,8 +863,38 @@ key('ctrl+i', function(){
               // For equations, use the id as-is
               var cleanId = id.match(/\d{2}$/) ? id.slice(0,-3) : id
               socket.emit('pos_img', cleanId + '§§' + JSON.stringify(pos))
+              count++
           }
       })
+
+      // Show confirmation message
+      if (count === 0) return  // Don't show message if nothing to save
+
+      // Create and display temporary message div
+      var $msgDiv = $('<div>')
+          .text('Position saved')
+          .css({
+              'position': 'fixed',
+              'top': '50%',
+              'left': '50%',
+              'transform': 'translate(-50%, -50%)',
+              'background-color': '#4CAF50',
+              'color': 'white',
+              'padding': '20px 40px',
+              'border-radius': '5px',
+              'font-size': '18px',
+              'z-index': '10000',
+              'box-shadow': '0 4px 6px rgba(0,0,0,0.3)'
+          })
+
+      $('body').append($msgDiv)
+
+      // Remove message after 1 second
+      setTimeout(function() {
+          $msgDiv.fadeOut(300, function() {
+              $(this).remove()
+          })
+      }, 1000)
 })
 
 //--------------------------------  Help syntax
@@ -900,25 +979,6 @@ socket.on('config', function(){
 key('alt+c', function(){         // show config
     $('#config').toggle()
 })
-
-// var scrfull = false
-// key('space', function(){
-//
-//     /*
-//     Pass to full screen
-//     */
-//
-//     scrfull = !scrfull
-//     socket.emit('full_screen')
-//
-// })
-//
-// socket.on('fullscreen',function(){
-//       alert('oooooooo')
-//       if ( screenfull ) {
-//           screenfull.request();
-//       }
-// })
 
 //------------------------------- Drag & Drop Image Upload
 

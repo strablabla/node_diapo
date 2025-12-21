@@ -30,6 +30,8 @@ function pattern_and_flip(socket, elem, take_elem){
 
     if (elem.is('li')){ var patt = elem.text().split('\n')[0] }
     else if (elem.is('.date')){ var patt = elem.attr('id').split('_')[take_elem] }
+    else if (elem.is('h1')){ var patt = elem.text().split('\n')[0] }
+    else if (elem.is('h2')){ var patt = elem.text().split('\n')[0] }
 
     // ------------ flip to text
 

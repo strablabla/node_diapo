@@ -60,7 +60,7 @@ $memo1
 * la révolution des "Siths"co
 
 !pos386/446
-!['fire in London tower' 300x300 %fire-in-London-tower%](imgs/fire-in-London-tower.jpg)
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
 
 !pos847/276
 !['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
@@ -104,9 +104,12 @@ a
 
  --------------- diap4 ----------------- 
 
- # Rappel
+ 
+# Rappel
 
 ## diapo 4
+
+!head dans les étoiles, l'immensité est infinie.. 
 
 * Les "Météorologiques"u d'Aristote (384-322 BC)
 * La Voie Lactée irrégulière appartient au monde sublunaire
@@ -187,11 +190,11 @@ simple texte en format p pour être déplacé..
        ```
 * Catalan equation
 
-!pos790/569
+!pos194/480
 !eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
 
-!pos1159/86
-!['sapin de Noël' 200x200 %noël%](imgs/20181201_003-1766231418504.jpg)
+!pos509/387
+!['sapin de Noël!' 200x200 %sapin-de-Nol%](imgs/sapin-de-Nol.jpg)
 
 
  --------------- diap8 ----------------- 
@@ -235,13 +238,13 @@ $memo1
 
  * la révolution des "Siths"co
 
-!pos314/411
+!pos589/351
  !['turner' 300x300 %Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841%](imgs/Turner-Fire-at-the-Grand-Storehouse-of-the-Tower-of-London-1841.jpg)
 
-!pos921/269
+!pos289/320
  !['turner' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos452/713
+!pos685/607
  !eq e^{i\pi}=-1
 
 

@@ -57,10 +57,17 @@ exports.save_regularly = function(){
       lim_nb_saved = 10   // max versions saved
       var min_interv = 5  // intervall in minute
       setInterval(function() {
-              fs.readFile('views/strap_small.html', 'utf8', function (err,data) {
-                      if (err) { return console.log(err); }
-                      exports.save_current_version(data,true) // with date
-                  });   // end fs.readFile
+              // Check if file exists before trying to read it
+              fs.access('views/strap_small.html', fs.constants.F_OK, function(err) {
+                  if (err) {
+                      // File doesn't exist, skip save
+                      return;
+                  }
+                  fs.readFile('views/strap_small.html', 'utf8', function (err,data) {
+                          if (err) { return console.log(err); }
+                          exports.save_current_version(data,true) // with date
+                      });   // end fs.readFile
+              });
         }, parseInt(min_interv*60*1000)); // 300000 5 min  //10000 10 sec //600000 10 min
 
 }

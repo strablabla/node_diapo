@@ -6,21 +6,37 @@
 d3.js slider..
 */
 
-$('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','top':'750px'}))
-$('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','top':'780px'}))
+$('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','bottom':'20px','opacity':'0','transition':'opacity 0.3s'}))
+$('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','bottom':'-10px'}))
 $('#content').append($('<div/>').attr('id','current_diapo'))
 $("#slider_value").hide() //
 
+// Show slider on hover
+$('#slider').hover(
+    function() { $(this).css('opacity', '1') },  // Mouse enter
+    function() { $(this).css('opacity', '0') }   // Mouse leave
+)
 
-function css_miniature(elem){
+
+var currentSliderX = 0;
+
+function css_miniature(elem, xPos){
 
       /*
-      Css for miniature
+      Css for miniature - centers iframe above slider button
+      iframe width: 1600px * 0.3 scale = 480px effective width
+      iframe height: 950px * 0.3 scale = 285px effective height
+      To center horizontally: subtract half width (240px) from button position
+      Slider button is at y=50px from bottom of slider div (which is at bottom:80px)
+      Place iframe 50px above slider div, using top positioning
       */
 
+      // Calculate top position: screen height - slider bottom - gap - scaled iframe height
+      var topPos = window.innerHeight - 20 - 50 - 285 - 80  // Slider moved down 30px more (50->20)
+
       elem.css({'position':'absolute',
-                'top':'450px',
-                'left': d3.event.x + 60,
+                'top': topPos + 'px',
+                'left': xPos - 240,
                 '-webkit-transform': 'scale(0.3)',
                 'transform': 'scale(0.3)',
                 '-webkit-transform-origin': '0 0',
@@ -29,18 +45,59 @@ function css_miniature(elem){
 
 }
 
+var lastDiapoShown = null;
+var updateTimer = null;
+
 function show_target_diapo(d3){
 
       /*
-      Miniature of the target diapo
+      Miniature of the target diapo - optimized with debouncing
       */
 
-      var frame_part = '<iframe  id="frame0" src="{}" style="width:1600px;height:950px" > sandbox </iframe>'.format(numdiap())
-      var title_part = '<br><br><br><br><center><h1>{}</h1></center>'.format(numdiap())
-      elem = $('#current_diapo')
-      elem.html(frame_part + title_part)
-      css_miniature(elem)
+      var targetDiapo = numdiap();
 
+      // Extract the diapo number from the name (e.g., "d5" -> "5")
+      var diapoNum = targetDiapo.slice(1);
+
+      // Don't update if it's the same diapo
+      if (targetDiapo === lastDiapoShown) {
+          // Still update position even if same diapo
+          css_miniature($('#current_diapo'), currentSliderX);
+          return;
+      }
+
+      lastDiapoShown = targetDiapo;
+
+      var elem = $('#current_diapo');
+
+      // Update iframe src with diapo number as parameter
+      var iframe = $('#frame0');
+      var iframeUrl = targetDiapo + '?preview=' + diapoNum;
+      if (iframe.length > 0) {
+          iframe.attr('src', iframeUrl);
+          $('#diapo_title').text(targetDiapo);
+      } else {
+          // Create iframe only once with miniature styling
+          var frame_part = '<iframe id="frame0" src="{}" style="width:1600px;height:950px"></iframe>'.format(iframeUrl);
+          var title_part = '<br><br><br><br><center><h1 id="diapo_title">{}</h1></center>'.format(targetDiapo);
+          elem.html(frame_part + title_part);
+      }
+
+      // Always apply miniature CSS to update position
+      css_miniature(elem, currentSliderX);
+
+}
+
+function show_target_diapo_debounced(d3){
+      // Clear existing timer
+      if (updateTimer) {
+          clearTimeout(updateTimer);
+      }
+
+      // Set new timer - only update after 100ms of no movement
+      updateTimer = setTimeout(function() {
+          show_target_diapo(d3);
+      }, 100);
 }
 
 var drag_slider = d3.behavior.drag()
@@ -48,8 +105,9 @@ var drag_slider = d3.behavior.drag()
     .on("dragstart", dragstarted)
     .on("drag", function(d) {
         if (d.dir == "x"){
+            currentSliderX = d3.event.x;  // Store current slider position
             d.action();
-            show_target_diapo(d3)
+            show_target_diapo_debounced(d3)
             return d3.select(this).attr("cx", d.x  = d3.event.x ) ;
             }
         else if (d.dir == "y"){
@@ -58,13 +116,23 @@ var drag_slider = d3.behavior.drag()
             return d3.select(this).attr("cy", d.y  = d3.event.y);
             }
     })
-    .on("dragend", dragended);
+    .on("dragend", function(d) {
+        // Clear debounce timer and show immediately on drag end
+        if (updateTimer) {
+            clearTimeout(updateTimer);
+        }
+        show_target_diapo(d3);
+        dragended.call(this, d);
+    });
 
 var length_slider = 1000
 
+// Calculate SVG width to fill screen width minus margins
+var svgWidth = window.innerWidth - 100  // Leave 100px margin on right
+
 var svg = d3.select("#slider")
             .append("svg")
-            .attr("width", length_slider)
+            .attr("width", svgWidth)
             .attr("height", 100);
 
 var chgx = function(){$("#slider_value").html(d3.event.x)}
@@ -116,7 +184,7 @@ function dragended(d) {
     var newdiap = numdiap()
     //alert("ooooooopsssss")
     socket.emit('numdiap', newdiap.slice(1)) // send new num of diap..
-    window.location.href = newdiap;  // passes to another slide.. 
+    window.location.href = newdiap;  // passes to another slide..
     }
 
 function numdiap(){
@@ -125,7 +193,9 @@ function numdiap(){
     Return the num of the current diapo..
     */
 
-    val_denom = parseInt(parseFloat($("#slider_value").html())/length_slider*diapo_max)
+    var sliderValue = parseFloat($("#slider_value").html())
+    // Subtract the offset (100px) before calculating diapo number
+    val_denom = parseInt((sliderValue - 100)/length_slider*diapo_max)
     var name_diap = 'd' + val_denom
 
     return name_diap

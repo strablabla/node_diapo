@@ -22,7 +22,9 @@ exports.find_line_of_pattern = function(text, pattern){
 
       astring.forEach(function (line, number) {
 
-          var lineMatch = line.match(pattern) != null
+          // Échapper les caractères spéciaux regex dans le pattern
+          var escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          var lineMatch = line.match(escapedPattern) != null
 
           // Si pas de match direct, essayer de matcher en ignorant les marqueurs de coloration
           if (!lineMatch && cleanPattern.length > 0) {

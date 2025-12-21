@@ -16,7 +16,7 @@ socket.on('scroll_html', function(pos) { $(document).scrollTop(pos) });
 // ------------- Double click for switching to textarea
 
 var dic_modes_switch = { '.date': 1, 'li li': 0,
-                         'li': 0} //,'h1':0,'h2':0}
+                         'li': 0, 'h1': 0, 'h2': 0}
 
 Object.entries(dic_modes_switch).forEach(([elem,i]) =>
         dblclick_to_text(socket, $(elem), i)

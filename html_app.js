@@ -486,7 +486,7 @@ io.sockets.on('connection', function (socket) {
       socket.on('full_screen', function(){             //
             console.log('#####################  full screen !!!! ')
             fullscreen = !fullscreen
-            io.emit('fullscreen', ''); //
+            io.emit('full_screen', ''); //
           })
 
       //---------------------------------------- go to md
