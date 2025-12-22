@@ -46,35 +46,6 @@ $memo1
     * qu'est ce que ziber vraiment ?
 
 
- --------------- diap3 ----------------- 
-
- 
-# Inspection des travaux finis
-
-## diapo 3 !fg
-
-!head tête ou pas..
-
-* This is another day in Paradise
-* La saga des sagouins 
-
-!pos570/453
-!['magno' 200x200 %example_of_magnolia%](imgs/magnolia.jpg)
-
-!pos320/319
-!eq ax^2+bx+c =
-a
-\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
-\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
-
-!tagv ballon
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
-
  --------------- diap2 ----------------- 
 
  # diapo 2
@@ -88,18 +59,47 @@ a
 * Rêve ou réalité?
 * la révolution des "Siths"co
 
-!pos386/446
+!pos555/275
 !['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
 
-!pos847/276
+!pos1047/276
 !['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos683/267
+!pos283/357
 !eq e^{i\pi}=-1
 
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
+ --------------- diap3 ----------------- 
+
+ 
+# Inspection des travaux finis
+
+## diapo 3 !fg
+
+!head tête ou pas..
+
+* This is another day in Paradise
+* La saga des sagouins 
+
+!pos932/234
+!['magno' 200x200 %example_of_magnolia%](imgs/magnolia.jpg)
+
+!pos132/332
+!eq ax^2+bx+c =
+a
+\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
+\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
+
+!tagv ballon
+
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
 
 
  --------------- diap4 ----------------- 
@@ -151,6 +151,27 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
+ --------------- diap7 ----------------- 
+
+ # nouvelle diapo..
+
+## Diapo 7
+
+* Il était une fois dans la ville de Foix
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  		bizmuth et belzébuth..
+       ```
+* Catalan equation
+
+!pos294/480
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
+
+!pos787/357
+!['sapin de Noël!' 150x150 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
+
+
  --------------- diap6 ----------------- 
 
   # idée de mettre du Bokeh..
@@ -161,38 +182,17 @@ nous paraissent former une masse unie.
 * deuxième point.. 
 * troisième point
 
-!pos799/342
+!pos899/342
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
 simple texte en format p pour être déplacé.. 
 
-!pos690/552
+!pos513/233
 !['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
 !tagv car
 
 
-
-
- --------------- diap7 ----------------- 
-
- # nouvelle diapo..
-
-## Diapo 7
-
-* Il était une fois dans la ville de Foi
-* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
-* dans cette contrée reculée, en plein milieu de rien..
-	 * ```
-  		bizmuth et belzébuth..
-       ```
-* Catalan equation
-
-!pos194/480
-!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
-
-!pos509/387
-!['sapin de Noël!' 200x200 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
 
 
  --------------- diap8 ----------------- 

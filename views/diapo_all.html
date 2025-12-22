@@ -11,6 +11,7 @@
 {% for i in range(0, number_diapos) -%}
 
         <iframe id="frame{{i}}" src="d{{i}}" sandbox="allow-scripts"  > diapo {{i}} </iframe>
+        <div class="iframe_overlay" data-diapo="{{i}}"></div>
         <span class="name_diap" id="d{{i}}"> diapo {{i}} </span>
 
 {% endfor %}
@@ -29,11 +30,50 @@ for (var i = 0; i < {{number_diapos}}; i++){
 
 }
 
+// Style the overlay divs to cover iframes
+$('.iframe_overlay').each(function(index) {
+    var iframe = $('#frame' + index)
+    var iframePos = iframe.position()
+    var iframeWidth = iframe.width()
+    var iframeHeight = iframe.height()
+
+    $(this).css({
+        'position': 'absolute',
+        'top': iframePos.top,
+        'left': iframePos.left,
+        'width': iframeWidth,
+        'height': iframeHeight,
+        'cursor': 'pointer',
+        'z-index': '10',
+        'background-color': 'transparent'
+    })
+})
+
 $('.name_diap').click(function(){        // return to the full view diapo
       //alert($(this).attr('id'))
       socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
       location.replace($(this).attr('id'))
 })
+
+// Click on overlay to navigate to that slide
+$('.iframe_overlay').click(function(){
+      var diapoNum = parseInt($(this).attr('data-diapo'))
+      var diapoId = 'd' + diapoNum
+      socket.emit('numdiap', diapoNum)
+      location.replace(diapoId)
+})
+
+// Scroll to the current slide
+
+$(document).ready(function () {
+    // On vérifie si l'URL contient un hashtag (ex: #d5)
+    if (window.location.hash) {
+        const target = window.location.hash;
+        setTimeout(function () {
+            $(target)[0].scrollIntoView({ behavior: 'smooth' });
+        }, 500);
+    }
+});
 
 </script>
 

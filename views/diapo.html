@@ -182,9 +182,17 @@ key('ctrl+m', function(){                      // activate deactivate the memos
 //------------------ view of all the diapos
 
 key('alt+a', function(){         // go to the global view of the slides..
-      diapo_index = 0
-      location.replace("all")
-      socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
+    
+    // alert("d index is "+ diapo_index)
+    const diapo_id = 'd' + diapo_index;
+    location.replace("all#" + diapo_id)
+      
+    //   setTimeout(function () {
+    //     $('#d' )[0].scrollIntoView({ behavior: 'smooth' });
+    // }, 500); 
+
+    diapo_index = 0
+    socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
   });
 
 //------------------ go to markdown
