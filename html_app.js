@@ -91,21 +91,18 @@ function concat_diapos(i){
 function addget(app,i){           // add Routes
 
       var addrd = '/d{}'.format(i)
-      var adddiap = 'diapos/diapo{}.html'.format(i)
+      var adddiap = 'diapos/diapo.html'
       console.log(addrd + '__' + adddiap)
 
-      // Generate diapo{i}.html if it doesn't exist
-      var diapoPath = 'views/diapos/diapo{}.html'.format(i)
-      if (!fs.existsSync(diapoPath)) {
-            console.log('Generating missing jinja template: ' + diapoPath)
-            modify.new_jinja(fs, i)
-      }
-
-      fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
-            if (err) { return console.log(err); }
-            config_params = JSON.parse(config_contents);
-            app.get(addrd, function(req, res){ res.render(adddiap, config_params) });
-        });
+      app.get(addrd, function(req, res){
+            fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+                  if (err) { return console.log(err); }
+                  var config_params = JSON.parse(config_contents);
+                  // Add diapo_index to the parameters
+                  config_params.diapo_index = i;
+                  res.render(adddiap, config_params);
+            });
+      });
       concat_diapos(i)              // concatenate all the diapo in one file
 }
 

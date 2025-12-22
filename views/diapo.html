@@ -105,9 +105,9 @@ function set_page_num_and_slider(diapo_index){
             // Only create slider if not inside an iframe
             if (!isInIframe) {
                 // Calculate slider length to go up to 100px from right edge
-                var sliderLength = window.innerWidth - 200  // 100px from left + 100px from right
-                var initialSliderX = 100 + diapo_index*1000/diapo_max
-                param_slider_x = [{'xbar': 100,
+                var sliderLength = window.innerWidth - 300  // 150px from left + 150px from right
+                var initialSliderX = 150 + diapo_index*sliderLength/(diapo_max - 1)
+                param_slider_x = [{'xbar': 150,
                                    'x': initialSliderX,
                                    'ybar': 50, 'y': 50,
                                    'col': color_bar, 'dir': 'x',

@@ -105,15 +105,19 @@ var drag_slider = d3.behavior.drag()
     .on("dragstart", dragstarted)
     .on("drag", function(d) {
         if (d.dir == "x"){
-            currentSliderX = d3.event.x;  // Store current slider position
+            // Constrain x position between xbar (left limit) and xbar + slength (right limit)
+            var constrainedX = Math.max(d.xbar, Math.min(d3.event.x, d.xbar + d.slength));
+            currentSliderX = constrainedX;  // Store current slider position
             d.action();
             show_target_diapo_debounced(d3)
-            return d3.select(this).attr("cx", d.x  = d3.event.x ) ;
+            return d3.select(this).attr("cx", d.x = constrainedX);
             }
         else if (d.dir == "y"){
-            $("#slider_value").html(d3.event.y);
+            // Constrain y position between ybar (top limit) and ybar + slength (bottom limit)
+            var constrainedY = Math.max(d.ybar, Math.min(d3.event.y, d.ybar + d.slength));
+            $("#slider_value").html(constrainedY);
             d.action();
-            return d3.select(this).attr("cy", d.y  = d3.event.y);
+            return d3.select(this).attr("cy", d.y = constrainedY);
             }
     })
     .on("dragend", function(d) {
@@ -194,9 +198,13 @@ function numdiap(){
     */
 
     var sliderValue = parseFloat($("#slider_value").html())
-    // Subtract the offset (100px) before calculating diapo number
-    val_denom = parseInt((sliderValue - 100)/length_slider*diapo_max)
-    var name_diap = 'd' + val_denom
+    // Subtract the offset (150px) before calculating diapo number
+    // Use actual slider length (window.innerWidth - 300) instead of fixed 1000
+    var actualSliderLength = window.innerWidth - 300
+    var slide_number = parseInt((sliderValue - 150)/actualSliderLength*(diapo_max - 1))
+    // Constrain to valid range [0, diapo_max-1]
+    slide_number = Math.max(0, Math.min(slide_number, diapo_max - 1))
+    var name_diap = 'd' + slide_number
 
     return name_diap
 }
