@@ -93,6 +93,14 @@ function addget(app,i){           // add Routes
       var addrd = '/d{}'.format(i)
       var adddiap = 'diapos/diapo{}.html'.format(i)
       console.log(addrd + '__' + adddiap)
+
+      // Generate diapo{i}.html if it doesn't exist
+      var diapoPath = 'views/diapos/diapo{}.html'.format(i)
+      if (!fs.existsSync(diapoPath)) {
+            console.log('Generating missing jinja template: ' + diapoPath)
+            modify.new_jinja(fs, i)
+      }
+
       fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
             if (err) { return console.log(err); }
             config_params = JSON.parse(config_contents);
@@ -111,15 +119,27 @@ function main_init(){
 
       numdiap = null
 
-      var stats = countFiles('views/diapos', function (err, results) {
+      // Count only d*.html files (markdown files), not diapo*.html (jinja templates)
+      fs.readdir('views/diapos', function(err, files) {
+            if (err) {
+                  console.error('Error reading diapos directory:', err)
+                  return
+            }
+
+            // Filter to only count d[0-9]*.html files (not diapo*.html)
+            var dFiles = files.filter(function(file) {
+                  return file.match(/^d\d+\.html$/)
+            })
+
+            numdiap = dFiles.length
             console.log('done counting')
-            console.log(results) // { files: 10, dirs: 2, bytes: 234 }
-            numdiap = parseInt(results.files/2)
+            console.log('Found', dFiles.length, 'd*.html files')
             console.log('numdiap is ' + numdiap)
+
             for (var i=0; i < numdiap; i++){
                   addget(app,i)      // Routage
-                } // end for
-      }) // end countFiles
+            } // end for
+      }) // end readdir
 
 }
 

@@ -85,10 +85,10 @@ $memo1
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos584/488
+!pos570/453
 !['magno' 200x200 %example_of_magnolia%](imgs/magnolia.jpg)
 
-!pos489/411
+!pos320/319
 !eq ax^2+bx+c =
 a
 \left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
@@ -141,7 +141,7 @@ Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
 Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
 nous paraissent former une masse unie.
 
-# titre quelconque
+## titre quelconque
 
 ## deuxième étage..
 
@@ -160,8 +160,6 @@ nous paraissent former une masse unie.
 * blabla
 * deuxième point.. 
 * troisième point
-* Utilisation de Mathpix.. 
-	* Ceci se fait de manière très simple en sélectionnant une partie du texte.. blabla
 
 !pos799/342
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
@@ -194,7 +192,7 @@ simple texte en format p pour être déplacé..
 !eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
 
 !pos509/387
-!['sapin de Noël!' 200x200 %sapin-de-Nol%](imgs/sapin-de-Nol.jpg)
+!['sapin de Noël!' 200x200 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
 
 
  --------------- diap8 ----------------- 
@@ -251,31 +249,3 @@ $memo1
 
  !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
-
- --------------- diap11 ----------------- 
-
-  
-
- --------------- diap12 ----------------- 
-
-  
-
- --------------- diap13 ----------------- 
-
-  
-
- --------------- diap14 ----------------- 
-
-  
-
- --------------- diap15 ----------------- 
-
-  
-
- --------------- diap16 ----------------- 
-
-  
-
- --------------- diap17 ----------------- 
-
-  
