@@ -16,6 +16,36 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
+ --------------- diap1 ----------------- 
+
+ # diap d1
+
+## diapo 1 !fo
+
+!head example d'autre en-tête, vérification du placement
+
+* Le rêve de la "supraconductivité"cb !memo0 
+* pinjlap "zaaaammm zooom zuumm "cg 
+    * ziiipp
+* 1987: la révolution aa  aa a aa a !stp
+    * "ziberwinger.."u ..
+* 10 "ans plus tard"co , le mystère plane toujours !stp
+	* par le passé c'était déjà assez obscur..
+* Les électrons fortement corrélés !memo1 !stp
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+$memo0
+
+* Depuis quand est-ce un rêve??
+    * beaucoup d'idées d'application..
+
+$memo1
+
+* ziber..
+    * qu'est ce que ziber vraiment ?
+
+
  --------------- diap2 ----------------- 
 
  # diapo 2
@@ -70,36 +100,6 @@ a
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
-
-
- --------------- diap1 ----------------- 
-
- # diap d1
-
-## diapo 1 !fo
-
-!head example d'autre en-tête, vérification du placement
-
-* Le rêve de la "supraconductivité"cb !memo0 
-* pinjlap "zaaaammm zooom zuumm "cg 
-    * ziiipp
-* 1987: la révolution aa  aa a aa a !stp
-    * "ziberwinger.."u ..
-* 10 "ans plus tard"co , le mystère plane toujours !stp
-	* par le passé c'était déjà assez obscur..
-* Les électrons fortement corrélés !memo1 !stp
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-$memo0
-
-* Depuis quand est-ce un rêve??
-    * beaucoup d'idées d'application..
-
-$memo1
-
-* ziber..
-    * qu'est ce que ziber vraiment ?
 
 
  --------------- diap4 ----------------- 
@@ -236,10 +236,10 @@ $memo1
 
  * la révolution des "Siths"co
 
-!pos607/245
+!pos661/227
  !['turner' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos885/607
+!pos410/406
  !eq e^{i\pi}=-1
 
 
@@ -252,3 +252,4 @@ $memo1
   # new diap
  
  ## blabla
+
