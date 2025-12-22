@@ -75,29 +75,50 @@ node_diapo/
 ### Keyboard Shortcuts
 
 #### Navigation
+<small>
+
 - **Left/Right arrows**: Navigate between slides
-- **Ctrl+A**: View all slides
+- **Alt+A**: View all slides
 - **Alt+M**: View miniatures
 
+</small>
+
 #### Editing
+<small>
+
 - **Double-click**: Switch to editing mode (on slide elements)
 - **Alt+T**: Switch to markdown editing mode
 - **Alt+T** (in edit mode): Return to presentation mode
 
+</small>
+
 #### Slide Management
+<small>
+
 - **Ctrl+P**: Create a new slide
 - **Alt+Ctrl+X**: Delete current slide
 
+</small>
+
 #### Display & Presentation
-- **Alt+S**: Show/hide syntax help
-- **Alt+N**: Show next line (progressive visualization)
+<small>
+
+- **Down arrow**: Show next line (progressive visualization)
+- **Up arrow**: Show previous line (progressive visualization)
 - **Ctrl+M**: Show/hide memos indicators
-- **Ctrl+I**: Save position of images and equations
+- **Ctrl+S**: Save position of images and equations
+- **Alt+H**: Show/hide syntax help
+
+</small>
 
 #### Help
+<small>
+
 - **Alt+K**: Show keyboard shortcuts help
 - **Alt+V**: Show voice commands help
 - **Alt+C**: Show configuration
+
+</small>
 
 ### Available URLs
 

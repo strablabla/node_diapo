@@ -181,7 +181,7 @@ key('ctrl+m', function(){                      // activate deactivate the memos
 
 //------------------ view of all the diapos
 
-key('ctrl+a', function(){         // go to the global view of the slides..
+key('alt+a', function(){         // go to the global view of the slides..
       diapo_index = 0
       location.replace("all")
       socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
@@ -900,7 +900,7 @@ $('p figure, p.eq').each(function(){
 
 //------------------------- fixing image's and equation's position
 
-key('ctrl+i', function(){
+key('ctrl+s', function(){
 
       /*
       Fixing image and equation position..
@@ -988,7 +988,7 @@ socket.on('syntax', function(){
      */
      $('#help_syntax').toggle()
     })
-key('alt+s', function(){         // show syntax
+key('alt+h', function(){         // show syntax
     $('#help_syntax').toggle()
 })
 

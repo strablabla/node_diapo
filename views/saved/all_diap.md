@@ -46,33 +46,6 @@ $memo1
     * qu'est ce que ziber vraiment ?
 
 
- --------------- diap2 ----------------- 
-
- # diapo 2
-
-# A general intro stuff blabla
-
-## diapo 2 !fb
-
-!head tête ou pas..
-
-* Rêve ou réalité?
-* la révolution des "Siths"co
-
-!pos386/446
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
-
-!pos847/276
-!['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
-
-!pos683/267
-!eq e^{i\pi}=-1
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
  --------------- diap3 ----------------- 
 
  
@@ -102,6 +75,33 @@ a
 
 
 
+ --------------- diap2 ----------------- 
+
+ # diapo 2
+
+# A general intro stuff blabla
+
+## diapo 2 !fb
+
+!head tête ou pas..
+
+* Rêve ou réalité?
+* la révolution des "Siths"co
+
+!pos386/446
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+
+!pos847/276
+!['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
+
+!pos683/267
+!eq e^{i\pi}=-1
+
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
  --------------- diap4 ----------------- 
 
  
@@ -124,29 +124,6 @@ a
 
 
 !foot Il était une fois un petit chaperon rouge.. 
-
-
- --------------- diap6 ----------------- 
-
-  # idée de mettre du Bokeh..
-
- ## voir comment faire..!fo 
-
-* blabla
-* deuxième point.. 
-* troisième point
-
-!pos799/342
-!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
-
-simple texte en format p pour être déplacé.. 
-
-!pos690/552
-!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
-
-!tagv car
-
-
 
 
  --------------- diap5 ----------------- 
@@ -172,6 +149,29 @@ nous paraissent former une masse unie.
 
 
 !foot Besoin d'un pied de page.. 
+
+
+ --------------- diap6 ----------------- 
+
+  # idée de mettre du Bokeh..
+
+ ## voir comment faire..!fo 
+
+* blabla
+* deuxième point.. 
+* troisième point
+
+!pos799/342
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
+
+simple texte en format p pour être déplacé.. 
+
+!pos690/552
+!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
+
+!tagv car
+
+
 
 
  --------------- diap7 ----------------- 
@@ -214,6 +214,15 @@ $memo0
 $memo1
 
 * mem1..
+
+ --------------- diap9 ----------------- 
+
+  # diap 9
+ 
+## Broadband EPR Spectroscopy in Diverse Field Conditions Using Optically Detected Nitrogen-Vacancy Centers in Diamond
+## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
+
+* [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
 
  --------------- diap10 ----------------- 
 
