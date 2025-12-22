@@ -209,4 +209,42 @@ function numdiap(){
     return name_diap
 }
 
+// Handle window resize (including fullscreen changes)
+window.addEventListener('resize', function() {
+    // Recalculate slider dimensions
+    var newSliderLength = window.innerWidth - 300
+    var newSvgWidth = window.innerWidth - 100
+
+    // Update SVG width
+    svg.attr("width", newSvgWidth)
+
+    // Update slider line length
+    d3.selectAll("line")
+        .attr('x2', function(d) {
+            if (d && d.dir == "x") {
+                d.slength = newSliderLength
+                return d.xbar + newSliderLength
+            }
+            return d3.select(this).attr('x2')
+        })
+
+    // Recalculate button position to maintain same diapo
+    if (typeof diapo_index !== 'undefined' && typeof diapo_max !== 'undefined') {
+        var newSliderX = 150 + diapo_index * newSliderLength / (diapo_max - 1)
+
+        // Update button position
+        d3.selectAll("ellipse.slide")
+            .attr("cx", function(d) {
+                if (d && d.dir == "x") {
+                    d.x = newSliderX
+                    d.slength = newSliderLength
+                }
+                return d.x
+            })
+
+        // Update slider_value
+        $('#slider_value').html(newSliderX)
+    }
+})
+
 </script>

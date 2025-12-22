@@ -900,11 +900,14 @@ $('p figure, p.eq').each(function(){
 
 //------------------------- fixing image's and equation's position
 
-key('ctrl+s', function(){
+key('ctrl+s', function(e){
 
       /*
       Fixing image and equation position..
       */
+
+      // Prevent browser's default save dialog
+      e.preventDefault()
 
       var count = 0
       $('p figure, p.eq').each(function(){
@@ -947,6 +950,8 @@ key('ctrl+s', function(){
               $(this).remove()
           })
       }, 1000)
+
+      return false  // Prevent any default browser behavior
 })
 
 //--------------------------------  Help syntax
