@@ -187,10 +187,6 @@ key('alt+a', function(){         // go to the global view of the slides..
     const diapo_id = 'd' + diapo_index;
     location.replace("all#" + diapo_id)
       
-    //   setTimeout(function () {
-    //     $('#d' )[0].scrollIntoView({ behavior: 'smooth' });
-    // }, 500); 
-
     diapo_index = 0
     socket.emit('numdiap', diapo_index)  // set diapo_index to 0 for avoiding bad page number..
   });
@@ -204,7 +200,9 @@ key('alt+t', function(){         // pass to text..
 //------------------ go to miniatures
 
 key('alt+m', function(){         // show all the slides as miniatures
-    window.location.href = 'all_mini';                    
+    window.location.href = 'all_mini';     
+    diapo_index = 0
+    socket.emit('numdiap', diapo_index)                
   });
 
 //------------------ delete the slide
@@ -229,12 +227,13 @@ $('#toc').hide()
 $('#content').css({'margin-left':'0px',
                    'margin-right':'0px',
                    'padding-bottom':'0px',
-                   'padding-top':'25px',
+                   'padding-top':'0px',
                    'padding-left':'100px',
-                   'height' : 'calc(100vh - 25px)',
+                   'height' : '100vh',
                    'min-height': '790px'
                    })
-$('body').css({'margin': '0', 'padding': '0'})
+$('body').css({'margin': '0', 'padding': '0', 'overflow': 'hidden'})
+$('html').css({'overflow': 'hidden'})
 $('.container').css({
     'width': '100%',
     'max-width': '100%',
@@ -580,7 +579,8 @@ function make_title(){
       $('li').hide()
       var dictit= {'position':'relative','font-size':'300%',
                   'text-align':'center', 'top':'100px',
-                  'background-color':'orange', 'color':'white'}
+                  'background-color':'orange', 'color':'white',
+                  'margin-left':'100px', 'margin-right':'100px'}
       p_match__inject_css(/\!title/, dictit)
 
 }
