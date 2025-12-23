@@ -59,13 +59,13 @@ $memo1
 * Rêve ou réalité?
 * la révolution des "Siths"co
 
-!pos655/275
+!pos755/275
 !['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
 
-!pos304/451
+!pos224/356
 !['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos383/357
+!pos495/467
 !eq e^{i\pi}=-1
 
 
@@ -151,29 +151,6 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
- --------------- diap6 ----------------- 
-
-  # idée de mettre du Bokeh..
-
- ## voir comment faire..!fo 
-
-* blabla
-* deuxième point.. 
-* troisième point
-
-!pos226/457
-!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
-
-simple texte en format p pour être déplacé.. 
-
-!pos713/233
-!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
-
-!tagv car
-
-
-
-
  --------------- diap7 ----------------- 
 
  # nouvelle diapo..
@@ -193,6 +170,29 @@ simple texte en format p pour être déplacé..
 
 !pos787/357
 !['sapin de Noël!' 150x150 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
+
+
+ --------------- diap6 ----------------- 
+
+  # idée de mettre du Bokeh..
+
+ ## voir comment faire..!fo 
+
+* blabla
+* deuxième point.. 
+* troisième point
+
+!pos828/500
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
+
+simple texte en format p pour être déplacé.. 
+
+!pos813/233
+!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
+
+!tagv car
+
+
 
 
  --------------- diap8 ----------------- 

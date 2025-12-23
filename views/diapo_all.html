@@ -2,7 +2,13 @@
 {% include 'header.html' %}
 {% include 'voice.html' %}
 
-{% include 'iframe_mini.html' %}
+<style>
+body, html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100vw;
+}
+</style>
 
 <h1> All the slides </h1>
 
@@ -10,53 +16,82 @@
 
 {% for i in range(0, number_diapos) -%}
 
-        <iframe id="frame{{i}}" src="d{{i}}" sandbox="allow-scripts"  > diapo {{i}} </iframe>
-        <div class="iframe_overlay" data-diapo="{{i}}"></div>
-        <span class="name_diap" id="d{{i}}"> diapo {{i}} </span>
+        <img id="thumb{{i}}" src="thumbnails/thumb_{{i}}.png" class="thumbnail" data-diapo="{{i}}" />
+        <span class="slide_index" id="d{{i}}">{{i}}</span>
 
 {% endfor %}
+
+<div id="bottom_spacer"></div>
 
 <script>
 
 var socket = io.connect();
 
+// Override overflow settings from diapo.html to enable scrolling
+// Use a slight delay to ensure this runs after diapo.html's overflow:hidden
+setTimeout(function() {
+    $('body').css({'overflow-y': 'auto !important', 'overflow-x': 'hidden !important'});
+    $('html').css({'overflow-y': 'auto !important', 'overflow-x': 'hidden !important'});
+    // Also set via setAttribute to ensure it takes effect
+    document.body.style.setProperty('overflow-y', 'auto', 'important');
+    document.body.style.setProperty('overflow-x', 'hidden', 'important');
+    document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+    document.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
+}, 100);
+
+// Thumbnail dimensions (from Puppeteer: 1200x800, displayed at 50% = 600x400)
+var thumbWidth = 600   // 50% of 1200
+var thumbHeight = 400  // 50% of 800
+
+// Style slide indices
+$('.slide_index').css({
+    'position': 'absolute',
+    'color': '#333',
+    'background': 'transparent',
+    'padding': '5px 10px',
+    'border-radius': '3px',
+    'pointer-events': 'none',
+    'z-index': '1000',
+    'font-weight': 'bold',
+    'text-shadow': '1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8)'
+})
+
+// Style all thumbnails
+$('.thumbnail').css({
+    'position': 'absolute',
+    'width': thumbWidth + 'px',
+    'height': thumbHeight + 'px',
+    'cursor': 'pointer',
+    'border': '2px solid #ccc',
+    'box-shadow': '0 4px 8px rgba(0,0,0,0.3)'
+})
+
+// Position thumbnails vertically and center them horizontally
 for (var i = 0; i < {{number_diapos}}; i++){
+    var posY = 200 + (thumbHeight + 115) * i  // 115px spacing between thumbnails
+    var posX = (window.innerWidth - thumbWidth) / 2  // Center horizontally
 
-    var posframe =  -450*i //+ 'px'
-    var posh2 =  515*i+160 //+ 'px'
-    //alert(posh2)
-    $('#frame'+i).css({'top' : posframe, 'left' : '400px'})
-    $('#d'+i).css({'top' : posh2, 'left' : '300px', 'font-size' : '20px'})
-
+    $('#thumb' + i).css({'top' : posY + 'px', 'left' : posX + 'px'})
+    $('#d' + i).css({
+        'top' : (posY - 35) + 'px',
+        'left' : (posX + thumbWidth/2) + 'px',
+        'font-size' : '20px',
+        'transform': 'translateX(-50%)',
+        'font-weight': 'bold'
+    })
 }
 
-// Style the overlay divs to cover iframes
-$('.iframe_overlay').each(function(index) {
-    var iframe = $('#frame' + index)
-    var iframePos = iframe.position()
-    var iframeWidth = iframe.width()
-    var iframeHeight = iframe.height()
-
-    $(this).css({
-        'position': 'absolute',
-        'top': iframePos.top,
-        'left': iframePos.left,
-        'width': iframeWidth,
-        'height': iframeHeight,
-        'cursor': 'pointer',
-        'z-index': '10',
-        'background-color': 'transparent'
-    })
+// Add bottom spacer to create margin after last thumbnail
+var lastThumbY = 200 + (thumbHeight + 115) * ({{number_diapos}} - 1) + thumbHeight
+$('#bottom_spacer').css({
+    'position': 'absolute',
+    'top': (lastThumbY + 200) + 'px',
+    'height': '1px',
+    'width': '100%'
 })
 
-$('.name_diap').click(function(){        // return to the full view diapo
-      //alert($(this).attr('id'))
-      socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
-      location.replace($(this).attr('id'))
-})
-
-// Click on overlay to navigate to that slide
-$('.iframe_overlay').click(function(){
+// Click on thumbnail to navigate to that slide
+$('.thumbnail').click(function(){
       var diapoNum = parseInt($(this).attr('data-diapo'))
       var diapoId = 'd' + diapoNum
       socket.emit('numdiap', diapoNum)
@@ -64,16 +99,36 @@ $('.iframe_overlay').click(function(){
 })
 
 // Scroll to the current slide
-
 $(document).ready(function () {
-    // On vérifie si l'URL contient un hashtag (ex: #d5)
+    // Check if URL contains a hashtag (ex: #d5)
     if (window.location.hash) {
         const target = window.location.hash;
         setTimeout(function () {
-            $(target)[0].scrollIntoView({ behavior: 'smooth' });
+            const targetElement = $(target.replace('d', 'thumb'))[0];
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }, 500);
     }
 });
+
+// Recenter thumbnails on window resize
+function repositionThumbnails() {
+    for (var i = 0; i < {{number_diapos}}; i++){
+        var posY = 200 + (thumbHeight + 115) * i
+        var posX = (window.innerWidth - thumbWidth) / 2
+
+        $('#thumb' + i).css({'left' : posX + 'px'})
+        $('#d' + i).css({
+            'top' : (posY - 35) + 'px',
+            'left' : (posX + thumbWidth/2) + 'px'
+        })
+    }
+}
+
+window.addEventListener('resize', function() {
+    setTimeout(repositionThumbnails, 100)
+})
 
 </script>
 
