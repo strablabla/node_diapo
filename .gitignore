@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Data
+examples/
+
 # Logs
 *.log
 npm-debug.log*

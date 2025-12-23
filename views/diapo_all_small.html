@@ -2,8 +2,6 @@
 {% include 'header.html' %}
 {% include 'voice.html' %}
 
-{% include 'iframe_mini_small.html' %}
-
 <style>
 body, html {
     overflow-x: hidden;
@@ -18,8 +16,7 @@ body, html {
 
 {% for i in range(0, number_diapos) -%}
 
-        <iframe id="frame{{i}}" src="d{{i}}" sandbox="allow-scripts" > diapo {{i}} </iframe>
-        <div class="iframe_overlay" data-diapo="{{i}}"></div>
+        <img id="thumb{{i}}" src="thumbnails/thumb_{{i}}.png" class="thumbnail" data-diapo="{{i}}" />
         <span class="name_diap" id="d{{i}}"> {{i}} </span>
 
 {% endfor %}
@@ -28,163 +25,91 @@ body, html {
 
 var socket = io.connect();
 
-// Calculate iframe dimensions based on screen ratio (fullscreen ratio)
-function calculateIframeDimensions() {
-    // Use actual window ratio for proper fullscreen adaptation
-    var windowRatio = window.innerWidth / window.innerHeight
-
-    // Calculate max width available for miniatures to avoid horizontal overflow
-    var nbcol = {{nb_horiz_mosaic}}
-    var margin = 60  // Margin between miniatures
-    var availableWidth = window.innerWidth - 100  // Leave 100px total margin
-    var maxScaledWidth = (availableWidth / nbcol) - margin
-    var maxIframeWidth = maxScaledWidth / 0.2  // Reverse scaling
-
-    // Calculate height from width to maintain window ratio
-    var iframeWidth = Math.round(maxIframeWidth)
-    var iframeHeight = Math.round(iframeWidth / windowRatio)
-
-    // Apply dimensions to all iframes
-    $('iframe').css({
-        'width': iframeWidth + 'px',
-        'height': iframeHeight + 'px'
-    })
-}
-
-// Set initial dimensions
-calculateIframeDimensions()
+// Thumbnail dimensions (from Puppeteer screenshot: 1200x800)
+var thumbWidth = 240  // 20% of 1200
+var thumbHeight = 160  // 20% of 800
 
 var nbcol = {{nb_horiz_mosaic}}    // nb of columns in the mosaic
-var nblines = Math.round({{number_diapos}}/nbcol)  // nb of lines in the mosaic //
+var nblines = Math.round({{number_diapos}}/nbcol)  // nb of lines in the mosaic
 var modulo = {{number_diapos}}%nbcol
 if ( modulo != 0 ){nblines += 1}
-make_the_mosaic(nblines,nbcol)
+
+// Style all thumbnails
+$('.thumbnail').css({
+    'position': 'absolute',
+    'width': thumbWidth + 'px',
+    'height': thumbHeight + 'px',
+    'cursor': 'pointer',
+    'border': '2px solid #ccc',
+    'box-shadow': '0 2px 5px rgba(0,0,0,0.2)'
+})
 
 function one_diap(currdiap,i,j){
-
       /*
-      Create one diapo
+      Position one thumbnail
       */
-
-      // Calculate iframe dimensions to determine spacing (same as calculateIframeDimensions)
-      var windowRatio = window.innerWidth / window.innerHeight
-      var nbcol = {{nb_horiz_mosaic}}
       var margin = 60
-      var availableWidth = window.innerWidth - 100
-      var maxScaledWidth = (availableWidth / nbcol) - margin
-      var maxIframeWidth = maxScaledWidth / 0.2
-      var iframeWidth = Math.round(maxIframeWidth)
-      var iframeHeight = Math.round(iframeWidth / windowRatio)
-
-      var scaledWidth = iframeWidth * 0.2  // Width after scaling
-      var scaledHeight = iframeHeight * 0.2  // Height after scaling
-      var spacingX = scaledWidth + margin  // Add margin between miniatures
-      var spacingY = (scaledHeight + 50) * 1.2  // Add vertical spacing (increased by 1.2x)
+      var spacingX = thumbWidth + margin
+      var spacingY = thumbHeight + 60
 
       // Calculate centered position
-      var mosaicWidth = nbcol * spacingX  // Total width of mosaic
-      var startX = (window.innerWidth - mosaicWidth) / 2  // Center horizontally
+      var mosaicWidth = nbcol * spacingX
+      var startX = (window.innerWidth - mosaicWidth) / 2
 
-      var posx=  startX + spacingX*j     // pos x for iframe
-      var posy=  150 + spacingY*i    // pos y for iframe
-      //------
-      // Center the number above the miniature
-      var posxd =  posx + scaledWidth/2  // pos x for name (centered)
-      var posyd =  posy + 15     // pos y for name (adjusted position)
-      //-------
-      $('#frame' + currdiap).css({'top' : posy, 'left' : posx})
-      $('#d' + currdiap).css({'top' : posyd, 'left' : posxd, 'font-size' : '14px', 'text-align' : 'center'})
+      var posx = startX + spacingX*j
+      var posy = 150 + spacingY*i
 
+      // Center the number above the thumbnail
+      var posxd = posx + thumbWidth/2
+      var posyd = posy - 30
+
+      $('#thumb' + currdiap).css({'top' : posy, 'left' : posx})
+      $('#d' + currdiap).css({
+          'position': 'absolute',
+          'top' : posyd,
+          'left' : posxd,
+          'font-size' : '11px',
+          'text-align' : 'center',
+          'transform': 'translateX(-50%)',
+          'font-weight': 'bold'
+      })
 }
 
 function make_the_mosaic(nblines,nbcol){
-
       /*
-      Build the complete mosaic representation..
+      Build the complete mosaic representation
       */
-
-      for (var i=0; i < nblines; i++){    // sweep on the lines
-          for (var j=0; j < nbcol; j++){  // sweep on the columns
+      for (var i=0; i < nblines; i++){
+          for (var j=0; j < nbcol; j++){
                var currdiap = i*nbcol + j
                if (currdiap < {{number_diapos}}){
-
                     one_diap(currdiap,i,j)
-
-              } // if
-          } // j
-
-      } // i
+              }
+          }
+      }
 }
 
-$('.name_diap').click(function(){        // return to the full view diapo
-      //alert($(this).attr('id'))
-      socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
-      location.replace($(this).attr('id'))
-})
+make_the_mosaic(nblines,nbcol)
 
-// Style the overlay divs to cover iframes
-$('.iframe_overlay').each(function(index) {
-    var iframe = $('#frame' + index)
-    var iframePos = iframe.position()
-    var iframeWidth = iframe.width()
-    var iframeHeight = iframe.height()
-
-    $(this).css({
-        'position': 'absolute',
-        'top': iframePos.top,
-        'left': iframePos.left,
-        'width': iframeWidth,
-        'height': iframeHeight,
-        'cursor': 'pointer',
-        'z-index': '10',
-        'background-color': 'transparent'
-    })
-})
-
-// Click on overlay to navigate to that slide
-$('.iframe_overlay').click(function(){
+// Click on thumbnail to navigate to that slide
+$('.thumbnail').click(function(){
       var diapoNum = parseInt($(this).attr('data-diapo'))
       var diapoId = 'd' + diapoNum
       socket.emit('numdiap', diapoNum)
       location.replace(diapoId)
 })
 
-// Handle fullscreen changes to reposition miniatures
+// Click on number to navigate to that slide
+$('.name_diap').click(function(){
+      socket.emit('numdiap', parseInt($(this).attr('id').slice(1)))
+      location.replace($(this).attr('id'))
+})
+
+// Handle window resize
 function repositionMiniatures() {
-    // Recalculate iframe dimensions based on new screen ratio
-    calculateIframeDimensions()
-
-    // Recalculate mosaic based on current number of slides
-    var nbcol = {{nb_horiz_mosaic}}
-    var nblines = Math.round({{number_diapos}}/nbcol)
-    var modulo = {{number_diapos}}%nbcol
-    if ( modulo != 0 ){nblines += 1}
-
     make_the_mosaic(nblines, nbcol)
-
-    // Reposition overlays
-    $('.iframe_overlay').each(function(index) {
-        var iframe = $('#frame' + index)
-        var iframePos = iframe.position()
-        var iframeWidth = iframe.width()
-        var iframeHeight = iframe.height()
-
-        $(this).css({
-            'top': iframePos.top,
-            'left': iframePos.left,
-            'width': iframeWidth,
-            'height': iframeHeight
-        })
-    })
 }
 
-// Listen for fullscreen changes
-document.addEventListener('fullscreenchange', repositionMiniatures)
-document.addEventListener('webkitfullscreenchange', repositionMiniatures)
-document.addEventListener('mozfullscreenchange', repositionMiniatures)
-document.addEventListener('MSFullscreenChange', repositionMiniatures)
-
-// Also listen for window resize
 window.addEventListener('resize', function() {
     setTimeout(repositionMiniatures, 100)
 })

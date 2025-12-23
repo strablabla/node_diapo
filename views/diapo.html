@@ -959,6 +959,9 @@ key('ctrl+s', function(e){
           })
       }, 1000)
 
+      // Update thumbnail for current slide
+      socket.emit('update_thumbnail')
+
       return false  // Prevent any default browser behavior
 })
 

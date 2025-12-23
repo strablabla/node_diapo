@@ -161,12 +161,12 @@ nous paraissent former une masse unie.
 * deuxième point.. 
 * troisième point
 
-!pos899/342
+!pos226/457
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
 simple texte en format p pour être déplacé.. 
 
-!pos513/233
+!pos713/233
 !['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
 !tagv car

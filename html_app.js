@@ -14,6 +14,14 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 var multer = require('multer');
 var crypto = require('crypto');
+const puppeteer = require('puppeteer');
+
+String.prototype.format = function () {
+    var i = 0, args = arguments;
+    return this.replace(/{}/g, function () {
+        return typeof args[i] != 'undefined' ? args[i++] : '';
+    });
+};
 
 //--------------  Server
 
@@ -27,12 +35,11 @@ diapo_index = 0;
 all_diap = ''
 var fullscreen = false
 
-String.prototype.format = function () {
-  var i = 0, args = arguments;
-  return this.replace(/{}/g, function () {
-    return typeof args[i] != 'undefined' ? args[i++] : '';
-  });
-};
+var port = 3067
+server.listen(port);
+var addr = 'http://127.0.0.1:{}/d0'.format(port)
+
+
 
 nunjucks.configure('views', {
     autoescape: true,
@@ -64,6 +71,76 @@ function make_png(i){
 
 }
 
+async function create_thumbnails(){
+
+    // make thumbnails - optimized version
+    console.log('Creating {} thumbnails...'.format(numdiap));
+
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    // Process thumbnails in parallel (batches of 3)
+    const batchSize = 3;
+    for (var i = 0; i < numdiap; i += batchSize) {
+        const promises = [];
+
+        for (var j = 0; j < batchSize && (i + j) < numdiap; j++) {
+            const index_diap = i + j;
+            promises.push(createSingleThumbnail(browser, index_diap));
+        }
+
+        await Promise.all(promises);
+    }
+
+    await browser.close();
+    console.log('All thumbnails created!');
+}
+
+async function createSingleThumbnail(browser, index_diap) {
+    const page = await browser.newPage();
+
+    await page.setViewport({ width: 1200, height: 800 });
+    var addr_diap = 'http://127.0.0.1:{}/d{}'.format(port, index_diap);
+
+    try {
+        await page.goto(addr_diap, { waitUntil: 'networkidle0', timeout: 30000 });
+
+        // Hide help elements before taking screenshot
+        await page.evaluate(() => {
+            const helpKeys = document.getElementById('help_keys');
+            const helpVoice = document.getElementById('help_voice_cmds');
+            if (helpKeys) helpKeys.style.display = 'none';
+            if (helpVoice) helpVoice.style.display = 'none';
+        });
+
+        await page.screenshot({ path: 'views/thumbnails/thumb_{}.png'.format(index_diap) });
+        console.log('Thumbnail {} created'.format(index_diap));
+    } catch (err) {
+        console.error('Error creating thumbnail {}: {}'.format(index_diap, err.message));
+    }
+
+    await page.close();
+}
+
+async function updateSingleThumbnail(index_diap) {
+    /*
+    Update the thumbnail for a single slide
+    */
+    console.log('Updating thumbnail for slide {}...'.format(index_diap));
+
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    await createSingleThumbnail(browser, index_diap);
+    await browser.close();
+
+    console.log('Thumbnail {} updated!'.format(index_diap));
+}
+
 function concat_diapos(i){
 
       /*
@@ -90,23 +167,25 @@ function concat_diapos(i){
 
 function addget(app,i){           // add Routes
 
-      var addrd = '/d{}'.format(i)
-      var adddiap = 'diapos/diapo.html'
-      console.log(addrd + '__' + adddiap)
+    var addrd = '/d{}'.format(i)
+    var adddiap = 'diapos/diapo.html'
+    console.log(addrd + '__' + adddiap)
 
-      app.get(addrd, function(req, res){
-            fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
-                  if (err) { return console.log(err); }
-                  var config_params = JSON.parse(config_contents);
-                  // Add diapo_index to the parameters
-                  config_params.diapo_index = i;
-                  res.render(adddiap, config_params);
-            });
-      });
-      concat_diapos(i)              // concatenate all the diapo in one file
+    app.get(addrd, function(req, res){
+        fs.readFile("views/config/config.json", 'utf8', function (err, config_contents) {
+                if (err) { return console.log(err); }
+                var config_params = JSON.parse(config_contents);
+                // Add diapo_index to the parameters
+                config_params.diapo_index = i;
+                res.render(adddiap, config_params);
+        });
+    });
+    concat_diapos(i)              // concatenate all the diapo in one file
 }
 
 // ----------------  Make the Routage
+
+numdiap = null      // number of slides
 
 function main_init(){
 
@@ -114,7 +193,7 @@ function main_init(){
       Routage and concatenation
       */
 
-      numdiap = null
+      
 
       // Count only d*.html files (markdown files), not diapo*.html (jinja templates)
       fs.readdir('views/diapos', function(err, files) {
@@ -182,6 +261,7 @@ route_all()
 app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('lib'));
+app.use('/thumbnails', express.static('views/thumbnails'));
 
 //--------------  Image upload configuration
 
@@ -482,6 +562,10 @@ io.sockets.on('connection', function (socket) {
 
       socket.on('return', function(new_text) {       // change html with textarea
             modify.modify_html_with_newtext(socket, fs, util, new_text, diapo_index)
+            // Update thumbnail after saving
+            updateSingleThumbnail(diapo_index).catch(err => {
+                console.error('Error updating thumbnail:', err)
+            })
          }); // end socket.on return
 
       //---------------------------------------- Make a new diapo..
@@ -558,11 +642,26 @@ io.sockets.on('connection', function (socket) {
           save_image_position(infos)
       })
 
+      //---------------------------------   Update thumbnail after Ctrl+S
+
+      socket.on('update_thumbnail', function(){
+          updateSingleThumbnail(diapo_index).catch(err => {
+              console.error('Error updating thumbnail:', err)
+          })
+      })
+
 
 }); // end sockets.on connection
 
-var port = 3067
-server.listen(port);
-var addr = 'http://127.0.0.1:{}/d0'.format(port)
+
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");
+
+// Create thumbnails after server is fully started (wait 2 seconds)
+setTimeout(function() {
+    create_thumbnails().then(function() {
+        console.log('Thumbnails created successfully');
+    }).catch(function(err) {
+        console.error('Error creating thumbnails:', err);
+    });
+}, 2000);
