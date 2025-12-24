@@ -14,12 +14,13 @@ var imagePosition = require('./lib/image_position');
 var generate_pdf_from_thumbnails = require('./lib/generate_pdf');
 var update_viewport_dimensions = require('./lib/update_viewport');
 var cleanupOldPDFs = require('./lib/cleanup_pdfs');
+var concat_diapos = require('./lib/concat_diapos');
+var thumbnails = require('./lib/thumbnails');
+var handle_upload_image = require('./lib/upload_image');
+var slideOperations = require('./lib/slide_operations');
 var domtoimage = require('dom-to-image');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
 var multer = require('multer');
 var crypto = require('crypto');
-const puppeteer = require('puppeteer');
 
 String.prototype.format = function () {
     var i = 0, args = arguments;
@@ -37,7 +38,6 @@ var patt = '' // pattern for scroll position
 var scroll_html_pos = 0 //
 var comment = false;
 diapo_index = 0;
-all_diap = ''
 var fullscreen = false
 
 var port = 3067
@@ -51,138 +51,6 @@ nunjucks.configure('views', {
     express: app,
     watch:true
 });
-
-function make_png(i){
-
-  // load from an external file
-  options = {
-    runScripts: 'dangerously',
-    resources: "usable"
-    };
-  console.log('current index is ' + i)
-  JSDOM.fromFile('views/diapos/d1.html', options).then(function (dom) {
-
-      console.log('######## inside jsdom #########')
-      let window = dom.window,
-      document = window.document;
-      //console.log(dom.serialize())
-      //console.log(document.getElementById('num').value)
-      content = window.document.documentElement.outerHTML
-      console.log(content)
-      console.log('#########################')
-    }).catch (function (e) {
-        console.log(e);
-    });
-
-}
-
-async function create_thumbnails(){
-
-    // make thumbnails - optimized version
-    console.log('Creating {} thumbnails...'.format(numdiap));
-
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-
-    // Process thumbnails sequentially to avoid race conditions with #num display
-    for (var i = 0; i < numdiap; i++) {
-        await createSingleThumbnail(browser, i);
-    }
-
-    await browser.close();
-    console.log('All thumbnails created!');
-}
-
-async function createSingleThumbnail(browser, index_diap) {
-    const page = await browser.newPage();
-
-    // Read viewport dimensions from config
-    var config = JSON.parse(fs.readFileSync('views/config/config.json', 'utf8'));
-    var viewportWidth = config.viewport_width || 1920;
-    var viewportHeight = config.viewport_height || 1080;
-
-    await page.setViewport({ width: viewportWidth, height: viewportHeight });
-    var addr_diap = 'http://127.0.0.1:{}/d{}'.format(port, index_diap);
-
-    try {
-        await page.goto(addr_diap, { waitUntil: 'networkidle0', timeout: 30000 });
-
-        // Hide UI elements - keep content styling as is (already configured in diapo.html)
-        await page.evaluate(() => {
-            // Hide all UI elements that shouldn't appear in screenshots
-            // Note: #num is kept visible for PDF generation
-            const elementsToHide = [
-                document.getElementById('help_keys'),
-                document.getElementById('help_voice_cmds'),
-                document.getElementById('slider'),
-                document.getElementById('slider_value'),
-                document.getElementById('current_diapo'),
-                document.getElementById('help_syntax'),
-                document.getElementById('config'),
-                document.querySelector('header'),
-                document.querySelector('footer')
-            ];
-
-            elementsToHide.forEach(el => {
-                if (el) el.style.display = 'none';
-            });
-        });
-
-        // Take screenshot of the entire page (content is already properly styled)
-        await page.screenshot({
-            path: 'views/thumbnails/thumb_{}.png'.format(index_diap),
-            fullPage: false
-        });
-        console.log('Thumbnail {} created'.format(index_diap));
-    } catch (err) {
-        console.error('Error creating thumbnail {}: {}'.format(index_diap, err.message));
-    }
-
-    await page.close();
-}
-
-async function updateSingleThumbnail(index_diap) {
-    /*
-    Update the thumbnail for a single slide
-    */
-    console.log('Updating thumbnail for slide {}...'.format(index_diap));
-
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-
-    await createSingleThumbnail(browser, index_diap);
-    await browser.close();
-
-    console.log('Thumbnail {} updated!'.format(index_diap));
-}
-
-function concat_diapos(i){
-
-      /*
-      Concatenate the content of all the slides..
-      */
-
-      make_png(i)
-      fs.readFile('views/diapos/d{}.html'.format(i), 'utf8', function (err,txt) {
-            if (err) { return console.log(err); }
-
-            all_diap +=  '\n --------------- diap{} ----------------- \n\n '.format(i) + txt + '\n'
-
-            if ( i == numdiap-1 ){
-                //console.log(all_diap)
-                dest = 'views/saved/all_diap.md'
-                fs.writeFile( dest, all_diap, function(err) {
-                      if(err) { return console.log(err); }
-                      //console.log("all_diap saved in {}".format(dest));
-                });    // end writeFile
-            }
-        });   // end fs.readFile
-
-}
 
 function addget(app,i){           // add Routes
 
@@ -199,7 +67,7 @@ function addget(app,i){           // add Routes
                 res.render(adddiap, config_params);
         });
     });
-    concat_diapos(i)              // concatenate all the diapo in one file
+    concat_diapos(i, numdiap)              // concatenate all the diapo in one file
 }
 
 // ----------------  Make the Routage
@@ -312,83 +180,9 @@ var upload = multer({
 
 // Image upload endpoint
 app.post('/upload-image', upload.single('image'), function(req, res) {
-    if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' })
-    }
-
-    var filename = req.file.filename
-    var diapo_idx = req.body.diapo_index || diapo_index
-
-    console.log('Image uploaded:', filename, 'for diapo', diapo_idx)
-
-    // Read current diapo content
-    var diapoFile = 'views/diapos/d{}.html'.format(diapo_idx)
-
-    fs.readFile(diapoFile, 'utf8', function (err, txt) {
-        if (err) {
-            console.error('Error reading diapo file:', err)
-            return res.status(500).json({ error: 'Failed to read diapo file' })
-        }
-
-        // Generate unique image ID for positioning
-        var imageId = filename.replace(/\.[^/.]+$/, '') // Remove extension
-
-        // Add image to end of file with position marker
-        var newImageMarkdown = '\n!pos100/100\n![\'img\' 300x300 %' + imageId + '%](imgs/' + filename + ')\n'
-        var newContent = txt + newImageMarkdown
-
-        // Write updated content
-        fs.writeFile(diapoFile, newContent, function(err) {
-            if (err) {
-                console.error('Error writing diapo file:', err)
-                return res.status(500).json({ error: 'Failed to update diapo file' })
-            }
-
-            console.log('Image added to diapo:', diapoFile)
-
-            // Regenerate the jinja template
-            modify.new_jinja(fs, diapo_idx)
-
-            res.json({
-                success: true,
-                filename: filename,
-                imageId: imageId
-            })
-        })
-    })
+    handle_upload_image(req, res, diapo_index, modify)
 })
 
-//-----------------  modify the value of position in the slide..
-
-//------------------------ Delete slide
-
-function delete_slide(namediap){
-
-    /*
-    Delete
-    */
-
-    console.log('#################  /d{}'.format(namediap))
-    fs.unlink('views/diapos/d{}.html'.format(namediap), function (err) { if (err) throw err; })
-    fs.unlink('views/diapos/diapo{}.html'.format(namediap), function (err) { if (err) throw err; console.log('File deleted!'); })
-
-}
-
-//----------------------- Shift and renumber slides after delete ..
-
-function shift_renumber_slides(i){
-
-      /*
-      Shift and renumber
-      */
-
-      fs.rename('views/diapos/d{}.html'.format(i),'views/diapos/d{}.html'.format(i-1), (err) => { if (err) throw err; });
-      fs.unlink('views/diapos/diapo{}.html'.format(i), function (err) { if (err) throw err; })
-      modify.new_jinja(fs,i-1)
-      //new_jinja(fs, diapo_index)
-      if (i == numdiap){console.log('Renumbered the slides !')}
-
-}
 
 //--------------  websocket
 
@@ -430,7 +224,7 @@ io.sockets.on('connection', function (socket) {
       socket.on('return', function(new_text) {       // change html with textarea
             modify.modify_html_with_newtext(socket, fs, util, new_text, diapo_index)
             // Update thumbnail after saving
-            updateSingleThumbnail(diapo_index).catch(err => {
+            thumbnails.updateSingleThumbnail(diapo_index, port).catch(err => {
                 console.error('Error updating thumbnail:', err)
             })
          }); // end socket.on return
@@ -487,13 +281,13 @@ io.sockets.on('connection', function (socket) {
 
       socket.on('delete', function(namediap) {
 
-          delete_slide(namediap)
+          slideOperations.delete_slide(namediap)
 
           //------------------- renumber
 
           for (i = parseInt(namediap) + 1; i < numdiap ; i++ ){
 
-              shift_renumber_slides(i)
+              slideOperations.shift_renumber_slides(i, numdiap, modify)
 
           }
 
@@ -512,7 +306,7 @@ io.sockets.on('connection', function (socket) {
       //---------------------------------   Update thumbnail after Ctrl+S
 
       socket.on('update_thumbnail', function(){
-          updateSingleThumbnail(diapo_index).catch(err => {
+          thumbnails.updateSingleThumbnail(diapo_index, port).catch(err => {
               console.error('Error updating thumbnail:', err)
           })
       })
@@ -541,7 +335,7 @@ cleanupOldPDFs()
 
 // Create thumbnails after server is fully started (wait 2 seconds)
 setTimeout(function() {
-    create_thumbnails().then(function() {
+    thumbnails.create_thumbnails(numdiap, port).then(function() {
         console.log('Thumbnails created successfully');
     }).catch(function(err) {
         console.error('Error creating thumbnails:', err);
