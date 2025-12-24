@@ -151,27 +151,6 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
- --------------- diap7 ----------------- 
-
- # nouvelle diapo..
-
-## Diapo 7
-
-* Il était une fois dans la ville de Foix
-* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
-* dans cette contrée reculée, en plein milieu de rien..
-	 * ```
-  		bizmuth et belzébuth..
-       ```
-* Catalan equation
-
-!pos294/480
-!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
-
-!pos787/357
-!['sapin de Noël!' 150x150 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
-
-
  --------------- diap6 ----------------- 
 
   # idée de mettre du Bokeh..
@@ -193,6 +172,27 @@ simple texte en format p pour être déplacé..
 !tagv car
 
 
+
+
+ --------------- diap7 ----------------- 
+
+ # nouvelle diapo..
+
+## Diapo 7
+
+* Il était une fois dans la ville de Foix
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  		bizmuth et belzébuth..
+       ```
+* Catalan equation
+
+!pos294/480
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
+
+!pos787/357
+!['sapin de Noël!' 150x150 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
 
 
  --------------- diap8 ----------------- 

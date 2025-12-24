@@ -6,16 +6,24 @@
 d3.js slider..
 */
 
-$('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','bottom':'20px','opacity':'0','transition':'opacity 0.3s'}))
-$('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','bottom':'-10px'}))
-$('#content').append($('<div/>').attr('id','current_diapo'))
+$('#content').append($('<div/>').attr('id','slider').css({'position':'absolute','bottom':'20px','opacity':'0','transition':'opacity 0.3s','z-index':'2000'}))
+$('#content').append($('<div/>').attr('id','slider_value').css({'position':'absolute','bottom':'-10px','z-index':'2000'}))
+$('#content').append($('<div/>').attr('id','current_diapo').css({'z-index':'1500'}))
 $("#slider_value").hide() //
 
-// Show slider on hover
+// Show slider on hover - with extended hover zone around the slider itself
 $('#slider').hover(
     function() { $(this).css('opacity', '1') },  // Mouse enter
     function() { $(this).css('opacity', '0') }   // Mouse leave
 )
+
+// Extend the hover zone with padding to make it easier to trigger
+$('#slider').css({
+    'padding-top': '30px',
+    'padding-bottom': '30px',
+    'margin-top': '-30px',
+    'margin-bottom': '-30px'
+})
 
 
 var currentSliderX = 0;
@@ -23,24 +31,17 @@ var currentSliderX = 0;
 function css_miniature(elem, xPos){
 
       /*
-      Css for miniature - centers iframe above slider button
-      iframe width: 1600px * 0.3 scale = 480px effective width
-      iframe height: 950px * 0.3 scale = 285px effective height
-      To center horizontally: subtract half width (240px) from button position
-      Slider button is at y=50px from bottom of slider div (which is at bottom:80px)
-      Place iframe 50px above slider div, using top positioning
+      Css for miniature - centers thumbnail image above slider button
+      Thumbnail dimensions: 360x240 (240x160 scaled by 1.5)
+      To center horizontally: subtract half width (180px) from button position
       */
 
-      // Calculate top position: screen height - slider bottom - gap - scaled iframe height
-      var topPos = window.innerHeight - 20 - 50 - 285 - 80  // Slider moved down 30px more (50->20)
+      // Calculate top position: screen height - slider bottom - gap - thumbnail height (240px)
+      var topPos = window.innerHeight - 20 - 50 - 240 - 80
 
       elem.css({'position':'absolute',
                 'top': topPos + 'px',
-                'left': xPos - 240,
-                '-webkit-transform': 'scale(0.3)',
-                'transform': 'scale(0.3)',
-                '-webkit-transform-origin': '0 0',
-                'transform-origin': '0 0'
+                'left': xPos - 180
               })
 
 }
@@ -70,17 +71,17 @@ function show_target_diapo(d3){
 
       var elem = $('#current_diapo');
 
-      // Update iframe src with diapo number as parameter
-      var iframe = $('#frame0');
-      var iframeUrl = targetDiapo + '?preview=' + diapoNum;
-      if (iframe.length > 0) {
-          iframe.attr('src', iframeUrl);
+      // Update thumbnail image src with diapo number
+      var thumbnail = $('#thumb_preview');
+      var thumbnailUrl = '/thumbnails/thumb_{}.png'.format(diapoNum);
+      if (thumbnail.length > 0) {
+          thumbnail.attr('src', thumbnailUrl);
           $('#diapo_title').text(targetDiapo);
       } else {
-          // Create iframe only once with miniature styling
-          var frame_part = '<iframe id="frame0" src="{}" style="width:1600px;height:950px"></iframe>'.format(iframeUrl);
-          var title_part = '<br><br><br><br><center><h1 id="diapo_title">{}</h1></center>'.format(targetDiapo);
-          elem.html(frame_part + title_part);
+          // Create thumbnail image with title (1.5x larger: 360x240)
+          var thumb_part = '<img id="thumb_preview" src="{}" style="width:360px;height:240px;border:2px solid #ccc;box-shadow:0 4px 8px rgba(0,0,0,0.3)">'.format(thumbnailUrl);
+          var title_part = '<br><center><h3 id="diapo_title" style="margin-top:8px;margin-bottom:20px;color:#333;font-size:14px">{}</h3></center>'.format(targetDiapo);
+          elem.html(thumb_part + title_part);
       }
 
       // Always apply miniature CSS to update position
