@@ -20,7 +20,24 @@ artyom.initialize({
   lang:'fr-FR',
   continuous:true,
   debug:false,
-  listen:true
+  listen:false  // Don't start listening automatically
+})
+
+// Toggle voice control with ctrl+v
+var voiceActive = false;
+key('ctrl+v', function(){
+  if (!voiceActive) {
+    artyom.fatality();  // Stop any existing recognition
+    setTimeout(function() {
+      artyom.listen();
+      voiceActive = true;
+      console.log('Voice control activated');
+    }, 250);
+  } else {
+    artyom.fatality();
+    voiceActive = false;
+    console.log('Voice control deactivated');
+  }
 })
 
 
