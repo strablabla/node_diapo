@@ -51,15 +51,18 @@ function change_diapo(event, socket){
       */
 
       if (event.keyCode == 39){                                   // Increment
-            console.log('Arrow RIGHT pressed, diapo_index will be:', diapo_index + 1);
+            console.log('Arrow RIGHT pressed, current diapo_index:', diapo_index, 'diapo_max:', diapo_max);
             if ( (diapo_index + 1) < diapo_max ){ diapo_index += 1 }
+            console.log('New diapo_index after increment:', diapo_index);
 
             location.replace("d{}".format(diapo_index));
             socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
             }
 
       if (event.keyCode == 37){                                   // Decrement
+            console.log('Arrow LEFT pressed, current diapo_index:', diapo_index, 'diapo_max:', diapo_max);
             if ( (diapo_index - 1) > -1 ){ diapo_index += -1 }
+            console.log('New diapo_index after decrement:', diapo_index);
 
             location.replace("d{}".format(diapo_index));
             socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
@@ -125,14 +128,23 @@ function set_page_num_and_slider(diapo_index){
 //---------------
 
 $('h1').css({'right':'5%'})
-var diapo_index = null
+var diapo_index = {{ diapo_index }}  // Initialize with value from server-side template
+console.log('Initial diapo_index from template:', diapo_index)
+
 socket.on('numdiap', function(numdiap){
+      console.log('Received numdiap from server:', numdiap)
       diapo_index = parseInt(numdiap)
       set_page_num_and_slider(diapo_index)
      })  // index of current diap
+// Emit initial diapo_index to server
+console.log('Emitting initial diapo_index to server:', diapo_index)
+socket.emit('numdiap', diapo_index)
 var diapo_max = null
 socket.on('maxdiap', function(text){
+  console.log('Received maxdiap from server:', text)
   diapo_max = text
+  // Set initial page number and slider once we have diapo_max
+  set_page_num_and_slider(diapo_index)
   socket.emit('params','')
  })        // number max of diapo
 

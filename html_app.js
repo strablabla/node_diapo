@@ -48,13 +48,9 @@ nunjucks.configure('views', {
 
 // ----------------  Make the Routage
 
-numdiap = null      // number of slides
+var numdiap = null      // number of slides
 
 //------------------- Routage
-
-routing.route_all(app, concat_diapos, function(num) {
-    numdiap = num
-})
 
 //--------------  static addresses
 
@@ -85,6 +81,14 @@ var websocketState = setupWebSocket(io, server, {
     slideOperations: slideOperations,
     routing: routing,
     concat_diapos: concat_diapos
+})
+
+// Initialize routing and update websocket state when numdiap is ready
+routing.route_all(app, concat_diapos, function(num) {
+    numdiap = num
+    console.log('Numdiap initialized:', numdiap)
+    // Update websocket state with the correct numdiap value
+    websocketState.updateNumdiap(numdiap)
 })
 
 //--------------  Image upload configuration
