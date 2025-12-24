@@ -83,17 +83,9 @@ async function create_thumbnails(){
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
-    // Process thumbnails in parallel (batches of 3)
-    const batchSize = 3;
-    for (var i = 0; i < numdiap; i += batchSize) {
-        const promises = [];
-
-        for (var j = 0; j < batchSize && (i + j) < numdiap; j++) {
-            const index_diap = i + j;
-            promises.push(createSingleThumbnail(browser, index_diap));
-        }
-
-        await Promise.all(promises);
+    // Process thumbnails sequentially to avoid race conditions with #num display
+    for (var i = 0; i < numdiap; i++) {
+        await createSingleThumbnail(browser, i);
     }
 
     await browser.close();
@@ -117,6 +109,7 @@ async function createSingleThumbnail(browser, index_diap) {
         // Hide UI elements - keep content styling as is (already configured in diapo.html)
         await page.evaluate(() => {
             // Hide all UI elements that shouldn't appear in screenshots
+            // Note: #num is kept visible for PDF generation
             const elementsToHide = [
                 document.getElementById('help_keys'),
                 document.getElementById('help_voice_cmds'),
@@ -125,7 +118,6 @@ async function createSingleThumbnail(browser, index_diap) {
                 document.getElementById('current_diapo'),
                 document.getElementById('help_syntax'),
                 document.getElementById('config'),
-                document.getElementById('num'),
                 document.querySelector('header'),
                 document.querySelector('footer')
             ];

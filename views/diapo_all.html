@@ -39,9 +39,15 @@ setTimeout(function() {
     document.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
 }, 100);
 
-// Thumbnail dimensions (from config viewport, displayed at 50%)
-var thumbWidth = {{viewport_width}} * 0.5   // 50% of viewport width
-var thumbHeight = {{viewport_height}} * 0.5  // 50% of viewport height
+// Thumbnail dimensions - calculate max size that fits screen while respecting ratio
+var viewportWidth = {{viewport_width}}
+var viewportHeight = {{viewport_height}}
+var aspectRatio = viewportWidth / viewportHeight
+
+// Use 45% of window width (half of 90%)
+var maxWidth = window.innerWidth * 0.45
+var thumbWidth = maxWidth
+var thumbHeight = thumbWidth / aspectRatio
 
 // Style slide indices
 $('.slide_index').css({
