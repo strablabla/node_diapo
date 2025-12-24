@@ -1,21 +1,37 @@
 
-<div class="form-group">
+<!-- Text editing interface for slide content -->
+<div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 0 50px;">
 
-     <center for="comment">Text:</center>
-     <br/><br/>
-     <textarea class="form-control" rows="10" id="comment" style="width: 1200px; height: 500px">aaaa</textarea>
+     <!-- Title/label for the text area - displays current slide number -->
+     <div for="comment" id="textarea_title" style="text-align: center; font-size: 18px; margin-bottom: 20px;">Slide:</div>
+
+     <script>
+     // Update title with current slide number when diapo_index is received
+     $(document).ready(function() {
+         socket.on('numdiap', function(index) {
+             $('#textarea_title').text('Slide ' + index);
+         });
+     });
+     </script>
+
+     <!-- Large text area for editing slide content - width auto-adjusts with 50px margins -->
+     <textarea class="form-control" rows="10" id="comment" style="width: calc(100vw - 100px); max-width: 1200px; height: 500px;">aaaa</textarea>
 
      <br/>
 
+    <!-- Submit button (hidden by default) -->
     <div class="col-sm-10" hidden >
        <button type="submit" class="btn btn-default" id='submit' >Submit</button>
      </div>
 
 </div>
 
+<!-- Wrap URL button (hidden by default) - wraps selected text with URL markup -->
 <div class="col-sm-10" hidden >
    <button type="button" class="btn btn-default" id='wrap_url' > Wrap </button>
 </div>
+
+<!-- Insert button (hidden by default) - inserts content into textarea -->
 <div class="col-sm-10" hidden >
    <button type="button" class="btn btn-default" id='insert' > Insert </button>
 </div>

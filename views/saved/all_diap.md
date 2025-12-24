@@ -101,7 +101,6 @@ a
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
-
  --------------- diap4 ----------------- 
 
  

@@ -77,7 +77,10 @@ $('li').hover(function(){
      }
 })
 $('li').mouseleave(function(){
-      $(this).css({"font-size" : "100%"}) // normal size
+      // Only reset font size if this element contains Chinese characters
+      if ($(this).text().match(/[\u3400-\u9FBF]/)){
+            $(this).css({"font-size" : "100%"}) // normal size
+      }
 })
 
 </script>
