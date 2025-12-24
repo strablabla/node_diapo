@@ -1,6 +1,8 @@
 
 <script>
 
+MathLive.renderMathInDocument() 
+
 $('li').hover(function(){
      if ($(this).text().match(/[\u3400-\u9FBF]/)){
             $(this).css({"font-size" : "large"})    // if chinese, magnify the text..
@@ -11,3 +13,5 @@ $('li').mouseleave(function(){
 })
 
 </script>
+
+

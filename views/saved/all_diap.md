@@ -59,13 +59,13 @@ $memo1
 * Rêve ou réalité?
 * la révolution des "Siths"co
 
-!pos755/275
+!pos899/563
 !['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
 
-!pos224/356
+!pos424/356
 !['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos495/467
+!pos695/467
 !eq e^{i\pi}=-1
 
 
@@ -128,7 +128,7 @@ a
 
  --------------- diap5 ----------------- 
 
- # Rappel
+ # Mama météo
 
 * Les "Météorologiques"u d'Aristote (384-322 BC)
 
