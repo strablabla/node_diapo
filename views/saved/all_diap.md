@@ -59,13 +59,13 @@ $memo1
 * Rêve ou réalité?
 * la révolution des "Siths"co
 
-!pos899/563
+!pos938/251
 !['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
 
-!pos424/356
+!pos524/356
 !['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
 
-!pos695/467
+!pos795/467
 !eq e^{i\pi}=-1
 
 

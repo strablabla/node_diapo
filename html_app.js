@@ -9,13 +9,17 @@ var count = require('./static/js/count_lines');
 var util = require('./static/js/util');
 var re = require('./static/js/read_emit');
 var modify = require('./static/js/modify_html');
+var findpos_modif_txt = require('./lib/findpos_modif_txt');
+var imagePosition = require('./lib/image_position');
+var generate_pdf_from_thumbnails = require('./lib/generate_pdf');
+var update_viewport_dimensions = require('./lib/update_viewport');
+var cleanupOldPDFs = require('./lib/cleanup_pdfs');
 var domtoimage = require('dom-to-image');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 var multer = require('multer');
 var crypto = require('crypto');
 const puppeteer = require('puppeteer');
-const PDFDocument = require('pdfkit');
 
 String.prototype.format = function () {
     var i = 0, args = arguments;
@@ -35,7 +39,6 @@ var comment = false;
 diapo_index = 0;
 all_diap = ''
 var fullscreen = false
-var viewportDimensionsDetected = false  // Flag to detect viewport dimensions only once per server session
 
 var port = 3067
 server.listen(port);
@@ -357,159 +360,6 @@ app.post('/upload-image', upload.single('image'), function(req, res) {
 
 //-----------------  modify the value of position in the slide..
 
-function findpos_modif_txt(txt, pos, id){
-
-      /*
-      Find image or equation position marker and update it
-      For images: id is like "Turner-Fire..." from %id% in markdown
-      For equations: id is like "eq-0" indicating the Nth equation
-      */
-
-      if (!txt) {
-          console.error('findpos_modif_txt: txt is empty or undefined')
-          return txt
-      }
-
-      list_lines = txt.split('\n')
-      console.log('Looking for pattern ID:', id)
-      console.log('Position to save:', pos)
-
-      var found = false;
-
-      // Check if this is an equation (id starts with "eq-")
-      console.log('Checking if ID matches equation pattern /^eq-\\d+$/:', id.match(/^eq-\d+$/))
-      if (id.match(/^eq-\d+$/)) {
-          console.log('This is an equation ID!')
-          var eq_index = parseInt(id.split('-')[1])
-          var eq_count = 0
-          console.log('Looking for equation index:', eq_index)
-
-          for (var i=0; i < list_lines.length; i++){
-              if (list_lines[i].match(/\!eq/)){
-                  console.log('Found !eq at line ' + i + ', eq_count=' + eq_count)
-                  if (eq_count === eq_index) {
-                      console.log('Equation ' + eq_index + ' found at line ' + i + ': ' + list_lines[i])
-                      found = true;
-                      if (i > 0 && list_lines[i-1].match(/\!pos/)){
-                          console.log("Found !pos marker at line " + (i-1) + ": " + list_lines[i-1])
-                          list_lines[i-1] = '!pos' + Math.round(pos.left) + '/' + Math.round(pos.top)
-                          console.log("Updated to: " + list_lines[i-1])
-                      } else {
-                          console.log("No !pos marker found at line " + (i-1))
-                      }
-                      break;
-                  }
-                  eq_count++;
-              }
-          }
-      } else {
-          console.log('This is NOT an equation ID, treating as image')
-          // For images, search for the ID pattern (original behavior)
-          for (var i=0; i < list_lines.length; i++){
-              if (list_lines[i].match(id)){
-                  console.log('Pattern "' + id + '" found at line ' + i + ': ' + list_lines[i])
-                  found = true;
-                  if (i > 0 && list_lines[i-1].match(/\!pos/)){
-                      console.log("Found !pos marker at line " + (i-1) + ": " + list_lines[i-1])
-                      list_lines[i-1] = '!pos' + Math.round(pos.left) + '/' + Math.round(pos.top)
-                      console.log("Updated to: " + list_lines[i-1])
-                  } else {
-                      console.log("No !pos marker found at line " + (i-1) + ", it contains: " + (i > 0 ? list_lines[i-1] : 'N/A'))
-                  }
-              } // end if
-          } // end for
-      }
-
-      if (!found) {
-          console.error('Pattern "' + id + '" was NOT found in the file!')
-      }
-
-      new_txt = list_lines.join('\n')
-
-      if (!new_txt) {
-          console.error('findpos_modif_txt: new_txt is empty, returning original txt')
-          return txt
-      }
-
-      return new_txt
-}
-
-//------------------ Save image position with batching
-
-var imagePosQueue = [];
-var imagePosTimer = null;
-
-function save_image_position(infos){
-
-      /*
-      Image position is saved when ctrl+i is executed..
-      Accumulates positions for 100ms to handle multiple images
-      */
-
-      console.log(infos)
-      var id = infos.split('§§')[0]
-      var pos = JSON.parse(infos.split('§§')[1])
-
-      // Add to queue
-      imagePosQueue.push({id: id, pos: pos});
-
-      // Clear existing timer
-      if (imagePosTimer) {
-          clearTimeout(imagePosTimer);
-      }
-
-      // Set timer to process queue after 100ms
-      imagePosTimer = setTimeout(function() {
-          processImagePosQueue();
-      }, 100);
-}
-
-function processImagePosQueue() {
-      if (imagePosQueue.length === 0) {
-          return;
-      }
-
-      console.log('Processing', imagePosQueue.length, 'image positions');
-
-      fs.readFile('views/diapos/d{}.html'.format(diapo_index), 'utf8', function (err,txt) {
-              if (err) {
-                  console.error('Error reading file:', err);
-                  imagePosQueue = [];
-                  return;
-              }
-
-              if (!txt || txt.trim() === '') {
-                  console.error('File content is empty, aborting save to prevent data loss');
-                  imagePosQueue = [];
-                  return;
-              }
-
-              // Apply all position updates
-              var new_txt = txt;
-              for (var i = 0; i < imagePosQueue.length; i++) {
-                  new_txt = findpos_modif_txt(new_txt, imagePosQueue[i].pos, imagePosQueue[i].id);
-              }
-
-              // Safety check: don't write if new_txt is empty or too short
-              if (!new_txt || new_txt.trim() === '' || new_txt.length < 10) {
-                  console.error('Generated text is empty or too short, aborting save to prevent data loss');
-                  console.error('Original text length:', txt.length, 'New text length:', new_txt ? new_txt.length : 0);
-                  imagePosQueue = [];
-                  return;
-              }
-
-              dest = 'views/diapos/d{}.html'.format(diapo_index)
-              fs.writeFile(dest , new_txt, function(err) {
-                  if(err) {
-                      console.error('Error writing file:', err);
-                      return;
-                  }
-                  console.log("saved {} with {} image position updates".format(dest, imagePosQueue.length));
-                  imagePosQueue = []; // Clear queue after successful save
-                  });    // end writeFile
-            }) // end readFile
-}
-
 //------------------------ Delete slide
 
 function delete_slide(namediap){
@@ -538,111 +388,6 @@ function shift_renumber_slides(i){
       //new_jinja(fs, diapo_index)
       if (i == numdiap){console.log('Renumbered the slides !')}
 
-}
-
-//----------------------- Update viewport dimensions
-
-function update_viewport_dimensions(dimensions) {
-      // Only update dimensions once per server session
-      if (viewportDimensionsDetected) {
-          console.log('Viewport dimensions already detected, ignoring update')
-          return
-      }
-
-      console.log('Updating viewport dimensions:', dimensions)
-
-      fs.readFile('views/config/config.json', 'utf8', function(err, data) {
-          if (err) {
-              console.error('Error reading config:', err)
-              return
-          }
-
-          var config = JSON.parse(data)
-          config.viewport_width = dimensions.width
-          config.viewport_height = dimensions.height
-
-          fs.writeFile('views/config/config.json', JSON.stringify(config, null, 2), function(err) {
-              if (err) {
-                  console.error('Error writing config:', err)
-                  return
-              }
-              console.log('Viewport dimensions saved: {}x{}'.format(dimensions.width, dimensions.height))
-              viewportDimensionsDetected = true  // Mark as detected
-          })
-      })
-}
-
-//----------------------- Generate PDF from thumbnails
-
-function generate_pdf_from_thumbnails(socket) {
-    console.log('Starting PDF generation from thumbnails...')
-
-    try {
-        // Read viewport dimensions from config
-        var config = JSON.parse(fs.readFileSync('views/config/config.json', 'utf8'))
-        var viewportWidth = config.viewport_width || 1920
-        var viewportHeight = config.viewport_height || 1080
-
-        // Create PDF document in landscape A4 (842 x 595 points)
-        const doc = new PDFDocument({
-            size: 'A4',
-            layout: 'landscape',
-            margin: 0
-        })
-
-        // Output file in static folder to make it accessible via HTTP
-        const timestamp = Date.now()
-        const filename = 'slides_' + timestamp + '.pdf'
-        const outputPath = path.join(__dirname, 'static', filename)
-        const writeStream = fs.createWriteStream(outputPath)
-        doc.pipe(writeStream)
-
-        // Add each thumbnail to the PDF
-        let addedPages = 0
-        for (let i = 0; i < numdiap; i++) {
-            const thumbPath = path.join(__dirname, 'views', 'thumbnails', 'thumb_' + i + '.png')
-
-            if (fs.existsSync(thumbPath)) {
-                if (addedPages > 0) {
-                    doc.addPage()
-                }
-
-                // Fit image to page (A4 landscape: 842 x 595 points)
-                // Scale to fit width based on actual viewport dimensions
-                const scale = 842 / viewportWidth
-                const width = viewportWidth * scale  // 842
-                const height = viewportHeight * scale
-                const x = 0
-                const y = (595 - height) / 2  // Center vertically
-
-                doc.image(thumbPath, x, y, { width: width, height: height })
-                addedPages++
-                console.log('Added thumbnail ' + i + ' to PDF')
-            } else {
-                console.warn('Thumbnail ' + i + ' not found: ' + thumbPath)
-            }
-        }
-
-        doc.end()
-        console.log('PDF document ended, waiting for write to finish...')
-
-        // Wait for PDF to finish writing
-        writeStream.on('finish', function() {
-            console.log('PDF generated successfully at: ' + outputPath)
-            // Send the URL for download
-            const downloadUrl = '/static/' + filename
-            socket.emit('pdf_generated', { success: true, downloadUrl: downloadUrl })
-        })
-
-        writeStream.on('error', function(err) {
-            console.error('Error writing PDF:', err)
-            socket.emit('pdf_generated', { success: false, error: err.message })
-        })
-
-    } catch (err) {
-        console.error('Error generating PDF:', err)
-        socket.emit('pdf_generated', { success: false, error: err.message })
-    }
 }
 
 //--------------  websocket
@@ -761,7 +506,7 @@ io.sockets.on('connection', function (socket) {
       //---------------------------------   Image position..
 
       socket.on('pos_img', function(infos){
-          save_image_position(infos)
+          imagePosition.save_image_position(infos, diapo_index, findpos_modif_txt)
       })
 
       //---------------------------------   Update thumbnail after Ctrl+S
@@ -781,7 +526,7 @@ io.sockets.on('connection', function (socket) {
       //---------------------------------   Generate PDF from thumbnails
 
       socket.on('generate_pdf', function(){
-          generate_pdf_from_thumbnails(socket)
+          generate_pdf_from_thumbnails(socket, numdiap)
       })
 
 
@@ -790,30 +535,6 @@ io.sockets.on('connection', function (socket) {
 
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");
-
-// Clean up old PDF files in static folder
-function cleanupOldPDFs() {
-    const staticDir = path.join(__dirname, 'static')
-    fs.readdir(staticDir, function(err, files) {
-        if (err) {
-            console.error('Error reading static directory:', err)
-            return
-        }
-
-        files.forEach(function(file) {
-            if (file.startsWith('slides_') && file.endsWith('.pdf')) {
-                const filePath = path.join(staticDir, file)
-                fs.unlink(filePath, function(err) {
-                    if (err) {
-                        console.error('Error deleting ' + file + ':', err)
-                    } else {
-                        console.log('Deleted old PDF: ' + file)
-                    }
-                })
-            }
-        })
-    })
-}
 
 // Clean up old PDFs on startup
 cleanupOldPDFs()
