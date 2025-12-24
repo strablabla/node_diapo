@@ -46,33 +46,6 @@ $memo1
     * qu'est ce que ziber vraiment ?
 
 
- --------------- diap2 ----------------- 
-
- # diapo 2
-
-# A general intro stuff blabla
-
-## diapo 2 !fb
-
-!head tête ou pas..
-
-* Rêve ou réalité?
-* la révolution des "Siths"co
-
-!pos938/251
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
-
-!pos524/356
-!['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
-
-!pos795/467
-!eq e^{i\pi}=-1
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
  --------------- diap3 ----------------- 
 
  
@@ -95,6 +68,33 @@ a
 \left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
 
 !tagv ballon
+
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
+ --------------- diap2 ----------------- 
+
+ # diapo 2
+
+# A general intro stuff blabla
+
+## diapo 2 !fb
+
+!head tête ou pas..
+
+* Rêve ou réalité?
+* la révolution des "Siths"co
+
+!pos938/251
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+
+!pos524/356
+!['magno' 200x200 %magnolia%](imgs/magnolia.jpg)
+
+!pos795/467
+!eq e^{i\pi}=-1
 
 
 
