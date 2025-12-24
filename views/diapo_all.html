@@ -39,9 +39,9 @@ setTimeout(function() {
     document.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
 }, 100);
 
-// Thumbnail dimensions (from Puppeteer: 1200x800, displayed at 50% = 600x400)
-var thumbWidth = 600   // 50% of 1200
-var thumbHeight = 400  // 50% of 800
+// Thumbnail dimensions (from config viewport, displayed at 50%)
+var thumbWidth = {{viewport_width}} * 0.5   // 50% of viewport width
+var thumbHeight = {{viewport_height}} * 0.5  // 50% of viewport height
 
 // Style slide indices
 $('.slide_index').css({

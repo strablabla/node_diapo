@@ -32,16 +32,20 @@ function css_miniature(elem, xPos){
 
       /*
       Css for miniature - centers thumbnail image above slider button
-      Thumbnail dimensions: 360x240 (240x160 scaled by 1.5)
-      To center horizontally: subtract half width (180px) from button position
+      Thumbnail dimensions: viewport scaled by 0.21 (0.3 * 0.7)
+      To center horizontally: subtract half width from button position
       */
 
-      // Calculate top position: screen height - slider bottom - gap - thumbnail height (240px)
-      var topPos = window.innerHeight - 20 - 50 - 240 - 80
+      // Calculate thumbnail dimensions (0.21 scale = 0.3 * 0.7)
+      var thumbWidth = {{viewport_width}} * 0.21
+      var thumbHeight = {{viewport_height}} * 0.21
+
+      // Calculate top position: screen height - slider bottom - gap - thumbnail height
+      var topPos = window.innerHeight - 20 - 50 - thumbHeight - 80
 
       elem.css({'position':'absolute',
                 'top': topPos + 'px',
-                'left': xPos - 180
+                'left': xPos - (thumbWidth / 2)
               })
 
 }
@@ -78,8 +82,10 @@ function show_target_diapo(d3){
           thumbnail.attr('src', thumbnailUrl);
           $('#diapo_title').text(targetDiapo);
       } else {
-          // Create thumbnail image with title (1.5x larger: 360x240)
-          var thumb_part = '<img id="thumb_preview" src="{}" style="width:360px;height:240px;border:2px solid #ccc;box-shadow:0 4px 8px rgba(0,0,0,0.3)">'.format(thumbnailUrl);
+          // Create thumbnail image with title (0.21x scale = 0.3 * 0.7)
+          var thumbW = {{viewport_width}} * 0.21
+          var thumbH = {{viewport_height}} * 0.21
+          var thumb_part = '<img id="thumb_preview" src="{}" style="width:{}px;height:{}px;border:2px solid #ccc;box-shadow:0 4px 8px rgba(0,0,0,0.3)">'.format(thumbnailUrl, thumbW, thumbH);
           var title_part = '<br><center><h3 id="diapo_title" style="margin-top:8px;margin-bottom:20px;color:#333;font-size:14px">{}</h3></center>'.format(targetDiapo);
           elem.html(thumb_part + title_part);
       }

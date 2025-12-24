@@ -35,6 +35,7 @@ var comment = false;
 diapo_index = 0;
 all_diap = ''
 var fullscreen = false
+var viewportDimensionsDetected = false  // Flag to detect viewport dimensions only once per server session
 
 var port = 3067
 server.listen(port);
@@ -102,22 +103,43 @@ async function create_thumbnails(){
 async function createSingleThumbnail(browser, index_diap) {
     const page = await browser.newPage();
 
-    await page.setViewport({ width: 1200, height: 800 });
-    // Add fullscreen=true parameter to generate thumbnails in fullscreen mode
-    var addr_diap = 'http://127.0.0.1:{}/d{}?fullscreen=true'.format(port, index_diap);
+    // Read viewport dimensions from config
+    var config = JSON.parse(fs.readFileSync('views/config/config.json', 'utf8'));
+    var viewportWidth = config.viewport_width || 1920;
+    var viewportHeight = config.viewport_height || 1080;
+
+    await page.setViewport({ width: viewportWidth, height: viewportHeight });
+    var addr_diap = 'http://127.0.0.1:{}/d{}'.format(port, index_diap);
 
     try {
         await page.goto(addr_diap, { waitUntil: 'networkidle0', timeout: 30000 });
 
-        // Hide help elements before taking screenshot
+        // Hide UI elements - keep content styling as is (already configured in diapo.html)
         await page.evaluate(() => {
-            const helpKeys = document.getElementById('help_keys');
-            const helpVoice = document.getElementById('help_voice_cmds');
-            if (helpKeys) helpKeys.style.display = 'none';
-            if (helpVoice) helpVoice.style.display = 'none';
+            // Hide all UI elements that shouldn't appear in screenshots
+            const elementsToHide = [
+                document.getElementById('help_keys'),
+                document.getElementById('help_voice_cmds'),
+                document.getElementById('slider'),
+                document.getElementById('slider_value'),
+                document.getElementById('current_diapo'),
+                document.getElementById('help_syntax'),
+                document.getElementById('config'),
+                document.getElementById('num'),
+                document.querySelector('header'),
+                document.querySelector('footer')
+            ];
+
+            elementsToHide.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
         });
 
-        await page.screenshot({ path: 'views/thumbnails/thumb_{}.png'.format(index_diap) });
+        // Take screenshot of the entire page (content is already properly styled)
+        await page.screenshot({
+            path: 'views/thumbnails/thumb_{}.png'.format(index_diap),
+            fullPage: false
+        });
         console.log('Thumbnail {} created'.format(index_diap));
     } catch (err) {
         console.error('Error creating thumbnail {}: {}'.format(index_diap, err.message));
@@ -653,12 +675,49 @@ io.sockets.on('connection', function (socket) {
           })
       })
 
+      //---------------------------------   Update viewport dimensions from client
+
+      socket.on('update_viewport', function(dimensions){
+          // Only update dimensions once per server session
+          if (viewportDimensionsDetected) {
+              console.log('Viewport dimensions already detected, ignoring update')
+              return
+          }
+
+          console.log('Updating viewport dimensions:', dimensions)
+
+          fs.readFile('views/config/config.json', 'utf8', function(err, data) {
+              if (err) {
+                  console.error('Error reading config:', err)
+                  return
+              }
+
+              var config = JSON.parse(data)
+              config.viewport_width = dimensions.width
+              config.viewport_height = dimensions.height
+
+              fs.writeFile('views/config/config.json', JSON.stringify(config, null, 2), function(err) {
+                  if (err) {
+                      console.error('Error writing config:', err)
+                      return
+                  }
+                  console.log('Viewport dimensions saved: {}x{}'.format(dimensions.width, dimensions.height))
+                  viewportDimensionsDetected = true  // Mark as detected
+              })
+          })
+      })
+
       //---------------------------------   Generate PDF from thumbnails
 
       socket.on('generate_pdf', function(){
           console.log('Starting PDF generation from thumbnails...')
 
           try {
+              // Read viewport dimensions from config
+              var config = JSON.parse(fs.readFileSync('views/config/config.json', 'utf8'))
+              var viewportWidth = config.viewport_width || 1920
+              var viewportHeight = config.viewport_height || 1080
+
               // Create PDF document in landscape A4 (842 x 595 points)
               const doc = new PDFDocument({
                   size: 'A4',
@@ -684,11 +743,10 @@ io.sockets.on('connection', function (socket) {
                       }
 
                       // Fit image to page (A4 landscape: 842 x 595 points)
-                      // Thumbnail is 1200x800, aspect ratio 1.5
-                      // Scale to fit width: 842 / 1200 = 0.7017
-                      const scale = 842 / 1200
-                      const width = 1200 * scale  // 842
-                      const height = 800 * scale  // 561
+                      // Scale to fit width based on actual viewport dimensions
+                      const scale = 842 / viewportWidth
+                      const width = viewportWidth * scale  // 842
+                      const height = viewportHeight * scale
                       const x = 0
                       const y = (595 - height) / 2  // Center vertically
 
