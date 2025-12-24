@@ -18,3 +18,7 @@ Thumbs.db
 
 # Thumbnails
 views/thumbnails/
+
+# Generated PDFs
+slides.pdf
+static/slides_*.pdf

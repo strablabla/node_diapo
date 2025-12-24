@@ -15,6 +15,7 @@ const { JSDOM } = jsdom;
 var multer = require('multer');
 var crypto = require('crypto');
 const puppeteer = require('puppeteer');
+const PDFDocument = require('pdfkit');
 
 String.prototype.format = function () {
     var i = 0, args = arguments;
@@ -262,6 +263,7 @@ app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('lib'));
 app.use('/thumbnails', express.static('views/thumbnails'));
+app.use('/static', express.static('static'));
 
 //--------------  Image upload configuration
 
@@ -650,12 +652,108 @@ io.sockets.on('connection', function (socket) {
           })
       })
 
+      //---------------------------------   Generate PDF from thumbnails
+
+      socket.on('generate_pdf', function(){
+          console.log('Starting PDF generation from thumbnails...')
+
+          try {
+              // Create PDF document in landscape A4 (842 x 595 points)
+              const doc = new PDFDocument({
+                  size: 'A4',
+                  layout: 'landscape',
+                  margin: 0
+              })
+
+              // Output file in static folder to make it accessible via HTTP
+              const timestamp = Date.now()
+              const filename = 'slides_' + timestamp + '.pdf'
+              const outputPath = path.join(__dirname, 'static', filename)
+              const writeStream = fs.createWriteStream(outputPath)
+              doc.pipe(writeStream)
+
+              // Add each thumbnail to the PDF
+              let addedPages = 0
+              for (let i = 0; i < numdiap; i++) {
+                  const thumbPath = path.join(__dirname, 'views', 'thumbnails', 'thumb_' + i + '.png')
+
+                  if (fs.existsSync(thumbPath)) {
+                      if (addedPages > 0) {
+                          doc.addPage()
+                      }
+
+                      // Fit image to page (A4 landscape: 842 x 595 points)
+                      // Thumbnail is 1200x800, aspect ratio 1.5
+                      // Scale to fit width: 842 / 1200 = 0.7017
+                      const scale = 842 / 1200
+                      const width = 1200 * scale  // 842
+                      const height = 800 * scale  // 561
+                      const x = 0
+                      const y = (595 - height) / 2  // Center vertically
+
+                      doc.image(thumbPath, x, y, { width: width, height: height })
+                      addedPages++
+                      console.log('Added thumbnail ' + i + ' to PDF')
+                  } else {
+                      console.warn('Thumbnail ' + i + ' not found: ' + thumbPath)
+                  }
+              }
+
+              doc.end()
+              console.log('PDF document ended, waiting for write to finish...')
+
+              // Wait for PDF to finish writing
+              writeStream.on('finish', function() {
+                  console.log('PDF generated successfully at: ' + outputPath)
+                  // Send the URL for download
+                  const downloadUrl = '/static/' + filename
+                  socket.emit('pdf_generated', { success: true, downloadUrl: downloadUrl })
+              })
+
+              writeStream.on('error', function(err) {
+                  console.error('Error writing PDF:', err)
+                  socket.emit('pdf_generated', { success: false, error: err.message })
+              })
+
+          } catch (err) {
+              console.error('Error generating PDF:', err)
+              socket.emit('pdf_generated', { success: false, error: err.message })
+          }
+      })
+
 
 }); // end sockets.on connection
 
 
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");
+
+// Clean up old PDF files in static folder
+function cleanupOldPDFs() {
+    const staticDir = path.join(__dirname, 'static')
+    fs.readdir(staticDir, function(err, files) {
+        if (err) {
+            console.error('Error reading static directory:', err)
+            return
+        }
+
+        files.forEach(function(file) {
+            if (file.startsWith('slides_') && file.endsWith('.pdf')) {
+                const filePath = path.join(staticDir, file)
+                fs.unlink(filePath, function(err) {
+                    if (err) {
+                        console.error('Error deleting ' + file + ':', err)
+                    } else {
+                        console.log('Deleted old PDF: ' + file)
+                    }
+                })
+            }
+        })
+    })
+}
+
+// Clean up old PDFs on startup
+cleanupOldPDFs()
 
 // Create thumbnails after server is fully started (wait 2 seconds)
 setTimeout(function() {
