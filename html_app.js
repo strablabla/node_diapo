@@ -103,7 +103,8 @@ async function createSingleThumbnail(browser, index_diap) {
     const page = await browser.newPage();
 
     await page.setViewport({ width: 1200, height: 800 });
-    var addr_diap = 'http://127.0.0.1:{}/d{}'.format(port, index_diap);
+    // Add fullscreen=true parameter to generate thumbnails in fullscreen mode
+    var addr_diap = 'http://127.0.0.1:{}/d{}?fullscreen=true'.format(port, index_diap);
 
     try {
         await page.goto(addr_diap, { waitUntil: 'networkidle0', timeout: 30000 });
