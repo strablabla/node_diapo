@@ -151,6 +151,10 @@ var chgy = function(){$("#slider_value").html(d3.event.y)}
 
 var slide = function(data, name_svg){              // Vertical or horizontal slider
 
+    // Remove existing slider elements before creating new ones
+    name_svg.selectAll("line").remove();
+    name_svg.selectAll("ellipse.slide").remove();
+
     slider_line = function(data){
           var svg_slider_line = name_svg
             .selectAll("svg_slider_line")

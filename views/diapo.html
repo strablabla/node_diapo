@@ -98,8 +98,14 @@ function set_page_num_and_slider(diapo_index){
 
             // Always show page number (both in main window and iframe)
             var numpage = displayIndex + '/' + (parseInt(diapo_max) - 1)
-            $('#content').append($('</p>').attr('id', 'num').text(numpage))
-            $('#num').css({
+
+            // Only create #num if it doesn't exist
+            if ($('#num').length === 0) {
+                $('#content').append($('<p></p>').attr('id', 'num'))
+            }
+
+            // Update content and style
+            $('#num').text(numpage).css({
                 'position': 'absolute', 'bottom': '20px',
                 'right': '30px', 'font-size': '20px',
                 'z-index': '100'
