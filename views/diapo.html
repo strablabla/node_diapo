@@ -44,32 +44,6 @@ var keyev = function(key, event){
 
       } // end keyev
 
-function change_diapo(event, socket){
-
-      /*
-      Change diapo with arrow left or right
-      */
-
-      if (event.keyCode == 39){                                   // Increment
-            console.log('Arrow RIGHT pressed, current diapo_index:', diapo_index, 'diapo_max:', diapo_max);
-            if ( (diapo_index + 1) < diapo_max ){ diapo_index += 1 }
-            console.log('New diapo_index after increment:', diapo_index);
-
-            location.replace("d{}".format(diapo_index));
-            socket.emit('numdiap', diapo_index)                // informs server of the change of the slide number..
-            }
-
-      if (event.keyCode == 37){                                   // Decrement
-            console.log('Arrow LEFT pressed, current diapo_index:', diapo_index, 'diapo_max:', diapo_max);
-            if ( (diapo_index - 1) > -1 ){ diapo_index += -1 }
-            console.log('New diapo_index after decrement:', diapo_index);
-
-            location.replace("d{}".format(diapo_index));
-            socket.emit('numdiap', diapo_index)              // informs server of the change of the slide number..
-            }
-
-      return diapo_index
-}
 
 //------------------------
 
@@ -160,20 +134,19 @@ console.log('key function type:', typeof key);
 console.log('socket:', socket);
 
 key('right', function(event){
-    console.log('RIGHT key pressed via keymaster');
-    change_diapo({keyCode: 39}, socket);
+    if ((diapo_index + 1) < diapo_max) { diapo_index += 1 }
+    location.replace("d{}".format(diapo_index));
+    socket.emit('numdiap', diapo_index)                
     return false;  // prevent default
 });
 console.log('RIGHT handler registered');
 
 key('left', function(event){
-    console.log('LEFT key pressed via keymaster');
-    change_diapo({keyCode: 37}, socket);
+    if ((diapo_index - 1) > -1) { diapo_index += -1 }
+    location.replace("d{}".format(diapo_index));
+    socket.emit('numdiap', diapo_index)              
     return false;  // prevent default
 });
-console.log('LEFT handler registered');
-
-console.log('===== ALL HANDLERS REGISTERED =====');
 
 //------------------ New diapo
 
@@ -596,9 +569,9 @@ function make_title(){
       $('h1').hide()
       $('li').hide()
       var dictit= {'position':'relative','font-size':'300%',
-                  'text-align':'center', 'top':'100px',
-                  'background-color':'orange', 'color':'white',
-                  'margin-left':'100px', 'margin-right':'100px'}
+                   'text-align':'center', 'top':'100px',
+                   'background-color':'orange', 'color':'white',
+                   'margin-left':'100px', 'margin-right':'100px'}
       p_match__inject_css(/\!title/, dictit)
 
 }
@@ -627,7 +600,7 @@ function make_date(){
       */
 
       var dicdate= {'position':'relative','font-size':'200%',
-                  'text-align':'center', 'top':'300px'}
+                  'text-align':'center', 'top':'300px', 'margin-left':'0'}
       p_match__inject_css(/\!date/, dicdate)
 
 }
