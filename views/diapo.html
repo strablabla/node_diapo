@@ -694,7 +694,7 @@ function memo(cls){
           'position': 'relative'
       })
 
-      var title = $('<div>').text('note ' + num_memo).css({
+      var title = $('<div>').html('<span style="color: red;">‡</span> <span style="color: #666;">note ' + num_memo + '</span>').css({
           'margin': '0',
           'font-size': '18px',
           'font-weight': 'normal',
@@ -787,6 +787,19 @@ $(document).on('click', '.memo', function(){   // if click on the horizontal mem
         $(this).after(cross)
         currentMemoCross = cross
         currentActiveMemo = $(this)
+
+        // Calculate vertical position to align with the clicked phrase
+        var memoOffset = $(this).offset()
+        var memoHeight = $(this).outerHeight()
+        var panelHeight = 400  // Height of #infos panel
+        var verticalCenter = memoOffset.top + (memoHeight / 2) - (panelHeight / 2)
+
+        // Position the panel at the vertical center of the phrase, 50px to the right
+        tag_infos.css({
+            'top': verticalCenter + 'px',
+            'left': (memoOffset.left + $(this).outerWidth() + 50) + 'px',
+            'right': 'auto'  // Override the right positioning
+        })
 
         memo($(this))
     }
