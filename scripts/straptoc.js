@@ -1361,7 +1361,7 @@ buc($("p"))  // dealing with p
     var wpdf = '"' + param['pdf_width']['var'] + '"'
     var hpdf = '"' + param['pdf_height']['var'] + '"'
     var debend = { ',,' : {'color':'#ff0066'},
-                   ';;' : {'deb' : '<iframe width='+'"' + param['vid_width']['var'] + '"' + 'height="315" src="', 'end' : '" frameborder="0" allowfullscreen></iframe>','color':'#cc99ff'},
+        ';;': { 'deb': '<iframe width=' + '"' + param['vid_width']['var'] + '"' + 'height="315" src="', 'end': '" frameborder="0" allowfullscreen></iframe>', 'color':'#ff99cc'},
                    '§§': {'deb' : '<object width='+ wpdf + ' height=' + hpdf + ' type="application/pdf" data="' , 'end' : '"></object>', 'color':'#ff6600'}}
 
 //=====================================================================   No video
