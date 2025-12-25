@@ -162,7 +162,7 @@ The system supports enriched markdown syntax with special markers:
 
 ## Configuration
 
-Configuration settings are located in `views/config/config.json`:
+Configuration settings are located in `config.json`:
 - Progress bar colors
 - Presentation title
 - Author email

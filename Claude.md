@@ -162,7 +162,7 @@ Ce fichier documente les améliorations et modifications apportées au projet no
 **Fichiers modifiés:**
 - `views/diapo_all_small.html` - 138 lignes pour améliorer l'affichage
 - `views/iframe_mini_small.html` - Ajustements CSS
-- `views/config/config.json` - Paramètres mis à jour
+- `config.json` - Paramètres mis à jour
 
 ### Nettoyage
 **Commit:** `dc26d3d` - "cleaning"

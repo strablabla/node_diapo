@@ -16,34 +16,6 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
- --------------- diap3 ----------------- 
-
- 
-# Inspection des travaux finis
-
-## diapo 3 !fg
-
-!head tête ou pas..
-
-* This is another day in Paradise
-* La saga des sagouins 
-
-!pos932/234
-!['magno' 200x200 %example_of_magnolia%](imgs/magnolia.jpg)
-
-!pos132/332
-!eq ax^2+bx+c =
-a
-\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
-\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
-
-!tagv ballon
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
  --------------- diap1 ----------------- 
 
  # diap d1
@@ -76,51 +48,64 @@ $memo1
 
 
 
- --------------- diap4 ----------------- 
+ --------------- diap2 ----------------- 
+
+ # diapo 2
+
+# A general intro stuff blabla
+
+## diapo 2 !fb
+
+!head tête ou pas..
+
+* Rêve ou réalité?
+* la révolution des "Siths"co
+
+!pos505/344
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+
+!pos835/344
+!['magno' 300x362 %magnolia%](imgs/magnolia.jpg)
+
+!pos636/235
+!eq e^{i\pi}=-1
+
+
+!pos256/341
+!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
+
+
+
+ --------------- diap3 ----------------- 
 
  
-# Rappel
+# Inspection des travaux finis
 
-## diapo 4
+## diapo 3 !fg
 
-!head dans les étoiles, l'immensité est infinie.. 
+!head tête ou pas..
 
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-* La Voie Lactée irrégulière appartient au monde sublunaire
-* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-* "Démocrite (460-370 BC) et la vision atomiste"cb
-* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-* nous paraissent former une masse unie. !stp
-* Lucrèce (99-51 BC)
-* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-* créent la "Voie Lactée"cy 
-* Critiques au moyen-âge : !stp
+* This is another day in Paradise
+* La saga des sagouins 
 
+!pos932/234
+!['magno' 270x325 %example_of_magnolia%](imgs/magnolia.jpg)
 
-!foot Il était une fois un petit chaperon rouge.. 
+!pos132/332
+!eq ax^2+bx+c =
+a
+\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
+\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
 
-
- --------------- diap6 ----------------- 
-
-  # idée de mettre du Bokeh..
-
- ## voir comment faire..!fo 
-
-* blabla
-* deuxième point.. 
-* troisième point
-
-!pos514/302
-!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
-
-simple texte en format p pour être déplacé.. 
-
-!pos913/233
-!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
-
-!tagv car
+!tagv ballon
 
 
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
  --------------- diap5 ----------------- 
@@ -148,36 +133,27 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
- --------------- diap2 ----------------- 
+ --------------- diap6 ----------------- 
 
- # diapo 2
+  # idée de mettre du Bokeh..
 
-# A general intro stuff blabla
+ ## voir comment faire..!fo 
 
-## diapo 2 !fb
+* blabla
+* deuxième point.. 
+* troisième point
 
-!head tête ou pas..
+!pos514/302
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
-* Rêve ou réalité?
-* la révolution des "Siths"co
+simple texte en format p pour être déplacé.. 
 
-!pos834/711
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+!pos913/233
+!['img' 300x300 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
-!pos661/357
-!['magno' 250x301 %magnolia%](imgs/magnolia.jpg)
-
-!pos982/440
-!eq e^{i\pi}=-1
+!tagv car
 
 
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
-
-!pos260/358
-!['img' 220x293 %rose-1766679953458%](imgs/rose-1766679953458.jpg)
 
 
  --------------- diap7 ----------------- 
@@ -224,6 +200,30 @@ $memo1
 
 * mem1..
 
+ --------------- diap4 ----------------- 
+
+ 
+# Rappel
+
+## diapo 4
+
+!head dans les étoiles, l'immensité est infinie.. 
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+* La Voie Lactée irrégulière appartient au monde sublunaire
+* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
+* "Démocrite (460-370 BC) et la vision atomiste"cb
+* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
+* nous paraissent former une masse unie. !stp
+* Lucrèce (99-51 BC)
+* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
+* créent la "Voie Lactée"cy 
+* Critiques au moyen-âge : !stp
+
+
+!foot Il était une fois un petit chaperon rouge.. 
+
+
  --------------- diap9 ----------------- 
 
   # diap 9
@@ -232,26 +232,6 @@ $memo1
 ## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
 
 * [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
-
- --------------- diap10 ----------------- 
-
-  # diap ten.. 
- 
- ## some texxxxtttt !fo
- 
- * a list element. !memo0
- * aeaeaea !memo1
- 
- !eq E=mc^2
- 
- 
-$memo0
-
-* mem0
-
-$memo1
-
-* mem1..
 
  --------------- diap11 ----------------- 
 
