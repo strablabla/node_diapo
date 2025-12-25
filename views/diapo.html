@@ -280,7 +280,7 @@ function progressive_visualization(stp){
     var hasHiddenContent = false;
     var lastVisibleElement = null;
 
-    $('li, p').not('#num, #footlim, .foot, .head').each(function(){
+    $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *').each(function(){
          var txt = $(this).text()
          //alert(htm)
          if ($(this).hasClass('stop')){
@@ -417,15 +417,22 @@ function find_target_memo(match_txt, num_memo){
 
       var memo_short = match_txt.slice(1,-1) + num_memo // .slice(1,-1)
       var newreg = '\\$' + memo_short
+      console.log('find_target_memo: Looking for', newreg)
+      var found = false
       $('p').each(function(){
           var regdoll = new RegExp( newreg );
           if ( $(this).text().match(regdoll) ){
+               console.log('find_target_memo: Found memo tag', newreg, 'Next element:', $(this).next().length > 0 ? $(this).next().prop('tagName') : 'NONE')
                $(this).next().attr('id', 'targ_memo' + num_memo)
                $(this).next().hide()     // hide the list after
                $(this).hide()         // hide the tag $memo
                $(this).addClass('targ_memo')
+               found = true
           }
       })
+      if (!found) {
+          console.log('find_target_memo: WARNING - Did not find', newreg)
+      }
 }
 
 function tag_for_memo(elem,txt,reg){
@@ -436,9 +443,16 @@ function tag_for_memo(elem,txt,reg){
 
       var match_txt = txt.match(reg)[0]
       var num_memo = match_txt.split('!memo')[1]
-      elem.html(  txt.replace(/!memo\d/,'') )   // remove the pattern memo
-      elem.attr('memo', num_memo)               // add the memo attribute..
-      elem.addClass('memo')                     // add the class memo
+
+      // Split text into parts: before memo tag and after
+      var parts = txt.split(/!memo\d+/)
+      var beforeMemo = parts[0]
+      var afterMemo = parts[1] || ''
+
+      // Wrap only the text before !memo in a span with the memo class
+      var newHtml = '<span class="memo" memo="' + num_memo + '">' + beforeMemo + '</span>' + afterMemo
+      elem.html(newHtml)
+
       find_target_memo(match_txt, num_memo)     // tag the target
 
 }
@@ -464,7 +478,7 @@ function p_match_memos(elem){
 $('p').each(function(){
     var regtagv = new RegExp( '!tagv' );
     if ( $(this).text().match(regtagv) ){
-         $(this).hide()         // hide the tag $memo
+         $(this).hide()         
     }
 })
 
@@ -670,25 +684,110 @@ function memo(cls){
       */
 
       var num_memo = cls.attr('memo')       // memo's index
-      tag_infos.html('<h1> Mémo ' + num_memo + ' </h1>')
+
+      // Create header with title and close button
+      var header = $('<div>').css({
+          'display': 'flex',
+          'justify-content': 'center',
+          'align-items': 'center',
+          'margin-bottom': '50px',
+          'position': 'relative'
+      })
+
+      var title = $('<div>').text('note ' + num_memo).css({
+          'margin': '0',
+          'font-size': '18px',
+          'font-weight': 'normal',
+          'text-align': 'center'
+      })
+
+      var closeBtn = $('<span>').html('&times;').css({
+          'cursor': 'pointer',
+          'font-size': '24px',
+          'font-weight': 'bold',
+          'color': '#666',
+          'line-height': '20px',
+          'position': 'absolute',
+          'right': '0',
+          'top': '0'
+      }).click(function(e){
+          e.stopPropagation()  // Prevent triggering the div click
+          // Remove cross from active memo when closing
+          if (currentMemoCross) {
+              currentMemoCross.remove()
+              currentMemoCross = null
+          }
+          if (currentActiveMemo) {
+              currentActiveMemo = null
+          }
+          tag_infos.hide()
+      }).hover(
+          function(){ $(this).css('color', '#000') },
+          function(){ $(this).css('color', '#666') }
+      )
+
+      header.append(title).append(closeBtn)
+
+      // Get memo content
       var targ_memo = '#targ_memo' + num_memo
-      var clone = $(targ_memo).clone()
-      clone.show()
-      var diccss = {'font-size':'11px', 'margin':'10px 10px'}
-      clone.css(diccss)
-      tag_infos.append(clone)
-      tag_infos.toggle()
+      var $target = $(targ_memo)
+
+      console.log('Looking for memo target:', targ_memo, 'Found:', $target.length)
+
+      if ($target.length === 0) {
+          // Target not found - show error message
+          var errorMsg = $('<div>').text('Memo content not found (target: ' + targ_memo + ')').css({
+              'color': 'red',
+              'padding': '10px'
+          })
+          tag_infos.html('').append(header).append(errorMsg)
+      } else {
+          var clone = $target.clone()
+          clone.show()
+          // Force display of all child elements that might be hidden
+          clone.find('*').show()
+          // Shift all content to the left by 100px
+          var diccss = {'font-size':'11px', 'margin-left':'-100px', 'margin-top':'0px', 'display':'block'}
+          clone.css(diccss)
+
+          // Update tag_infos content
+          tag_infos.html('').append(header).append(clone)
+      }
+
+      tag_infos.show()
 }
 
 //------ click on memo..
 
-$('.memo').click(function(){   // if click on the horizontal memo tag..
+var currentActiveMemo = null  // Track the currently active memo span
+var currentMemoCross = null   // Track the cross marker element
+
+$(document).on('click', '.memo', function(){   // if click on the horizontal memo tag..
 
     /*
     click on colored memo bars..
     */
 
     if (show_memos){
+        // Remove cross from previous active memo
+        if (currentMemoCross) {
+            currentMemoCross.remove()
+            currentMemoCross = null
+        }
+
+        // Add cross of Lorraine after the clicked memo
+        var cross = $('<span>').html('‡').css({
+            'color': 'red',
+            'font-size': '12px',
+            'margin-left': '3px',
+            'vertical-align': 'super',
+            'position': 'relative',
+            'top': '-3px'
+        })
+        $(this).after(cross)
+        currentMemoCross = cross
+        currentActiveMemo = $(this)
+
         memo($(this))
     }
 })
@@ -707,10 +806,8 @@ socket.on('trigger_memos', function(){
 
 var tag_infos = $('<div>').attr('id','infos')
 tag_infos.css({'position':'absolute',
-              'top': '50px', 'left':'10px',
-              'padding-left': '10px',
-              'padding-right': '10px',
-              'padding-top' : '50px',
+              'top': '50px', 'right':'10px',
+              'padding': '20px',
               'width': '600px','height': '400px',
               'font-size' : '16px',
               'background-color':'white',
@@ -721,8 +818,19 @@ tag_infos.css({'position':'absolute',
 
 tag_infos.draggable()
 $('#content').append(tag_infos.hide())
-tag_infos.click(function(){
-    $(this).toggle()
+tag_infos.click(function(e){
+    // Only hide if clicking on the background, not on content
+    if (e.target === this) {
+        // Remove cross from active memo when closing
+        if (currentMemoCross) {
+            currentMemoCross.remove()
+            currentMemoCross = null
+        }
+        if (currentActiveMemo) {
+            currentActiveMemo = null
+        }
+        $(this).hide()
+    }
 })
 
 //-------------------- Simple mardown..
