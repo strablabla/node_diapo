@@ -488,12 +488,23 @@ function change_pos(elem){
                   var coord = regmatch[0].split('!pos')[1].split('/')
                   var x = parseFloat(coord[0])
                   var y = parseFloat(coord[1])
-                  $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none'})
-                  $(this).html(htm.replace(regmatch,''))
+
+                  // Check if this paragraph contains an image
+                  var hasImage = $(this).find('img').length > 0
+
+                  if (hasImage) {
+                      // For images: disable pointer-events on paragraph, enable on image
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none'})
+                      $(this).html(htm.replace(regmatch,''))
+                      $(this).find('img').css('pointer-events', 'auto')
+                  } else {
+                      // For equations or other content: enable pointer-events on the whole paragraph
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto'})
+                      $(this).html(htm.replace(regmatch,''))
+                  }
+
                   // Mark with a class for special drag handling
                   $(this).addClass('positioned-image')
-                  // Enable pointer-events only on the image itself, not the paragraph
-                  $(this).find('img').css('pointer-events', 'auto')
            }
       });
 }
