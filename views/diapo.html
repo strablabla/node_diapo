@@ -12,10 +12,6 @@ var stp=0;
 
 console.log('===== DIAPO.HTML SCRIPT STARTING =====');
 
-//------------------------
-
-color_bar = "{{color_bar}}" //'violet'
-
 // ============================================
 // NAVIGATION SYSTEM - Included from navigation/navigation.js
 // ============================================
@@ -40,35 +36,11 @@ color_bar = "{{color_bar}}" //'violet'
 
 {% include 'create_delete/create_delete.js' %}
 
-//----------------------- general configuration
+// ============================================
+// SLIDE CONFIGURATION - Included from slide_config/slide_config.js
+// ============================================
 
-$('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000', 'margin-left':'200px'})
-$('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
-$('h1').css({'margin-left':'100px'})
-$('h2').css({'margin-left':'100px'})
-$('p').css({'margin-left':'100px'})
-$('.effect2').css({'box-shadow':'0 0 0 0'})
-$('.navbar-inner').hide()
-$('#toc').hide()
-$('#content').css({'margin-left':'0px',
-                   'margin-right':'0px',
-                   'padding-bottom':'0px',
-                   'padding-top':'0px',
-                   'padding-left':'100px',
-                   'height' : '100vh',
-                   'min-height': '790px'
-                   })
-$('body').css({'margin': '0', 'padding': '0', 'overflow': 'hidden'})
-$('html').css({'overflow': 'hidden'})
-$('.container').css({
-    'width': '100%',
-    'max-width': '100%',
-    'margin': '0',
-    'padding': '0'
-})
-//$('li li').hide()         // hide the Mémos
-$('.help').hide()         // hide the help
-$('#gobottom').hide()     // hide go to bottom
+{% include 'slide_config/slide_config.js' %}
 
 // ============================================
 // PROGRESSIVE VISUALIZATION - Included from step_by_step_visu/step_by_step_visu.js
@@ -81,8 +53,6 @@ $('#gobottom').hide()     // hide go to bottom
 // ============================================
 
 {% include 'voice/voice.js' %}
-
-//------------------------
 
 // ============================================
 // DECORATION FUNCTIONS - Included from decorate/decorate.js
@@ -97,114 +67,11 @@ $('#gobottom').hide()     // hide go to bottom
 {% include 'equations/equations.js' %}
 
 // ============================================
-// FIRST PAGE FUNCTIONS - Included from first_page/first_page.htm
+// FIRST PAGE FUNCTIONS - Included from first_page/first_page.js
 // ============================================
 
-{% include 'first_page/first_page.htm' %}
+{% include 'first_page/first_page.js' %}
 
-make_head()  //-----------------------------  Header
-make_foot()  //-----------------------------  Footer
-
-//-----------------------------  Full screen
-
-// Fullscreen functionality removed - use F11 for native browser fullscreen
-
-//-------------------- Simple mardown..
-
-simple_md = function(text){               // mini markdown for the help
-     var all_text = text.split('\n')
-     var htm = $('<div/>')
-     var ul = $('<ul/>').css({'padding-left':'150px'})
-     for (i in all_text){
-         var text_insert = all_text[i].trim().slice(1) // prepare text
-         if (all_text[i].match(/^\s{4}\*/)){    // detect list first level
-             ul.append($('<li/>').text(text_insert).css({"font-weight": "bold"}))
-             } // end if
-         if (all_text[i].match(/^\s{8}\*/)){  // detect list second level
-                 var interm1 = $('<ul/>').append($('<li/>').text(text_insert))
-                 ul.append(interm1)
-                 } // end if
-         if (all_text[i].match(/^\s{12}\*/)){  // detect list third level
-                 var interm2 = $('<ul/>').append($('<li/>').text(text_insert))
-                 interm1.append(interm2)
-                 } // end if
-         if (all_text[i].match(/\s*\#/)){ // detect #
-             htm.append( $('<h1/>').html(text_insert + '<br>' + '<br>') )
-             } // end if
-     } // end for
-     htm.append(ul);
-     return htm.html()
- } // end function
-
- //------------------------------- Generic css for alerts
-
- alerts_css_dict = { 'position':'absolute',
-   'top': '200px', 'left':'100px',
-   'padding-left': '10px',
-   'padding-right': '10px',
-   'padding-top' : '50px',
-   'width': '400px','height': '200px',
-   'font-size' : '16px',
-   'background-color':'grey',
-   'box-shadow': '8px 8px 12px #aaa',
-   'opacity':'1',
-   'z-index': '100'
- }
-
-//------------------------------- Generic css dict for infos
-
-infos_css_dict = { 'position':'absolute',
-  'top': '50px', 'left':'10px',
-  'padding-left': '10px',
-  'padding-right': '10px',
-  'padding-top' : '50px',
-  'width': '600px','height': '400px',
-  'font-size' : '16px',
-  'background-color':'white',
-  'box-shadow': '8px 8px 12px #aaa',
-  'opacity':'1',
-  'z-index': '100'
-}
-
-//--------------------------------  Help keys
-
-var help_keys = $('<div>').attr('id','help_keys')
-help_keys.css(infos_css_dict)
-
-help_keys.draggable()
-$('#content').append(help_keys.hide())
-help_keys.click(function(){
-    $(this).toggle()
-})
-
-//--------------------- available keys
-
-var keys = function(){/*
-
-# Keys
-
-* Keys ::
-    * ctrl + a : view all the slides
-    * alt + h : help
-    * ctrl + i : save the position of the picture..
-    * ctrl + m : show memos..
-    * alt+m : miniatures
-    * ctrl + p : create new slide
-    * alt + s : show text sequentially
-    * alt + t : show markdown
-    * alt+ctrl+x : delete slide
-    * > : slide + 1
-    * < : slide - 1
-
-*/}.toString().slice(14,-3)
-
-$('#help_keys').html(simple_md(keys))
-
-//--------------------- Show the help
-
-key('alt+k', function(){         // Show the help, voice : "aide"
-    $('#help_keys').toggle()
-  });
 
 // ============================================
 // HANDLE POSITION - Included from handle_position/handle_position.js
@@ -217,90 +84,6 @@ key('alt+k', function(){         // Show the help, voice : "aide"
 // ============================================
 
 {% include 'context_menu/context_menu.js' %}
-
-
-//--------------------------------  Help syntax
-
-var help_syntax = $('<div>').attr('id','help_syntax')
-infos_css_dict.height = 700;
-//infos_css_dict['padding-left'] = -50;
-help_syntax.css(infos_css_dict)
-help_syntax.draggable()
-$('#content').append(help_syntax.hide())
-help_syntax.click(function(){
-    $(this).toggle()
-})
-
-//------------------------ available Syntax
-
-var syntax = function(){/*
-
-# syntax
-
-* Syntax ::
-    * diese : title
-    * !head :  header
-    * !foot : footer
-    * blabla !fo, put blabla in orange frame
-    * $memo0 : create a numbered memo..
-    * !memo0 : at the end of a line, indicates where to apply the memo..
-    * !stp : stop the slide undtil this sign..
-
-*/}.toString().slice(14,-3)
-
-$('#help_syntax').html(simple_md(syntax))
-
-//-------  show syntax
-
-socket.on('syntax', function(){
-     /*
-     toggle syntax
-     */
-     $('#help_syntax').toggle()
-    })
-key('alt+h', function(){         // show syntax
-    $('#help_syntax').toggle()
-})
-
-//--------------------------------  Configuration
-
-var config = $('<div>').attr('id','config')
-config.css(infos_css_dict)
-
-config.draggable()
-$('#content').append(config.hide())
-config.click(function(){
-    $(this).toggle()
-})
-
-//------------------------ available voice commands
-
-var config_content = function(){/*
-
-# Configuration
-
-* Config ::
-    * blabla
-
-*/}.toString().slice(14,-3)
-
-$('#config').html(simple_md(config_content))
-
-//-------  show config
-
-socket.on('config', function(){
-
-     /*
-     toggle config
-     */
-     //alert("configuration !!!!!!!!!!!")
-     $('#config').toggle()
-
-    })
-
-key('alt+c', function(){         // show config
-    $('#config').toggle()
-})
 
 // ============================================
 // PDF GENERATION - Included from create_pdf/create_pdf.js

@@ -59,3 +59,6 @@ $('.deck_title').attr('align', 'center')
 $('.deck_title').css({'line-height':'150%'})
 $('.author').wrap( "<div style='text-align:center;'></div>" )
 $('.date').attr('align', 'center')
+
+make_head() //----------------------------- Header
+make_foot() //----------------------------- Footer

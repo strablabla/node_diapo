@@ -2,6 +2,8 @@
 // NAVIGATION SYSTEM (Arrows, Page Up/Down, Slider)
 // ============================================
 
+color_bar = "{{color_bar}}" //'violet'
+
 function set_page_num_and_slider(diapo_index){
 
       /*
