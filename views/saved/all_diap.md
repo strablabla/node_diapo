@@ -56,17 +56,19 @@ $memo1
 
 !head supraconductivity
 
-* London penetration depth (1935)
+### London penetration depth (1935)
+!pos100/33
 
-!pos823/173
+!pos362/406
 !eq \lambda_L = \sqrt{\frac{m}{\mu_0 n_s e^2}}
 
-!pos590/173
+!pos101/367
 !eq B(x) = B_0 \exp\left(-\frac{x}{\lambda_L}\right)
 
-* The Ginzburg-Landau Equation (1950)
+### The Ginzburg-Landau Equation (1950)
+!pos100/311
 
-!pos642/232
+!pos113/615
 !eq \frac{1}{2m} \left( -i\hbar\nabla - q\mathbf{A} \right)^2 \psi + \alpha\psi + \beta|\psi|^2\psi = 0
 
 
@@ -100,31 +102,6 @@ $memo1
 !foot Il était une fois un petit chaperon rouge.. 
 
 
- --------------- diap5 ----------------- 
-
- # Mama météo
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-
-La Voie "Lactée irrégulière"u appartient au monde sublunaire
-
-Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
-
-"Démocrite (460-370 BC) et la vision atomiste"cb 
-
-Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-nous paraissent former une masse unie.
-
-## titre quelconque
-
-## deuxième étage..
-
-* ici je refais "encore une ligne"b .. 
-
-
-!foot Besoin d'un pied de page.. 
-
-
  --------------- diap3 ----------------- 
 
  
@@ -137,10 +114,10 @@ nous paraissent former une masse unie.
 * This is another day in Paradise
 * La saga des sagouins 
 
-!pos959/234
+!pos440/357
 !['magno' 249x300 %example_of_magnolia%](imgs/magnolia.jpg)
 
-!pos243/341
+!pos258/312
 !eq ax^2+bx+c =
 a
 \left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
@@ -151,6 +128,9 @@ a
 
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+!pos763/358
+!['img' 225x300 %20251129_163624-1766769723323%](imgs/20251129_163624-1766769723323.jpg)
 
 
  --------------- diap6 ----------------- 
@@ -168,7 +148,7 @@ a
 
 simple texte en format p pour être déplacé.. 
 
-!pos613/51
+!pos224/409
 !['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
 !tagv car
@@ -220,6 +200,31 @@ $memo1
 
 * mem1..
 
+ --------------- diap5 ----------------- 
+
+ # Mama météo
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+
+La Voie "Lactée irrégulière"u appartient au monde sublunaire
+
+Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+
+"Démocrite (460-370 BC) et la vision atomiste"cb 
+
+Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
+nous paraissent former une masse unie.
+
+## titre quelconque
+
+## deuxième étage..
+
+* ici je refais "encore une ligne"b .. 
+
+
+!foot Besoin d'un pied de page.. 
+
+
  --------------- diap9 ----------------- 
 
   # diap 9
@@ -228,6 +233,19 @@ $memo1
 ## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
 
 * [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
+
+ --------------- diap10 ----------------- 
+
+ # diap d10
+
+## diapo 10 !fg
+
+!head header example for police and placement
+
+* really the tenth slide !!! 
+
+
+
 
  --------------- diap11 ----------------- 
 

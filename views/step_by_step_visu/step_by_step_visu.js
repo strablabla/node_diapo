@@ -47,17 +47,35 @@ function progressive_visualization(stp){
     var hasHiddenContent = false;
     var lastVisibleElement = null;
 
-    $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *').each(function(){
+    $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *').each(function(index){
          var txt = $(this).text()
+         var elem_id = $(this).attr('id') || 'no-id'
+         var has_stop = $(this).hasClass('stop')
+
+         console.log('=== Progressive visu processing element ' + index + ' ===')
+         console.log('  Element:', $(this)[0])
+         console.log('  ID:', elem_id)
+         console.log('  Text preview:', txt.substring(0, 50))
+         console.log('  Has class "stop":', has_stop)
+         console.log('  Current count:', count)
+         console.log('  Current stp:', stp)
+         console.log('  Current showline:', showline)
+
          //alert(htm)
          if ($(this).hasClass('stop')){
              count += 1
+             console.log('  -> Incremented count to:', count)
              if (count > stp){
                  showline = false
                  hasHiddenContent = true
+                 console.log('  -> Setting showline to FALSE (count > stp)')
              }
          }
+
+         console.log('  -> About to call progressive_visu_hide_show with showline:', showline)
         progressive_visu_hide_show($(this),showline,count,reg )
+        console.log('  -> After progressive_visu_hide_show, display:', $(this).css('display'))
+
         if ($(this).hasClass('targ_memo')){ $(this).hide() }   // hide memo tags..
         if ($(this).hasClass('foot')){ $(this).show() }        // show footer
 

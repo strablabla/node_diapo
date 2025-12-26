@@ -48,6 +48,71 @@ function change_pos(elem){
       });
 }
 
+//------------------------- Initial positioning for h3 headers from !pos markers
+// MUST run BEFORE change_pos($('p')) to process !pos markers before they're consumed
+
+function change_pos_h3(elem){
+      /*
+      Change the vertical position of h3 elements
+      The !pos marker is on the next line after the h3 in the HTML
+      */
+
+      var reg1 = /\!pos\d+\/\d+/
+
+      elem.each(function(){
+           var $h3 = $(this)
+           var $prev = $h3.prev()
+           var $next = $h3.next()
+
+           // Hide any !pos marker that appears BEFORE the h3 (shouldn't be there)
+           // BUT only if it's a "pure" !pos marker (not an equation or image with !pos)
+           if ($prev.length > 0) {
+               var prevText = $prev.text().trim()
+               if (prevText.match(reg1)) {
+                   // Check if this is a pure !pos marker (ONLY "!pos123/456" with nothing else)
+                   var isPurePosMarker = prevText.match(/^!pos\d+\/\d+$/)
+                   if (isPurePosMarker) {
+                       console.log('Found stray !pos before h3, hiding it:', prevText)
+                       $prev.hide()
+                   } else {
+                       console.log('Found !pos before h3 but it contains other content (equation/image), NOT hiding it:', prevText.substring(0, 50))
+                   }
+               }
+           }
+
+           // Check if the next element is a text node or paragraph containing !pos
+           if ($next.length > 0) {
+               var nextText = $next.text().trim()
+               if (nextText.match(reg1)) {
+                   // Check if this !pos is ONLY the position marker (not followed by content like !eq)
+                   // A h3 position marker should be JUST "!pos123/456" with nothing else
+                   var isPurePos = nextText.match(/^!pos\d+\/\d+$/)
+
+                   if (isPurePos) {
+                       var regmatch = nextText.match(reg1)
+                       var coord = regmatch[0].split('!pos')[1].split('/')
+                       var x = parseFloat(coord[0])
+                       var y = parseFloat(coord[1])
+
+                       console.log('Restoring h3 position:')
+                       console.log('  Next element text:', nextText)
+                       console.log('  Coords from !pos: x=' + x + ', y=' + y)
+                       console.log('  Element:', $h3[0])
+
+                       // For h3: set position relative with only top offset
+                       $h3.css({'position':'relative', 'top':y + 'px', 'margin-left':'100px'})
+
+                       // Hide the !pos marker
+                       $next.hide()
+                   } else {
+                       console.log('Next element contains !pos but is not a pure h3 position marker:', nextText.substring(0, 50))
+                   }
+               }
+           }
+      });
+}
+
+change_pos_h3($('h3'))
 change_pos($('p'))
 
 //------------------------- Make objects draggable
@@ -103,7 +168,8 @@ key('ctrl+s', function(e){
 
       var count = 0
 
-      $('p figure, p.eq').each(function(){
+      // Save positions for images, equations, and h3 headers
+      $('p figure, p.eq, h3').each(function(){
           var $elem = $(this)
 
           var cssLeft, cssTop
@@ -119,6 +185,16 @@ key('ctrl+s', function(e){
 
               cssLeft = pLeft + figLeft
               cssTop = pTop + figTop
+          } else if ($elem.is('h3')) {
+              // For h3: only save vertical position (top), left should remain at margin-left
+              cssLeft = 100  // Keep the margin-left value
+
+              // Get the top value - jQuery UI draggable sets it directly
+              var topVal = $elem.css('top')
+              cssTop = parseInt(topVal) || 0
+
+              console.log('h3 CSS top value:', topVal)
+              console.log('h3 parsed cssTop:', cssTop)
           } else {
               // For equations: position is directly on <p>
               cssLeft = parseInt($elem.css('left')) || 0
@@ -137,7 +213,14 @@ key('ctrl+s', function(e){
               console.log('  Calculated pos:', pos)
           }
 
-          // For images, ID is on the <figure>, for equations it's on <p>
+          if ($elem.is('h3')) {
+              console.log('Saving h3 position:')
+              console.log('  Element:', $elem[0])
+              console.log('  CSS top:', cssTop)
+              console.log('  Calculated pos:', pos)
+          }
+
+          // For images, ID is on the <figure>, for equations it's on <p>, for h3 it's on h3
           var id = $elem.attr('id')
 
           if ($elem.is('figure')) {

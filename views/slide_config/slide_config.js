@@ -8,6 +8,7 @@ $('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000', 'mar
 $('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
 $('h1').css({'margin-left':'100px'})
 $('h2').css({'margin-left':'100px'})
+$('h3').css({'margin-left':'100px'})
 $('p').css({'margin-left':'100px'})
 $('.effect2').css({'box-shadow':'0 0 0 0'})
 $('.navbar-inner').hide()
