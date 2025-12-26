@@ -26,12 +26,12 @@ function change_pos(elem){
 
                   if (hasImage) {
                       // For images: disable pointer-events on paragraph, enable on image
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none'})
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none', 'margin-left':'0'})
                       $(this).html(htm.replace(regmatch,''))
                       $(this).find('img').css('pointer-events', 'auto')
                   } else {
                       // For equations or other content: enable pointer-events on the whole paragraph
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto'})
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto', 'margin-left':'0'})
                       $(this).html(htm.replace(regmatch,''))
                   }
 
@@ -95,8 +95,15 @@ key('ctrl+s', function(e){
       e.preventDefault()
 
       var count = 0
+      var contentOffset = $('#content').offset()
+
       $('p figure, p.eq').each(function(){
-          var pos = $(this).offset()
+          var elemOffset = $(this).offset()
+          // Calculate position relative to #content
+          var pos = {
+              left: elemOffset.left - contentOffset.left,
+              top: elemOffset.top - contentOffset.top
+          }
           var id = $(this).attr('id')
           if (id) {
               // For images, remove the -## suffix (slice 0,-3)

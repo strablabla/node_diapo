@@ -27,7 +27,16 @@ socket.on('markdown', function(){
 //--------------------------------  Help voice commands
 
 var help_voice_cmds = $('<div>').attr('id','help_voice_cmds')
-help_voice_cmds.css(infos_css_dict)
+help_voice_cmds.css({'position':'absolute',
+              'top': '50px', 'right':'10px',
+              'padding': '20px',
+              'width': '600px','height': '400px',
+              'font-size' : '16px',
+              'background-color':'white',
+              'box-shadow': '8px 8px 12px #aaa',
+              'opacity':'1',
+              'z-index': '100'
+            })
 
 help_voice_cmds.draggable()
 $('#content').append(help_voice_cmds.hide())

@@ -7,8 +7,8 @@ var socket = io.connect();
 
 var stp=0;
 
-{% include '../lib/string_format.js' %}
-{% include '../lib/css_injection.js' %}
+{% include 'lib/string_format.js' %}
+{% include 'lib/css_injection.js' %}
 
 console.log('===== DIAPO.HTML SCRIPT STARTING =====');
 
@@ -71,7 +71,6 @@ console.log('===== DIAPO.HTML SCRIPT STARTING =====');
 // ============================================
 
 {% include 'first_page/first_page.js' %}
-
 
 // ============================================
 // HANDLE POSITION - Included from handle_position/handle_position.js
