@@ -106,10 +106,24 @@ key('ctrl+s', function(e){
       $('p figure, p.eq').each(function(){
           var $elem = $(this)
 
-          // Get position directly from CSS instead of using offset()
-          // This is more reliable since these elements are position:absolute
-          var cssLeft = parseInt($elem.css('left')) || 0
-          var cssTop = parseInt($elem.css('top')) || 0
+          var cssLeft, cssTop
+
+          if ($elem.is('figure')) {
+              // For images: <figure> is draggable and has position:relative inside <p position:absolute>
+              // We need to combine both positions
+              var $p = $elem.parent('p')
+              var pLeft = parseInt($p.css('left')) || 0
+              var pTop = parseInt($p.css('top')) || 0
+              var figLeft = parseInt($elem.css('left')) || 0
+              var figTop = parseInt($elem.css('top')) || 0
+
+              cssLeft = pLeft + figLeft
+              cssTop = pTop + figTop
+          } else {
+              // For equations: position is directly on <p>
+              cssLeft = parseInt($elem.css('left')) || 0
+              cssTop = parseInt($elem.css('top')) || 0
+          }
 
           var pos = {
               left: cssLeft,
@@ -123,7 +137,21 @@ key('ctrl+s', function(e){
               console.log('  Calculated pos:', pos)
           }
 
+          // For images, ID is on the <figure>, for equations it's on <p>
           var id = $elem.attr('id')
+
+          if ($elem.is('figure')) {
+              var $p = $elem.parent('p')
+              console.log('Saving image position:')
+              console.log('  Figure element:', $elem[0])
+              console.log('  Parent p element:', $p[0])
+              console.log('  Figure ID:', id)
+              console.log('  P left/top:', {left: parseInt($p.css('left')), top: parseInt($p.css('top'))})
+              console.log('  Figure left/top:', {left: parseInt($elem.css('left')), top: parseInt($elem.css('top'))})
+              console.log('  Combined left/top:', {left: cssLeft, top: cssTop})
+              console.log('  Calculated pos:', pos)
+          }
+
           if (id) {
               // For images, remove the -## suffix (slice 0,-3)
               // For equations, use the id as-is
