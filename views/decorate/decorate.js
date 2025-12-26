@@ -1,5 +1,5 @@
 // ============================================
-// DECORATION FUNCTIONS (Header & Footer)
+// DECORATION FUNCTIONS (Header, Footer & Colored Frames)
 // ============================================
 
 function make_head(){
@@ -34,3 +34,27 @@ function make_foot(){
       $('#footlim').css({'position':'absolute','bottom':'70px'})
 
 }
+
+function frame_col(){
+
+      /*
+      Frame with color around tag element
+      eg: !fb  for blue frame ..
+      */
+
+      var dic_col = {'b':'blue','r':'red','g':'green','o':'orange'}
+      var tags = ['h1','h2','h3']
+      var reg = /\!f\w/
+      for (var i in tags){
+            $(tags[i]).each(function(){
+                var regmatch = $(this).text().match(reg)
+                if (regmatch){
+                      var col = dic_col[regmatch[0].slice(-1)] // find color..
+                      var cssfb = {'border':'3px solid ' + col, 'display':'inline-block', 'padding':' 7px 7px 7px 7px'}
+                      elem_match__inject_css($(this), reg, cssfb)
+                }
+            })
+      }
+}
+
+frame_col() // frame with color around the tag..

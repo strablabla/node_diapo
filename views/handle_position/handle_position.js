@@ -1,8 +1,49 @@
 // ============================================
-// MOVE OBJECTS (Images and Equations)
+// HANDLE POSITION (Images and Equations)
 // ============================================
 
-//---------------------------------
+//------------------------- Initial positioning from !pos markers
+
+function change_pos(elem){
+
+      /*
+      Change the position of the element
+      */
+
+      var reg1 = /\!pos\d+\/\d+/
+
+      elem.each(function(){
+           var txt = $(this).text()
+           var htm = $(this).html()
+           if (txt.match(reg1)){
+                  regmatch = txt.match(reg1)
+                  var coord = regmatch[0].split('!pos')[1].split('/')
+                  var x = parseFloat(coord[0])
+                  var y = parseFloat(coord[1])
+
+                  // Check if this paragraph contains an image
+                  var hasImage = $(this).find('img').length > 0
+
+                  if (hasImage) {
+                      // For images: disable pointer-events on paragraph, enable on image
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none'})
+                      $(this).html(htm.replace(regmatch,''))
+                      $(this).find('img').css('pointer-events', 'auto')
+                  } else {
+                      // For equations or other content: enable pointer-events on the whole paragraph
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto'})
+                      $(this).html(htm.replace(regmatch,''))
+                  }
+
+                  // Mark with a class for special drag handling
+                  $(this).addClass('positioned-image')
+           }
+      });
+}
+
+change_pos($('p'))
+
+//------------------------- Make objects draggable
 
 // Make both images (p figure) and equations (p.eq) draggable
 $('p figure, p.eq').each(function(){

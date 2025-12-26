@@ -2,6 +2,22 @@
 // PROGRESSIVE VISUALIZATION (STEP BY STEP)
 // ============================================
 
+function match__inject_stop(elem, patt){
+
+      /*
+      Inject class stop
+      */
+
+      elem.each(function(){
+           var htm = $(this).html()
+           if (htm.match(patt)){
+               pattern = htm.match(patt)
+               var class_added = pattern.slice(1,-1)
+               $(this).attr('class', 'stop')                  // adding Class
+           }
+       })
+}
+
 match__inject_stop($('li'), /\!stp/) // inject Class stop
 
 function progressive_visu_hide_show(elem,showline,count,reg){

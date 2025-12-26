@@ -8,37 +8,9 @@ var socket = io.connect();
 var stp=0;
 
 {% include '../lib/string_format.js' %}
+{% include '../lib/css_injection.js' %}
 
 console.log('===== DIAPO.HTML SCRIPT STARTING =====');
-
-var keymap = {
-        backspace: 8, tab: 9, clear: 12,
-        enter: 13, 'return': 13,
-        esc: 27, escape: 27, space: 32,
-        left: 37, up: 38,
-        right: 39, down: 40,
-        del: 46, 'delete': 46,
-        home: 36, end: 35,
-        pageup: 33, pagedown: 34,
-        ',': 188, '.': 190, '/': 191,
-        '`': 192, '-': 189, '=': 187,
-        ';': 186, '\'': 222,
-        '[': 219, ']': 221, '\\': 220
-  }
-
-var keyev = function(key, event){
-
-        /*
-        generic code for key event with a key letter..
-        */
-
-        if (event.keyCode == key.charCodeAt(0)-32 ){
-            curr_func(key)
-            return true
-        }else{ return false }
-
-      } // end keyev
-
 
 //------------------------
 
@@ -50,13 +22,11 @@ color_bar = "{{color_bar}}" //'violet'
 
 {% include 'navigation/navigation.js' %}
 
-//------------------ edit in  markdown
+// ============================================
+// EDIT IN MARKDOWN - Included from edit_markdown/edit_markdown.js
+// ============================================
 
-key('alt+t', function () {         // pass to text..
-    window.location.href = 'text';                    // flip from html to textarea
-});
-
-
+{% include 'edit_markdown/edit_markdown.js' %}
 
 // ============================================
 // GLOBAL VIEW AND MINIATURES - Included from global_view/global_view.js
@@ -64,23 +34,11 @@ key('alt+t', function () {         // pass to text..
 
 {% include 'global_view/global_view.js' %}
 
+// ============================================
+// CREATE AND DELETE SLIDES - Included from create_delete/create_delete.js
+// ============================================
 
-//------------------ new diapo
-
-key('ctrl+p', function () {                      // Add a new diapo
-    socket.emit('make_new_diap', '')
-    alert('adding a new diapo !!!!!');
-    return false
-});
-
-//------------------ delete the slide
-
-key('alt+ctrl+x', function(){
-    pos_before = diapo_index-1   //
-    //alert('delete')
-    window.location.href = 'd' + pos_before;
-    socket.emit('delete', diapo_index)
-    });
+{% include 'create_delete/create_delete.js' %}
 
 //----------------------- general configuration
 
@@ -112,151 +70,19 @@ $('.container').css({
 $('.help').hide()         // hide the help
 $('#gobottom').hide()     // hide go to bottom
 
-function match__inject_stop(elem, patt){
-
-      /*
-      Inject class stop
-      */
-
-      elem.each(function(){
-           var htm = $(this).html()
-           if (htm.match(patt)){
-               pattern = htm.match(patt)
-               var class_added = pattern.slice(1,-1)
-               $(this).attr('class', 'stop')                  // adding Class
-           }
-       })
-}
-
 // ============================================
 // PROGRESSIVE VISUALIZATION - Included from step_by_step_visu/step_by_step_visu.js
 // ============================================
 
 {% include 'step_by_step_visu/step_by_step_visu.js' %}
 
-function remove_patt_change_css(elem,txt,patt,dict_css){
+// ============================================
+// VOICE COMMANDS - Included from voice/voice.js
+// ============================================
 
-      /*
-      Remove the pattern and modify the css
-      patt : pattern
-      dict_css : dictionary of the css parameters..
-      */
-
-      var new_txt = txt.replace(patt,'')
-      elem.text(new_txt)
-      elem.css(dict_css)
-
-}
-
-function frame_col(){
-
-      /*
-      Frame with color around tag element
-      eg: !fb  for blue frame ..
-      */
-
-      var dic_col = {'b':'blue','r':'red','g':'green','o':'orange'}
-      var tags = ['h1','h2','h3']
-      var reg = /\!f\w/
-      for (var i in tags){
-            $(tags[i]).each(function(){
-                var regmatch = $(this).text().match(reg)
-                if (regmatch){
-                      var col = dic_col[regmatch[0].slice(-1)] // find color..
-                      var cssfb = {'border':'3px solid ' + col, 'display':'inline-block', 'padding':' 7px 7px 7px 7px'}
-                      elem_match__inject_css($(this), reg, cssfb)
-                }
-            })
-      }
-}
-
-frame_col() // frame with color around the tag..
-
-function elem_match__inject_css(elem, patt, dict_css){
-
-      /*
-      Generic match replace
-      patt : pattern
-      dict_css : dictionary of the css parameters..
-      */
-
-      if (patt==/\!fb/){alert('patt is fb')}
-      elem.each(function(){
-           var txt = $(this).text()
-           if (txt.match(patt)){
-               remove_patt_change_css($(this),txt,patt,dict_css)
-               var class_added = patt.toString().slice(3,-1)
-               //alert("class_added " + class_added)
-               $(this).attr('class',class_added) // adding Class
-               if (txt.match(/\!eq/)){                                // if equation..
-                  $(this).text('$$' + $(this).text() + '$$')
-               }
-           }
-       })
-}
-
-function p_match__inject_css(patt, dict_css){
-
-      /*
-      Generic match replace
-      patt : pattern
-      dict_css : dictionary of the css parameters..
-      */
-
-      elem_match__inject_css($("p"), patt, dict_css)
-
-}
-
-
-//------------------------ hiding voice tag
-
-$('p').each(function(){
-    var regtagv = new RegExp( '!tagv' );
-    if ( $(this).text().match(regtagv) ){
-         $(this).hide()         
-    }
-})
+{% include 'voice/voice.js' %}
 
 //------------------------
-
-function change_pos(elem){
-
-      /*
-      Change the position of the element
-      */
-
-      var reg1 = /\!pos\d+\/\d+/
-
-      elem.each(function(){
-           var txt = $(this).text()
-           var htm = $(this).html()
-           if (txt.match(reg1)){
-                  regmatch = txt.match(reg1)
-                  var coord = regmatch[0].split('!pos')[1].split('/')
-                  var x = parseFloat(coord[0])
-                  var y = parseFloat(coord[1])
-
-                  // Check if this paragraph contains an image
-                  var hasImage = $(this).find('img').length > 0
-
-                  if (hasImage) {
-                      // For images: disable pointer-events on paragraph, enable on image
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none'})
-                      $(this).html(htm.replace(regmatch,''))
-                      $(this).find('img').css('pointer-events', 'auto')
-                  } else {
-                      // For equations or other content: enable pointer-events on the whole paragraph
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto'})
-                      $(this).html(htm.replace(regmatch,''))
-                  }
-
-                  // Mark with a class for special drag handling
-                  $(this).addClass('positioned-image')
-           }
-      });
-}
-
-change_pos($('p'))
 
 // ============================================
 // DECORATION FUNCTIONS - Included from decorate/decorate.js
@@ -282,21 +108,6 @@ make_foot()  //-----------------------------  Footer
 //-----------------------------  Full screen
 
 // Fullscreen functionality removed - use F11 for native browser fullscreen
-
-//-----------------------------  go to markdown by voice
-
-socket.on('markdown', function(){
-
-     /*
-     trigger markdown view
-     */
-
-     //alert('go to markdown !!! ')
-     window.location.href = 'text'   // flip from html to textarea
-
-    })
-
-
 
 //-------------------- Simple mardown..
 
@@ -395,46 +206,11 @@ key('alt+k', function(){         // Show the help, voice : "aide"
     $('#help_keys').toggle()
   });
 
-//--------------------------------  Help voice commands
-
-var help_voice_cmds = $('<div>').attr('id','help_voice_cmds')
-help_voice_cmds.css(infos_css_dict)
-
-help_voice_cmds.draggable()
-$('#content').append(help_voice_cmds.hide())
-help_voice_cmds.click(function(){
-    $(this).toggle()
-})
-
-//------------------------ available voice commands
-
-var voice_cmds = function(){/*
-
-# Voice commands
-
-* Voice ::
-    * aide : help
-    * nouvelle diapo : create new slide
-    * toutes les diapos : view all the slides
-    * memos : show memos..
-    * diapo + num : go to diapo num ..
-
-*/}.toString().slice(14,-3)
-
-$('#help_voice_cmds').html(simple_md(voice_cmds))
-
-//----------- voice commands
-
-key('alt+v', function(){         // Show the help
-    $('#help_voice_cmds').toggle()
-  });
-
-
 // ============================================
-// MOVE OBJECTS - Included from move_object/move_object.js
+// HANDLE POSITION - Included from handle_position/handle_position.js
 // ============================================
 
-{% include 'move_object/move_object.js' %}
+{% include 'handle_position/handle_position.js' %}
 
 // ============================================
 // CONTEXT MENU - Included from context_menu/context_menu.js
