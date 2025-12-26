@@ -24,14 +24,21 @@ function change_pos(elem){
                   // Check if this paragraph contains an image
                   var hasImage = $(this).find('img').length > 0
 
+                  // Debug for equations (check class, not text, since !eq was already removed)
+                  if (!hasImage && $(this).hasClass('eq')) {
+                      console.log('Restoring equation position:')
+                      console.log('  Coords from !pos:', {x: x, y: y})
+                      console.log('  Element:', $(this)[0])
+                  }
+
                   if (hasImage) {
                       // For images: disable pointer-events on paragraph, enable on image
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none', 'margin-left':'0'})
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'none', 'margin':'0', 'padding':'0'})
                       $(this).html(htm.replace(regmatch,''))
                       $(this).find('img').css('pointer-events', 'auto')
                   } else {
                       // For equations or other content: enable pointer-events on the whole paragraph
-                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto', 'margin-left':'0'})
+                      $(this).css({'position':'absolute','left':x + 'px', 'top':y + 'px', 'z-index':'1', 'pointer-events':'auto', 'margin':'0', 'padding':'0'})
                       $(this).html(htm.replace(regmatch,''))
                   }
 
@@ -95,16 +102,28 @@ key('ctrl+s', function(e){
       e.preventDefault()
 
       var count = 0
-      var contentOffset = $('#content').offset()
 
       $('p figure, p.eq').each(function(){
-          var elemOffset = $(this).offset()
-          // Calculate position relative to #content
+          var $elem = $(this)
+
+          // Get position directly from CSS instead of using offset()
+          // This is more reliable since these elements are position:absolute
+          var cssLeft = parseInt($elem.css('left')) || 0
+          var cssTop = parseInt($elem.css('top')) || 0
+
           var pos = {
-              left: elemOffset.left - contentOffset.left,
-              top: elemOffset.top - contentOffset.top
+              left: cssLeft,
+              top: cssTop
           }
-          var id = $(this).attr('id')
+
+          if ($elem.hasClass('eq')) {
+              console.log('Saving equation position:')
+              console.log('  Element:', $elem[0])
+              console.log('  CSS left/top:', {left: cssLeft, top: cssTop})
+              console.log('  Calculated pos:', pos)
+          }
+
+          var id = $elem.attr('id')
           if (id) {
               // For images, remove the -## suffix (slice 0,-3)
               // For equations, use the id as-is

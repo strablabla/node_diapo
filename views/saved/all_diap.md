@@ -1,9 +1,26 @@
 
+ --------------- diap0 ----------------- 
+
+ 
+# aaeae
+
+!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
+
+!author par les auteurs de BCS... 
+
+!date 10 Mai 2078
+
+* abeabeae
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+
  --------------- diap1 ----------------- 
 
- # diap d1
+ # introduction
 
-## diapo 1 !fo
+## History !fo
 
 !head header example for police and placement
 
@@ -33,34 +50,79 @@ $memo1
 
  --------------- diap2 ----------------- 
 
- # diapo 2
+ # introduction
 
-# A general intro stuff blabla
+## Basic equations !fb
 
-## diapo 2 !fb
+!head supraconductivity
 
-!head tête ou pas..
+* London penetration depth (1935)
 
-* Rêve ou réalité?
-* la révolution des "Siths"co
+!pos823/173
+!eq \lambda_L = \sqrt{\frac{m}{\mu_0 n_s e^2}}
 
-!pos605/344
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+!pos590/173
+!eq B(x) = B_0 \exp\left(-\frac{x}{\lambda_L}\right)
 
-!pos935/344
-!['magno' 191x230 %magnolia%](imgs/magnolia.jpg)
+* The Ginzburg-Landau Equation (1950)
 
-!pos736/235
-!eq e^{i\pi}=-1
+!pos642/232
+!eq \frac{1}{2m} \left( -i\hbar\nabla - q\mathbf{A} \right)^2 \psi + \alpha\psi + \beta|\psi|^2\psi = 0
 
 
-!pos356/341
-!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+!foot formulae
 
 
 
+
+
+ --------------- diap4 ----------------- 
+
+ 
+# Rappel
+
+## diapo 4
+
+!head dans les étoiles, l'immensité est infinie.. 
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+* La Voie Lactée irrégulière appartient au monde sublunaire
+* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
+* "Démocrite (460-370 BC) et la vision atomiste"cb
+* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
+* nous paraissent former une masse unie. !stp
+* Lucrèce (99-51 BC)
+* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
+* créent la "Voie Lactée"cy 
+* Critiques au moyen-âge : !stp
+
+
+!foot Il était une fois un petit chaperon rouge.. 
+
+
+ --------------- diap5 ----------------- 
+
+ # Mama météo
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+
+La Voie "Lactée irrégulière"u appartient au monde sublunaire
+
+Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+
+"Démocrite (460-370 BC) et la vision atomiste"cb 
+
+Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
+nous paraissent former une masse unie.
+
+## titre quelconque
+
+## deuxième étage..
+
+* ici je refais "encore une ligne"b .. 
+
+
+!foot Besoin d'un pied de page.. 
 
 
  --------------- diap3 ----------------- 
@@ -91,55 +153,6 @@ a
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
- --------------- diap5 ----------------- 
-
- # Mama météo
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-
-La Voie "Lactée irrégulière"u appartient au monde sublunaire
-
-Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
-
-"Démocrite (460-370 BC) et la vision atomiste"cb 
-
-Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-nous paraissent former une masse unie.
-
-## titre quelconque
-
-## deuxième étage..
-
-* ici je refais "encore une ligne"b .. 
-
-
-!foot Besoin d'un pied de page.. 
-
-
- --------------- diap4 ----------------- 
-
- 
-# Rappel
-
-## diapo 4
-
-!head dans les étoiles, l'immensité est infinie.. 
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-* La Voie Lactée irrégulière appartient au monde sublunaire
-* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-* "Démocrite (460-370 BC) et la vision atomiste"cb
-* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-* nous paraissent former une masse unie. !stp
-* Lucrèce (99-51 BC)
-* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-* créent la "Voie Lactée"cy 
-* Critiques au moyen-âge : !stp
-
-
-!foot Il était une fois un petit chaperon rouge.. 
-
-
  --------------- diap6 ----------------- 
 
   # idée de mettre du Bokeh..
@@ -150,12 +163,12 @@ nous paraissent former une masse unie.
 * deuxième point.. 
 * troisième point
 
-!pos504/498
+!pos710/366
 !eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
 
 simple texte en format p pour être déplacé.. 
 
-!pos100/144
+!pos613/51
 !['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
 
 !tagv car
@@ -163,21 +176,28 @@ simple texte en format p pour être déplacé..
 
 
 
- --------------- diap0 ----------------- 
+ --------------- diap7 ----------------- 
 
- 
-# aaeae
+ # nouvelle diapo..
 
-!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
+## Diapo 7
 
-!author par les auteurs de BCS... 
+* Il était une fois dans la ville de Foix, ahah
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  		bizmuth et belzébuth..
+       ```
+* Catalan equation
 
-!date 10 Mai 2078
+!pos766/471
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
 
-* abeabeae
+!pos1077/352
+!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
 
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+!pos480/357
+!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
  --------------- diap8 ----------------- 
@@ -199,62 +219,6 @@ $memo0
 $memo1
 
 * mem1..
-
- --------------- diap7 ----------------- 
-
- # nouvelle diapo..
-
-## Diapo 7
-
-* Il était une fois dans la ville de Foix, ahah
-* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
-* dans cette contrée reculée, en plein milieu de rien..
-	 * ```
-  		bizmuth et belzébuth..
-       ```
-* Catalan equation
-
-!pos466/511
-!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
-
-!pos209/346
-!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
-
-!pos100/870
-!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
-
-
- --------------- diap10 ----------------- 
-
- # diap d1
-
-## diapo 1 !fo
-
-!head header example for police and placement
-
-* craziness of "supraconductivity"cb !memo0 
-* Kamerling Ohnes was the "dicoverer"cg in 1911
-    * last century, trying to freeze elements.. 
-* 1987: HUge revolution with dicovery of the HTC 
-    * like "YBaCuO"cg.. ..
-* 10 "years later"co , the topic is still mysterious !stp
-	* many tried unsuccessfully.
-* Correlated electrons is also an interesting topic !memo1 !stp
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-$memo0
-
-* superconductivity was absolutely not expected.. 
-	* at its time it was a huge surprise !!!
-
-$memo1
-
-* ziber..
-    * qu'est ce que ziber vraiment ?
-
-
-
 
  --------------- diap9 ----------------- 
 
