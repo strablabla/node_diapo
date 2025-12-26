@@ -1,0 +1,61 @@
+// ============================================
+// FIRST PAGE FUNCTIONS (Title, Author, Date)
+// ============================================
+
+function make_deck_title(){
+
+      /*
+      Place the title
+      */
+
+      $('h1').hide()
+      $('li').hide()
+      var dictit= {'position':'relative','font-size':'300%',
+                   'text-align':'center', 'top':'100px',
+                   'background-color':'orange', 'color':'white',
+                   'margin-left':'100px', 'margin-right':'100px'}
+      p_match__inject_css(/\!deck_title/, dictit)
+
+}
+
+function make_author(){
+
+      /*
+      Place the author
+      */
+
+      var dicauth= {'position':'relative','font-size':'250%',
+                  'text-align':'center', 'top':'250px',
+                   'margin': 'auto'}
+      p_match__inject_css(/\!author/, dicauth)
+
+}
+
+function make_date(){
+
+      /*
+      place the date
+      */
+
+      var dicdate= {'position':'relative','font-size':'200%',
+                  'text-align':'center', 'top':'300px', 'margin-left':'0'}
+      p_match__inject_css(/\!date/, dicdate)
+
+}
+
+
+$("p").each(function(){
+var txt = $(this).text()
+if (txt.match(/\!deck_title/)){
+
+make_deck_title() //----------------------------- Title
+make_author() //----------------------------- Author
+make_date() //----------------------------- Date
+
+}
+})
+
+$('.deck_title').attr('align', 'center')
+$('.deck_title').css({'line-height':'150%'})
+$('.author').wrap( "<div style='text-align:center;'></div>" )
+$('.date').attr('align', 'center')
