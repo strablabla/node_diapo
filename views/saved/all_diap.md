@@ -16,66 +16,6 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
- --------------- diap2 ----------------- 
-
- # diapo 2
-
-# A general intro stuff blabla
-
-## diapo 2 !fb
-
-!head tête ou pas..
-
-* Rêve ou réalité?
-* la révolution des "Siths"co
-
-!pos605/344
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
-
-!pos935/344
-!['magno' 191x230 %magnolia%](imgs/magnolia.jpg)
-
-!pos736/235
-!eq e^{i\pi}=-1
-
-
-!pos356/341
-!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
-
-
-
- --------------- diap3 ----------------- 
-
- 
-# Inspection des travaux finis
-
-## diapo 3 !fg
-
-!head tête ou pas..
-
-* This is another day in Paradise
-* La saga des sagouins 
-
-!pos959/234
-!['magno' 249x300 %example_of_magnolia%](imgs/magnolia.jpg)
-
-!pos243/341
-!eq ax^2+bx+c =
-a
-\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
-\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
-
-!tagv ballon
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
  --------------- diap1 ----------------- 
 
  # diap d1
@@ -108,6 +48,38 @@ $memo1
 
 
 
+ --------------- diap2 ----------------- 
+
+ # diapo 2
+
+# A general intro stuff blabla
+
+## diapo 2 !fb
+
+!head tête ou pas..
+
+* Rêve ou réalité?
+* la révolution des "Siths"co
+
+!pos605/344
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+
+!pos935/344
+!['magno' 191x230 %magnolia%](imgs/magnolia.jpg)
+
+!pos736/235
+!eq e^{i\pi}=-1
+
+
+!pos356/341
+!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
+
+
+
+
  --------------- diap4 ----------------- 
 
  
@@ -132,29 +104,32 @@ $memo1
 !foot Il était une fois un petit chaperon rouge.. 
 
 
- --------------- diap5 ----------------- 
+ --------------- diap3 ----------------- 
 
- # Mama météo
+ 
+# Inspection des travaux finis
 
-* Les "Météorologiques"u d'Aristote (384-322 BC)
+## diapo 3 !fg
 
-La Voie "Lactée irrégulière"u appartient au monde sublunaire
+!head tête ou pas..
 
-Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+* This is another day in Paradise
+* La saga des sagouins 
 
-"Démocrite (460-370 BC) et la vision atomiste"cb 
+!pos959/234
+!['magno' 249x300 %example_of_magnolia%](imgs/magnolia.jpg)
 
-Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-nous paraissent former une masse unie.
+!pos243/341
+!eq ax^2+bx+c =
+a
+\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
+\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
 
-## titre quelconque
-
-## deuxième étage..
-
-* ici je refais "encore une ligne"b .. 
+!tagv ballon
 
 
-!foot Besoin d'un pied de page.. 
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
  --------------- diap6 ----------------- 
@@ -202,6 +177,31 @@ simple texte en format p pour être déplacé..
 
 !pos430/366
 !['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
+
+
+ --------------- diap5 ----------------- 
+
+ # Mama météo
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+
+La Voie "Lactée irrégulière"u appartient au monde sublunaire
+
+Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+
+"Démocrite (460-370 BC) et la vision atomiste"cb 
+
+Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
+nous paraissent former une masse unie.
+
+## titre quelconque
+
+## deuxième étage..
+
+* ici je refais "encore une ligne"b .. 
+
+
+!foot Besoin d'un pied de page.. 
 
 
  --------------- diap8 ----------------- 
