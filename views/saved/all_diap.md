@@ -16,38 +16,6 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
- --------------- diap2 ----------------- 
-
- # diapo 2
-
-# A general intro stuff blabla
-
-## diapo 2 !fb
-
-!head tête ou pas..
-
-* Rêve ou réalité?
-* la révolution des "Siths"co
-
-!pos605/344
-!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
-
-!pos935/344
-!['magno' 191x230 %magnolia%](imgs/magnolia.jpg)
-
-!pos736/235
-!eq e^{i\pi}=-1
-
-
-!pos356/341
-!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
-
-
-
-
-
  --------------- diap1 ----------------- 
 
  # diap d1
@@ -76,6 +44,38 @@ $memo1
 
 * ziber..
     * qu'est ce que ziber vraiment ?
+
+
+
+
+ --------------- diap2 ----------------- 
+
+ # diapo 2
+
+# A general intro stuff blabla
+
+## diapo 2 !fb
+
+!head tête ou pas..
+
+* Rêve ou réalité?
+* la révolution des "Siths"co
+
+!pos605/344
+!['fire in London tower, Turner' 300x300 %fire-in-London-tower-Turner%](imgs/fire-in-London-tower-Turner.jpg)
+
+!pos935/344
+!['magno' 191x230 %magnolia%](imgs/magnolia.jpg)
+
+!pos736/235
+!eq e^{i\pi}=-1
+
+
+!pos356/341
+!['Rossseee' 220x293 %Rossseee%](imgs/Rossseee.jpg)
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+
 
 
 
@@ -232,6 +232,38 @@ $memo1
 ## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
 
 * [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
+
+ --------------- diap10 ----------------- 
+
+ # diap d1
+
+## diapo 1 !fo
+
+!head header example for police and placement
+
+* craziness of "supraconductivity"cb !memo0 
+* Kamerling Ohnes was the "dicoverer"cg in 1911
+    * last century, trying to freeze elements.. 
+* 1987: HUge revolution with dicovery of the HTC 
+    * like "YBaCuO"cg.. ..
+* 10 "years later"co , the topic is still mysterious !stp
+	* many tried unsuccessfully.
+* Correlated electrons is also an interesting topic !memo1 !stp
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+$memo0
+
+* superconductivity was absolutely not expected.. 
+	* at its time it was a huge surprise !!!
+
+$memo1
+
+* ziber..
+    * qu'est ce que ziber vraiment ?
+
+
+
 
  --------------- diap11 ----------------- 
 
