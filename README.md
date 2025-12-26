@@ -78,6 +78,7 @@ node_diapo/
 <small>
 
 - **Left/Right arrows**: Navigate between slides
+- **Page Up/Page Down**: Navigate between slides (alternative)
 - **Alt+A**: View all slides
 - **Alt+M**: View miniatures
 
@@ -141,15 +142,31 @@ The application supports voice commands in French via Artyom.js for:
 - Displaying memos
 - And more
 
-### Special Syntax
+### Special Markdown Syntax
 
 The system supports enriched markdown syntax with special markers:
-- `!memo0`, `!memo1`: Define notes/memos
-- `$memo0`: Display a memo
-- `!head`: Define a custom header
-- `!foot`: Define a footer
-- `!stp`: Step marker
-- Color annotations: `"text"cb`, `"text"cg`, etc.
+
+#### Page Layout
+- `!deck_title`: Presentation title (title page)
+- `!author`: Author name
+- `!date`: Presentation date
+- `!head`: Slide header
+- `!foot`: Slide footer
+
+#### Content
+- `!eq <formula>`: Mathematical equation (LaTeX syntax)
+- `!pos<x>/<y>`: Position an image or equation at coordinates (x,y)
+- `!['description' WxH %id%](imgs/file.jpg)`: Insert image with dimensions
+
+#### Memos/Notes
+- `!memo0`, `!memo1`, etc.: Mark a phrase as having an associated memo
+- `$memo0`, `$memo1`, etc.: Define the memo content
+- Use **Ctrl+M** to show/hide memo indicators
+- Click on a marked phrase to display its memo
+
+#### Progressive Visualization & Styling
+- `!stp`: Mark a stop point for progressive content reveal
+- Color annotations: `"text"cb` (blue), `"text"cg` (green), `"text"co` (orange), etc.
 
 ## Main Dependencies
 

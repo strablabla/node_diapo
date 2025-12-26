@@ -1,34 +1,19 @@
 
- --------------- diap1 ----------------- 
+ --------------- diap0 ----------------- 
 
- # diap d1
+ 
+# aaeae
 
-## diapo 1 !fo
+!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
 
-!head header example for police and placement
+!author par les auteurs de BCS... 
 
-* craziness of "supraconductivity"cb !memo0 
-* Kamerling Ohnes was the "dicoverer"cg in 1911
-    * last century, trying to freeze elements.. 
-* 1987: HUge revolution with dicovery of the HTC 
-    * like "YBaCuO"cg.. ..
-* 10 "years later"co , the topic is still mysterious !stp
-	* many tried unsuccessfully.
-* Correlated electrons is also an interesting topic !memo1 !stp
+!date 10 Mai 2078
+
+* abeabeae
+
 
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-$memo0
-
-* Depuis quand est-ce un rêve??
-    * beaucoup d'idées d'application..
-
-$memo1
-
-* ziber..
-    * qu'est ce que ziber vraiment ?
-
-
 
 
  --------------- diap2 ----------------- 
@@ -91,6 +76,38 @@ a
 !foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
 
 
+ --------------- diap1 ----------------- 
+
+ # diap d1
+
+## diapo 1 !fo
+
+!head header example for police and placement
+
+* craziness of "supraconductivity"cb !memo0 
+* Kamerling Ohnes was the "dicoverer"cg in 1911
+    * last century, trying to freeze elements.. 
+* 1987: HUge revolution with dicovery of the HTC 
+    * like "YBaCuO"cg.. ..
+* 10 "years later"co , the topic is still mysterious !stp
+	* many tried unsuccessfully.
+* Correlated electrons is also an interesting topic !memo1 !stp
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+$memo0
+
+* Depuis quand est-ce un rêve??
+    * beaucoup d'idées d'application..
+
+$memo1
+
+* ziber..
+    * qu'est ce que ziber vraiment ?
+
+
+
+
  --------------- diap4 ----------------- 
 
  
@@ -113,23 +130,6 @@ a
 
 
 !foot Il était une fois un petit chaperon rouge.. 
-
-
- --------------- diap0 ----------------- 
-
- 
-# aaeae
-
-!title les supraconducteurs de type I et II, l'histoire continue !!!
-
-!author par les auteurs de BCS... 
-
-!date 10 Mai 2078
-
-* abeabeae
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
  --------------- diap5 ----------------- 
@@ -224,6 +224,15 @@ $memo1
 
 * mem1..
 
+ --------------- diap9 ----------------- 
+
+  # diap 9
+ 
+## Broadband EPR Spectroscopy in Diverse Field Conditions Using Optically Detected Nitrogen-Vacancy Centers in Diamond
+## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
+
+* [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
+
  --------------- diap10 ----------------- 
 
  # diap d1
@@ -255,15 +264,6 @@ $memo1
 
 
 
-
- --------------- diap9 ----------------- 
-
-  # diap 9
- 
-## Broadband EPR Spectroscopy in Diverse Field Conditions Using Optically Detected Nitrogen-Vacancy Centers in Diamond
-## Electron spin resonance of nitrogen-vacancy centers in optically trapped nanodiamonds
-
-* [A Curious Link Between Prime Numbers, the Maundy Cake Problem and Parallel Sorting §§](https://arxiv.org/pdf/1910.11749.pdf)
 
  --------------- diap11 ----------------- 
 

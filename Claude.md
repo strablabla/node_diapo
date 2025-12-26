@@ -487,8 +487,168 @@ node_diapo/
 └── .gitignore                     # Exclusions git
 ```
 
+---
+
+## 📅 26 Décembre 2025 - Jour 6
+
+### Système de mémos amélioré
+
+**Améliorations visuelles et fonctionnelles du système de mémo:**
+
+1. **Titre du panneau de mémo**
+   - Changement de "Mémo X" à "note X"
+   - Ajout d'une croix de Lorraine rouge (‡) avant le titre
+   - Titre en gris (#666), police normale sans relief
+   - Fichier: `views/memos/memo.js`
+
+2. **Bouton de fermeture**
+   - Ajout d'un bouton × (times) en haut à droite du panneau
+   - Taille: 24px avec effet hover
+   - Fichier: `views/memos/memo.js` lignes 115-135
+
+3. **Positionnement du panneau**
+   - Déplacement du panneau de la gauche vers la droite de l'écran
+   - Positionnement dynamique: aligné verticalement avec la phrase cliquée
+   - Décalage de 50px à droite de la phrase
+   - Fichier: `views/memos/memo.js` lignes 208-217
+
+4. **Espacement et marges**
+   - 50px d'espace sous le titre
+   - Contenu décalé de -100px vers la gauche
+   - Fichier: `views/memos/memo.js` lignes 104, 165
+
+5. **Indicateur visuel de mémo actif**
+   - Ajout d'une croix de Lorraine (‡) rouge après la phrase cliquée
+   - Position: légèrement en exposant
+   - Suppression automatique lors de la fermeture ou du clic sur un autre mémo
+   - Fichier: `views/memos/memo.js` lignes 195-206
+
+6. **Correction du conflit avec visualisation progressive**
+   - Exclusion du contenu des mémos (`#infos, #infos *`) de la visualisation progressive
+   - Empêche la disparition du texte lors de l'utilisation des flèches haut/bas
+   - Fichier: `views/diapo.html` ligne 283
+
+### Navigation améliorée
+
+**Nouvelles touches de navigation:**
+- **Page Down**: Avancer à la diapo suivante (équivalent à flèche droite)
+- **Page Up**: Retourner à la diapo précédente (équivalent à flèche gauche)
+- Fichier: `views/diapo.html` lignes 151-165
+
+### Refactorisation et modularisation du code
+
+**Organisation en modules:**
+
+1. **Système de mémo** (`views/memos/memo.js`)
+   - Extraction de tout le code relatif aux mémos
+   - Inclusion via Nunjucks: `{% include 'memos/memo.js' %}`
+   - Fichiers concernés:
+     - Création: `views/memos/memo.js` (280 lignes)
+     - Modification: `views/diapo.html` (suppression de ~200 lignes)
+
+2. **Fonctions de décoration** (`views/decorate/decorate.htm`)
+   - Extraction des fonctions `make_head()` et `make_foot()`
+   - Inclusion via Nunjucks: `{% include 'decorate/decorate.htm' %}`
+   - Fichiers concernés:
+     - Création: `views/decorate/decorate.htm` (35 lignes)
+     - Modification: `views/diapo.html`
+
+3. **Fonctions de première page** (`views/first_page/first_page.htm`)
+   - Extraction et renommage des fonctions de page de titre
+   - `make_title()` → `make_deck_title()`
+   - Instruction markdown: `!title` → `!deck_title`
+   - Inclusion via Nunjucks: `{% include 'first_page/first_page.htm' %}`
+   - Fichiers concernés:
+     - Création: `views/first_page/first_page.htm` (61 lignes)
+     - Modification: `views/diapo.html`
+
+**Structure du projet améliorée:**
+
+```
+node_diapo/
+├── views/
+│   ├── memos/
+│   │   └── memo.js              # Système de mémos complet
+│   ├── decorate/
+│   │   └── decorate.htm         # Fonctions header/footer
+│   ├── first_page/
+│   │   └── first_page.htm       # Fonctions de page de titre
+│   └── diapo.html               # Template principal (simplifié)
+```
+
+### Système de redimensionnement d'images amélioré
+
+**Améliorations du menu contextuel:**
+
+1. **Sauvegarde de la taille dans le fichier markdown**
+   - Création du module `lib/image_size.js`
+   - Socket event `size_img` pour transmettre les nouvelles dimensions
+   - Pattern de mise à jour: `WIDTHxHEIGHT` dans `!['text' WxH %id%](imgs/...)`
+   - Fichiers:
+     - `lib/image_size.js` (95 lignes)
+     - `lib/websocket.js` (ajout du handler)
+
+2. **Gestion des IDs d'images**
+   - Nettoyage des IDs (suppression du suffixe numérique aléatoire)
+   - Fonction `escapeRegExp()` pour échapper les caractères spéciaux
+   - Pattern matching robuste avec RegExp
+   - Fichier: `lib/image_size.js` lignes 11-13, 43-60
+
+### Déplacement de config.json
+
+**Relocalisation du fichier de configuration:**
+- **Ancien emplacement:** `views/config/config.json`
+- **Nouvel emplacement:** `config.json` (racine du projet)
+- **Raison:** Meilleure organisation (config à la racine)
+- **Fichiers mis à jour:**
+  - `lib/thumbnails.js`
+  - `lib/routing.js`
+  - `lib/generate_pdf.js`
+  - `lib/update_viewport.js`
+  - `README.md`
+  - `Claude.md`
+
+### Détection et sauvegarde des dimensions d'écran
+
+**Amélioration de la détection viewport:**
+
+1. **Détection unique par session serveur**
+   - Flag `viewportDimensionsDetected` pour éviter les mises à jour répétées
+   - Sauvegarde dans `config.json`
+   - Fichier: `lib/update_viewport.js` lignes 3, 14-17, 37
+
+2. **Utilisation de screen.width/height**
+   - Au lieu de window.innerWidth/innerHeight
+   - Plus fiable et précis
+   - Fichier: `views/diapo.html` lignes 1495-1497
+
+---
+
 ## Notes pour le futur
 
+### Mémos
+- Utiliser `!memo0`, `!memo1`, etc. dans le texte pour marquer les phrases
+- Utiliser `$memo0`, `$memo1`, etc. pour définir le contenu du mémo
+- Activer/désactiver avec Ctrl+M
+- Cliquer sur une phrase marquée pour afficher le mémo
+
+### Instructions markdown spéciales
+- `!deck_title` - Titre de la présentation (page de garde)
+- `!author` - Auteur de la présentation
+- `!date` - Date de la présentation
+- `!head` - En-tête de diapo
+- `!foot` - Pied de page de diapo
+- `!eq` - Équation mathématique
+- `!pos` - Positionnement d'image/équation
+- `!memo` - Référence à un mémo
+
+### Configuration
+- Le fichier `config.json` à la racine contient:
+  - Dimensions du viewport
+  - Nombre de colonnes pour la mosaïque (`nb_horiz_mosaic`)
+  - Port du serveur
+
+### Vignettes
 - Les vignettes sont générées automatiquement, pas besoin de les créer manuellement
 - Le dossier `views/thumbnails/` doit exister mais son contenu n'est pas versionné
 - Pour régénérer toutes les vignettes: redémarrer le serveur
