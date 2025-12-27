@@ -1,6 +1,36 @@
 // ============================================
-// DECORATION FUNCTIONS (Header, Footer & Colored Frames)
+// DECORATION FUNCTIONS (Header, Footer, Title & Colored Frames)
 // ============================================
+
+function make_title(){
+
+      /*
+      Style h1 title
+      syntax : # My Title !tit
+      Applies centered style and 30px font to h1 elements with !tit marker
+      */
+
+      var reg = /\!tit/
+      var dict_tit = {
+          'text-align': 'center',
+          'font-size': '40px',
+          'font-style': 'italic',
+          'margin-top': '100px',
+          'margin-bottom': '70px',
+          'text-shadow': 'none'
+      }
+
+      $('h1').each(function(){
+          var txt = $(this).text()
+          if (txt.match(reg)){
+              // Add slide_title class
+              $(this).addClass('slide_title')
+
+              // Apply CSS styling and remove the !tit marker from text
+              elem_match__inject_css($(this), reg, dict_tit)
+          }
+      })
+}
 
 function make_head(){
 
@@ -57,4 +87,5 @@ function frame_col(){
       }
 }
 
+make_title() // style h1 title with !tit marker
 frame_col() // frame with color around the tag..

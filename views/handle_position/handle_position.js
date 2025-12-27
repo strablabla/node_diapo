@@ -100,7 +100,7 @@ function change_pos_h3(elem){
                        console.log('  Element:', $h3[0])
 
                        // For h3: set position relative with only top offset
-                       $h3.css({'position':'relative', 'top':y + 'px', 'margin-left':'100px'})
+                       $h3.css({'position':'relative', 'top':y + 'px'})
 
                        // Hide the !pos marker
                        $next.hide()
@@ -186,8 +186,8 @@ key('ctrl+s', function(e){
               cssLeft = pLeft + figLeft
               cssTop = pTop + figTop
           } else if ($elem.is('h3')) {
-              // For h3: only save vertical position (top), left should remain at margin-left
-              cssLeft = 100  // Keep the margin-left value
+              // For h3: only save vertical position (top), left is managed by margin-left from config
+              cssLeft = parseInt($elem.css('margin-left')) || 0
 
               // Get the top value - jQuery UI draggable sets it directly
               var topVal = $elem.css('top')
