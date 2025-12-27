@@ -1,7 +1,9 @@
 
 
 <title> node diapo </title>
-<link rel="icon" type="image/png" href="/favicons/fav_slide-1766864024970.png">
+{% if config.favicon %}
+<link rel="icon" href="/favicons/{{ config.favicon }}">
+{% endif %}
 
 
 

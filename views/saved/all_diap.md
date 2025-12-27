@@ -64,7 +64,7 @@ $memo1
 
 !head supraconductivity
 
-### London penetration depth (1935)
+### London penetration depth (1935).......
 !pos150/46
 
 * first attempt to explain supra.. 
@@ -105,7 +105,7 @@ $memo1
 ### Principle
 !pos150/0
 
-* quantized flux and voltage.. 
+* quantized flux and voltage... 
 
 !pos299/413
 !eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
@@ -123,7 +123,6 @@ $memo1
 !head supra applications
 
 !foot one example
-
 
 
 
@@ -177,6 +176,29 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
+ --------------- diap6 ----------------- 
+
+  # idée de mettre du Bokeh..
+
+ ## voir comment faire..!fo 
+
+* blabla
+* deuxième point.. 
+* troisième point
+
+!pos710/366
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
+
+simple texte en format p pour être déplacé.. 
+
+!pos224/409
+!['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
+
+!tagv car
+
+
+
+
  --------------- diap7 ----------------- 
 
  # nouvelle diapo..
@@ -220,29 +242,6 @@ $memo0
 $memo1
 
 * mem1..
-
- --------------- diap6 ----------------- 
-
-  # idée de mettre du Bokeh..
-
- ## voir comment faire..!fo 
-
-* blabla
-* deuxième point.. 
-* troisième point
-
-!pos710/366
-!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
-
-simple texte en format p pour être déplacé.. 
-
-!pos224/409
-!['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
-
-!tagv car
-
-
-
 
  --------------- diap9 ----------------- 
 

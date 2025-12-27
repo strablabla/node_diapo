@@ -3,6 +3,8 @@ var open = require('open');
 var _ = require('underscore');
 var countFiles = require('count-files');
 var nunjucks  = require('nunjucks');
+var fs = require('fs');
+var yaml = require('js-yaml');
 var count = require('./static/js/count_lines');
 var util = require('./static/js/util');
 var re = require('./static/js/read_emit');
@@ -40,11 +42,19 @@ var addr = 'http://127.0.0.1:{}/d0'.format(port)
 
 
 
-nunjucks.configure('views', {
+// Load config and setup nunjucks with global variables
+var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+var config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
+
+var nunjucksEnv = nunjucks.configure('views', {
     autoescape: true,
     express: app,
     watch:true
 });
+
+// Add global variables to nunjucks
+nunjucksEnv.addGlobal('config', config);
+nunjucksEnv.addGlobal('config_desk', config_desk);
 
 // ----------------  Make the Routage
 
@@ -93,9 +103,17 @@ routing.route_all(app, concat_diapos, function(num) {
 
 //--------------  Image upload configuration
 
+// Function to reload config
+function reloadConfig() {
+    config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+    config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
+    nunjucksEnv.addGlobal('config', config);
+    nunjucksEnv.addGlobal('config_desk', config_desk);
+}
+
 // Image upload endpoint (uses websocketState.diapo_index)
 app.post('/upload-image', uploadImage.upload.single('image'), function(req, res) {
-    uploadImage.handle_upload_image(req, res, websocketState.diapo_index, modify)
+    uploadImage.handle_upload_image(req, res, websocketState.diapo_index, modify, reloadConfig)
 })
 
 
