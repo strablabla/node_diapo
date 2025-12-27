@@ -273,8 +273,10 @@ key('ctrl+s', function(e){
           })
       }, 1000)
 
-      // Update thumbnail for current slide
-      socket.emit('update_thumbnail')
+      // Update thumbnail for current slide (after a delay to let indicator reposition)
+      setTimeout(function() {
+          socket.emit('update_thumbnail')
+      }, 200)
 
       return false  // Prevent any default browser behavior
 })

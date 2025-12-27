@@ -24,25 +24,27 @@
 !head supraconductivity
 
 ### London penetration depth (1935)
-!pos100/46
+!pos150/46
 
-!pos425/446
+* first attempt to explain supra.. 
+
+!pos506/503
 !eq \lambda_L = \sqrt{\frac{m}{\mu_0 n_s e^2}}
 
-!pos170/442
+!pos239/492
 !eq B(x) = B_0 \exp\left(-\frac{x}{\lambda_L}\right)
 
 ### The Ginzburg-Landau Equation (1950)
-!pos100/246
+!pos150/147
 
 * first quantic equation in the field..
 * explains the field penetration inside the matter.. 
 
-!pos150/642
+!pos229/793
 !eq \frac{1}{2m} \left( -i\hbar\nabla - q\mathbf{A} \right)^2 \psi + \alpha\psi + \beta|\psi|^2\psi = 0
 
 
-!pos703/296
+!pos919/352
 !['Meissner effect' 412x412 %Meissner-effect%](imgs/Meissner-effect.jpeg)
 
 !foot formulae
@@ -50,6 +52,30 @@
 
 
 
+
+
+ --------------- diap4 ----------------- 
+
+ 
+# Rappel
+
+## diapo 4
+
+!head dans les étoiles, l'immensité est infinie.. 
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+* La Voie Lactée irrégulière appartient au monde sublunaire
+* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
+* "Démocrite (460-370 BC) et la vision atomiste"cb
+* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
+* nous paraissent former une masse unie. !stp
+* Lucrèce (99-51 BC)
+* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
+* créent la "Voie Lactée"cy 
+* Critiques au moyen-âge : !stp
+
+
+!foot Il était une fois un petit chaperon rouge.. 
 
 
  --------------- diap3 ----------------- 
@@ -85,11 +111,14 @@ a
 
  --------------- diap1 ----------------- 
 
- # introduction
+ # introduction !tit
 
 ## History !fo
 
 !head header example for police and placement
+
+### summary
+!pos150/16
 
 * craziness of "supraconductivity"cb !memo0 
 * Kamerling Ohnes was the "dicoverer"cg in 1911
@@ -104,8 +133,9 @@ a
 
 $memo0
 
-* Depuis quand est-ce un rêve??
-    * beaucoup d'idées d'application..
+* Supraconductivity is a very facinating phenomenon
+    * It manifests through strong magnetic field rejection 
+    * and also through current flowing with no resistance.. 
 
 $memo1
 
@@ -113,30 +143,6 @@ $memo1
     * qu'est ce que ziber vraiment ?
 
 
-
-
- --------------- diap4 ----------------- 
-
- 
-# Rappel
-
-## diapo 4
-
-!head dans les étoiles, l'immensité est infinie.. 
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-* La Voie Lactée irrégulière appartient au monde sublunaire
-* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-* "Démocrite (460-370 BC) et la vision atomiste"cb
-* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-* nous paraissent former une masse unie. !stp
-* Lucrèce (99-51 BC)
-* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-* créent la "Voie Lactée"cy 
-* Critiques au moyen-âge : !stp
-
-
-!foot Il était une fois un petit chaperon rouge.. 
 
 
  --------------- diap5 ----------------- 
@@ -164,6 +170,29 @@ nous paraissent former une masse unie.
 !foot Besoin d'un pied de page.. 
 
 
+ --------------- diap6 ----------------- 
+
+  # idée de mettre du Bokeh..
+
+ ## voir comment faire..!fo 
+
+* blabla
+* deuxième point.. 
+* troisième point
+
+!pos710/366
+!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
+
+simple texte en format p pour être déplacé.. 
+
+!pos224/409
+!['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
+
+!tagv car
+
+
+
+
  --------------- diap7 ----------------- 
 
  # nouvelle diapo..
@@ -188,29 +217,6 @@ nous paraissent former une masse unie.
 !['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
- --------------- diap6 ----------------- 
-
-  # idée de mettre du Bokeh..
-
- ## voir comment faire..!fo 
-
-* blabla
-* deuxième point.. 
-* troisième point
-
-!pos710/366
-!eq E=p^{0} c=\frac{m c^{2}}{\sqrt{1-\mathbf{v}^{2} / c^{2}}}
-
-simple texte en format p pour être déplacé.. 
-
-!pos224/409
-!['Duomo' 444x250 %Duomo%](imgs/20180827_131-1766231240197.jpg)
-
-!tagv car
-
-
-
-
  --------------- diap8 ----------------- 
 
   # diap eight.. 
@@ -230,6 +236,19 @@ $memo0
 $memo1
 
 * mem1..
+
+ --------------- diap10 ----------------- 
+
+ # diap d10
+
+## diapo 10 !fg
+
+!head header example for police and placement
+
+* really the tenth slide !!! 
+
+
+
 
  --------------- diap9 ----------------- 
 
