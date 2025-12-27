@@ -7,6 +7,7 @@
 {% include 'header.html' %}
 <script  src="/edit_textarea.js"></script>
 <script  src="/code_mirror_addons.js"></script>
+<script  src="/syntax_help.js"></script>
 <link rel="stylesheet" href="codemirror.css">
 <script src="codemirror.js"></script>
 <link rel="stylesheet" href="highlight.css">
@@ -48,6 +49,11 @@
             });
 
             code_mirror_add_func(editor) // add various functionnalities to code mirror
+
+            // Setup syntax helper (double-click on gutter to show syntax panel)
+            if (typeof setupSyntaxHelper === 'function') {
+                setupSyntaxHelper(editor);
+            }
 
              //------------- return from textarea to html
 

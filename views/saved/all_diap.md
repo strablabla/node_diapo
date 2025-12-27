@@ -15,6 +15,47 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
+ --------------- diap1 ----------------- 
+
+ # introduction !tit
+
+## History !fo
+
+!head header example for police and placement
+
+### summary
+!pos150/16
+
+!pos827/366
+!['img' 268x254 %ybacuo-1766841128791%](imgs/ybacuo-1766841128791.jpeg)
+
+* craziness of "supraconductivity"cb !memo0 
+* Kamerling Ohnes was the "dicoverer"cg in 1911
+    * last century, trying to freeze elements.. 
+* 1987: HUge revolution with dicovery of the HTC 
+    * like "YBaCuO"cg.. ..
+* 10 "years later"co , the topic is still mysterious !stp
+	* many tried unsuccessfully.
+* Correlated electrons is also an interesting topic !memo1 !stp
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+$memo0
+
+* Supraconductivity is a very facinating phenomenon
+    * It manifests through strong magnetic field rejection 
+    * and also through current flowing with no resistance.. 
+
+$memo1
+
+* ziber..
+    * qu'est ce que ziber vraiment ?
+
+
+
+
+
+
  --------------- diap2 ----------------- 
 
  # Introduction !tit
@@ -81,93 +122,34 @@
  --------------- diap3 ----------------- 
 
  
-# Inspection des travaux finis
+# Applications !tit
 
-## diapo 3 !fg
+## Josephson effect 
 
-!head tête ou pas..
+### Principle
+!pos150/0
 
-* This is another day in Paradise
-* La saga des sagouins 
+* quantized flux and voltage.. 
 
-!pos440/357
-!['magno' 249x300 %example_of_magnolia%](imgs/magnolia.jpg)
-
-!pos258/312
-!eq ax^2+bx+c =
-a
-\left( x - \frac{-b + \sqrt {b^2-4ac}}{2a} \right)
-\left( x - \frac{-b - \sqrt {b^2-4ac}}{2a} \right)
-
-!tagv ballon
+!pos299/413
+!eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
 
 
+### Schema
+!pos150/91
 
-!foot http://www.physique.usherb.ca/~tremblay/cours/zzzzzzzzzzzzzzzziiii
+* Insulator in sandwich between two supraconductors.. 
 
-!pos763/358
-!['img' 225x300 %20251129_163624-1766769723323%](imgs/20251129_163624-1766769723323.jpg)
+!pos407/627
+!['josepson_schema' 214x247 %josepson_schema%](imgs/josepson_schema.jpg)
 
 
- --------------- diap1 ----------------- 
+!head supra applications
 
- # introduction !tit
-
-## History !fo
-
-!head header example for police and placement
-
-### summary
-!pos150/16
-
-* craziness of "supraconductivity"cb !memo0 
-* Kamerling Ohnes was the "dicoverer"cg in 1911
-    * last century, trying to freeze elements.. 
-* 1987: HUge revolution with dicovery of the HTC 
-    * like "YBaCuO"cg.. ..
-* 10 "years later"co , the topic is still mysterious !stp
-	* many tried unsuccessfully.
-* Correlated electrons is also an interesting topic !memo1 !stp
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-$memo0
-
-* Supraconductivity is a very facinating phenomenon
-    * It manifests through strong magnetic field rejection 
-    * and also through current flowing with no resistance.. 
-
-$memo1
-
-* ziber..
-    * qu'est ce que ziber vraiment ?
+!foot one example
 
 
 
-
- --------------- diap5 ----------------- 
-
- # Mama météo
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-
-La Voie "Lactée irrégulière"u appartient au monde sublunaire
-
-Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
-
-"Démocrite (460-370 BC) et la vision atomiste"cb 
-
-Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-nous paraissent former une masse unie.
-
-## titre quelconque
-
-## deuxième étage..
-
-* ici je refais "encore une ligne"b .. 
-
-
-!foot Besoin d'un pied de page.. 
 
 
  --------------- diap6 ----------------- 
@@ -217,6 +199,31 @@ simple texte en format p pour être déplacé..
 !['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
+ --------------- diap5 ----------------- 
+
+ # Mama météo
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+
+La Voie "Lactée irrégulière"u appartient au monde sublunaire
+
+Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+
+"Démocrite (460-370 BC) et la vision atomiste"cb 
+
+Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
+nous paraissent former une masse unie.
+
+## titre quelconque
+
+## deuxième étage..
+
+* ici je refais "encore une ligne"b .. 
+
+
+!foot Besoin d'un pied de page.. 
+
+
  --------------- diap8 ----------------- 
 
   # diap eight.. 
@@ -236,19 +243,6 @@ $memo0
 $memo1
 
 * mem1..
-
- --------------- diap10 ----------------- 
-
- # diap d10
-
-## diapo 10 !fg
-
-!head header example for police and placement
-
-* really the tenth slide !!! 
-
-
-
 
  --------------- diap9 ----------------- 
 
