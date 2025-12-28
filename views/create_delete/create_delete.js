@@ -45,6 +45,71 @@ socket.on('new_slide_created', function(new_index) {
     }, 100);
 });
 
+//------------------ duplicate the slide
+
+key('ctrl+d', function () {                      // Duplicate current slide
+    console.log('Duplicating slide at index:', diapo_index);
+
+    // Send request to duplicate current slide
+    socket.emit('duplicate_diap', diapo_index);
+
+    // Show notification
+    var $notification = $('<div>')
+        .text('Duplicating slide...')
+        .css({
+            'position': 'fixed',
+            'top': '20px',
+            'left': '50%',
+            'transform': 'translateX(-50%)',
+            'background': '#17a2b8',
+            'color': 'white',
+            'padding': '15px 30px',
+            'border-radius': '4px',
+            'z-index': '10001',
+            'font-family': 'Arial, sans-serif',
+            'box-shadow': '0 2px 8px rgba(0,0,0,0.3)'
+        });
+    $('body').append($notification);
+
+    // Auto-remove notification after 2 seconds
+    setTimeout(function() {
+        $notification.fadeOut(500, function() { $(this).remove(); });
+    }, 2000);
+
+    return false;
+});
+
+// Listen for server confirmation and navigate to duplicated slide
+socket.on('slide_duplicated', function(duplicate_index) {
+    console.log('Slide duplicated at index:', duplicate_index);
+    // Navigate to the duplicated slide
+    setTimeout(function() {
+        window.location.href = 'd' + duplicate_index;
+    }, 100);
+});
+
+// Handle duplication errors
+socket.on('duplicate_error', function(message) {
+    console.error('Duplication error:', message);
+    var $errorMsg = $('<div>')
+        .text('Error: ' + message)
+        .css({
+            'position': 'fixed',
+            'top': '20px',
+            'left': '50%',
+            'transform': 'translateX(-50%)',
+            'background': '#dc3545',
+            'color': 'white',
+            'padding': '15px 30px',
+            'border-radius': '4px',
+            'z-index': '10001',
+            'font-family': 'Arial, sans-serif',
+            'box-shadow': '0 2px 8px rgba(0,0,0,0.3)'
+        });
+    $('body').append($errorMsg);
+    setTimeout(function() { $errorMsg.fadeOut(500, function() { $(this).remove(); }); }, 3000);
+});
+
 //------------------ delete the slide - custom confirmation dialog
 
 function showDeleteConfirmation(slideIndex, callback) {
