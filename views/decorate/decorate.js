@@ -151,3 +151,54 @@ $(document).ready(function() {
         setTimeout(function() { setupBackground(window.config_desk_background); }, 500);
     }
 });
+
+// ============================================
+// AUTO-HIDE CURSOR AFTER INACTIVITY
+// ============================================
+
+(function() {
+    var cursorTimeout;
+
+    // Add CSS to hide cursor with very strong selectors
+    var $cursorStyle = $('<style>')
+        .attr('id', 'cursor-hide-style')
+        .text(`
+            body.hide-cursor,
+            body.hide-cursor *,
+            html.hide-cursor,
+            html.hide-cursor * {
+                cursor: none !important;
+            }
+        `);
+    $('head').append($cursorStyle);
+
+    // Hide cursor after 2 seconds of inactivity
+    function resetCursorTimeout() {
+        // Show cursor
+        $('body').removeClass('hide-cursor');
+        $('html').removeClass('hide-cursor');
+
+        // Clear existing timeout
+        if (cursorTimeout) {
+            clearTimeout(cursorTimeout);
+        }
+
+        // Set timeout to hide cursor after 2 seconds
+        cursorTimeout = setTimeout(function() {
+            $('body').addClass('hide-cursor');
+            $('html').addClass('hide-cursor');
+            console.log('Cursor hidden');
+        }, 2000); // 2 seconds
+    }
+
+    // Listen to mouse movement
+    $(document).on('mousemove', function() {
+        resetCursorTimeout();
+    });
+
+    // Initialize on page load
+    $(document).ready(function() {
+        resetCursorTimeout();
+        console.log('Auto-hide cursor initialized');
+    });
+})();

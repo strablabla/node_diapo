@@ -107,12 +107,44 @@ function progressive_visualization(stp){
 
 progressive_visualization(stp)
 
-key('down', function(){  // next lines
+// Count total number of steps
+var maxSteps = $('.stop').length;
+
+// Direction for B key: 1 = forward, -1 = backward
+var bDirection = 1;
+var bPendingClick = false; // Flag to skip one click at boundaries
+
+key('down', function(){  // down arrow - always goes forward
     stp += 1;
     progressive_visualization(stp)
 })
 
-key('up', function(){  // previous lines
+key('b', function(){  // B key - goes back and forth
+    // If we're waiting for a "neutral" click at a boundary
+    if (bPendingClick) {
+        bPendingClick = false;
+        return; // Do nothing on this click
+    }
+
+    stp += bDirection;
+
+    // Check if we hit the bottom
+    if (stp >= maxSteps) {
+        stp = maxSteps;
+        bDirection = -1; // Reverse direction
+        bPendingClick = true; // Next click will be neutral
+    }
+    // Check if we hit the top
+    else if (stp <= 0) {
+        stp = 0;
+        bDirection = 1; // Reverse direction
+        bPendingClick = true; // Next click will be neutral
+    }
+
+    progressive_visualization(stp)
+})
+
+key('up', function(){  // up arrow - always goes backward
     if (stp > 0) {
         stp -= 1;
         progressive_visualization(stp)
