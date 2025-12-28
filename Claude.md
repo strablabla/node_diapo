@@ -1223,6 +1223,9 @@ Sans titre:
 - `lib/websocket.js` - lignes 28, 72-78 (appel lors de la sauvegarde)
 - `lib/generate_pdf.js` - lignes 5, 30-43 (utilisation du titre avec logique conditionnelle)
 - `views/create_pdf/create_pdf.js` - lignes 28-36 (préservation du nom)
+- `html_app.js` - lignes 47, 109 (renommage config_desk → config_deck)
+- `lib/upload_image.js` - lignes 116, 119, 128 (renommage config_desk → config_deck)
+- `lib/syntax_help.js` - lignes 62-76 (ajout section "Title Page" avec !deck_title)
 
 **Structure du fichier views/config_deck.yaml:**
 ```yaml
@@ -1234,3 +1237,116 @@ deck_title: les supraconducteurs de type I et II, l'histoire continue !!!
 - Pas besoin de renommer manuellement les fichiers
 - Titre toujours synchronisé avec la première diapo
 - Noms de fichiers safe pour tous les systèmes d'exploitation
+
+---
+
+#### 10. Correction CRITIQUE: Race condition lors de la sauvegarde de diapos
+
+**Problème identifié:**
+- Corruption massive de fichiers lors de navigation rapide et upload de fond
+- La diapo 10 a été écrasée avec le contenu de la diapo 2
+- La diapo 4 a été écrasée avec le contenu de la diapo 0
+- Cause: asynchronisme entre `state.diapo_index` (serveur) et l'index réel du client
+
+**Analyse détaillée:**
+
+Le problème était une **race condition classique** dans la communication WebSocket:
+
+1. **État initial:** Utilisateur édite la diapo 0 dans l'éditeur
+2. **Navigation rapide:** Appui sur flèche droite → diapo 10
+3. **Événement 'numdiap':** `state.diapo_index` mis à jour à 10 (asynchrone)
+4. **Sauvegarde déclenchée:** Ctrl+S pendant que l'éditeur contient encore la diapo 0
+5. **Handler 'return':** Utilise `state.diapo_index = 10` mais `new_text = contenu diapo 0`
+6. **Résultat:** Le contenu de la diapo 0 écrase la diapo 10 ❌
+
+**Même problème pour les uploads d'images:**
+- `websocketState.diapo_index` utilisé dans `handle_upload_image()`
+- Valeur stale lors de navigation rapide
+- Images ajoutées à la mauvaise diapo
+
+**Solution implémentée:**
+
+**1. Client envoie toujours son propre index**
+
+Avant ([text.html:63](views/text.html#L63)):
+```javascript
+socket.emit('return', new_text);  // Juste le texte
+```
+
+Après:
+```javascript
+socket.emit('return', {text: new_text, diapo_index: diapo_index});  // Texte + index
+```
+
+**2. Serveur utilise l'index fourni par le client**
+
+Avant ([websocket.js:70](lib/websocket.js#L70)):
+```javascript
+socket.on('return', function(new_text) {
+    modify.modify_html_with_newtext(socket, fs, util, new_text, state.diapo_index)
+    // Utilise state.diapo_index du serveur (potentiellement stale)
+```
+
+Après:
+```javascript
+socket.on('return', function(data) {
+    var new_text, slide_index;
+    if (typeof data === 'string') {
+        // Legacy: fallback sur serveur (avec warning)
+        new_text = data;
+        slide_index = state.diapo_index;
+        console.log('⚠️  Legacy save format - using server diapo_index:', slide_index);
+    } else {
+        // Nouveau format: utilise l'index du client
+        new_text = data.text;
+        slide_index = data.diapo_index;
+        console.log('✅ Client-provided diapo_index:', slide_index);
+    }
+    modify.modify_html_with_newtext(socket, fs, util, new_text, slide_index)
+```
+
+**3. Sécurité supplémentaire dans upload_image**
+
+Ajout de validations robustes ([upload_image.js:157-190](lib/upload_image.js#L157-L190)):
+```javascript
+// CRITICAL: Ensure diapo_idx is defined
+var diapo_idx = req.body.diapo_index !== undefined ? parseInt(req.body.diapo_index) : diapo_index
+
+console.log('=== Image Upload Debug ===')
+console.log('Final diapo_idx:', diapo_idx)
+
+// SAFETY CHECK: Validate diapo_idx before proceeding
+if (diapo_idx === undefined || diapo_idx === null || isNaN(diapo_idx)) {
+    console.error('❌ CRITICAL ERROR: Invalid diapo_idx:', diapo_idx)
+    return res.status(400).json({ error: 'Invalid diapo index' })
+}
+```
+
+**Fichiers modifiés:**
+- [views/text.html](views/text.html#L63) - lignes 63, 68 (envoi objet au lieu de string)
+- [lib/websocket.js](lib/websocket.js#L69-L98) - lignes 69-98 (gestion nouveau format)
+- [lib/upload_image.js](lib/upload_image.js#L157-L190) - lignes 157-190 (validation + debug)
+
+**Récupération des fichiers corrompus:**
+```bash
+git show ec81c2e:views/diapos/d10.html > /tmp/d10_backup.html
+cp /tmp/d10_backup.html views/diapos/d10.html
+git show ec81c2e:views/diapos/d4.html > views/diapos/d4.html
+```
+
+**Principes de la correction:**
+
+1. **Source de vérité unique:** Le client connaît TOUJOURS la diapo qu'il édite
+2. **Pas de confiance implicite:** Le serveur ne suppose jamais que son état est synchronisé
+3. **Compatibilité descendante:** Support du format legacy (string) avec warning
+4. **Défense en profondeur:** Validations multiples (client, serveur, upload)
+5. **Debugging facilitant:** Logs détaillés avec emojis (⚠️, ✅, ❌)
+
+**Pourquoi c'est critique:**
+- **Perte de données** potentielle (contenu écrasé)
+- **Corruption silencieuse** (pas d'erreur visible)
+- **Difficile à reproduire** (timing dependent)
+- **Impact utilisateur majeur** (travail perdu)
+
+**Leçon apprise:**
+> Dans une architecture client-serveur avec état asynchrone, toujours inclure le contexte nécessaire dans chaque requête. Ne jamais supposer que l'état du serveur est synchronisé avec le client.

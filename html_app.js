@@ -20,6 +20,8 @@ var uploadImage = require('./lib/upload_image');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
+var pdfTitle = require('./lib/pdf_title');
+var initSystem = require('./lib/init_system');
 var domtoimage = require('dom-to-image');
 
 String.prototype.format = function () {
@@ -44,7 +46,7 @@ var addr = 'http://127.0.0.1:{}/d0'.format(port)
 
 // Load config and setup nunjucks with global variables
 var config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
-var config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
+var config_desk = yaml.load(fs.readFileSync('views/config_deck.yaml', 'utf8'));
 
 var nunjucksEnv = nunjucks.configure('views', {
     autoescape: true,
@@ -106,7 +108,7 @@ routing.route_all(app, concat_diapos, function(num) {
 // Function to reload config
 function reloadConfig() {
     config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
-    config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
+    config_desk = yaml.load(fs.readFileSync('views/config_deck.yaml', 'utf8'));
     nunjucksEnv.addGlobal('config', config);
     nunjucksEnv.addGlobal('config_desk', config_desk);
 }
@@ -120,14 +122,11 @@ app.post('/upload-image', uploadImage.upload.single('image'), function(req, res)
 console.log('Server running at {}'.format(addr));
 open(addr,"node-strap");
 
-// Clean up old PDFs on startup
-cleanupOldPDFs()
-
-// Create thumbnails after server is fully started (wait 2 seconds)
-setTimeout(function() {
-    thumbnails.create_thumbnails(numdiap, port).then(function() {
-        console.log('Thumbnails created successfully');
-    }).catch(function(err) {
-        console.error('Error creating thumbnails:', err);
-    });
-}, 2000);
+// Initialize system (cleanup, extract PDF title, create thumbnails)
+initSystem({
+    cleanupOldPDFs: cleanupOldPDFs,
+    pdfTitle: pdfTitle,
+    thumbnails: thumbnails,
+    numdiap: numdiap,
+    port: port
+});

@@ -60,12 +60,12 @@
 
              $('#submit').click(function(){          // submit new text.. from text to html
                    var new_text = editor.getValue()
-                   socket.emit('return', new_text);
+                   socket.emit('return', {text: new_text, diapo_index: diapo_index});
                  }) // end click
 
              key('alt+t', function(){                 // return with alt+t key
                  var new_text = editor.getValue()
-                 socket.emit('return', new_text);
+                 socket.emit('return', {text: new_text, diapo_index: diapo_index});
              })
       }) // end socket.on("scroll")
 
