@@ -89,3 +89,65 @@ function frame_col(){
 
 make_title() // style h1 title with !tit marker
 frame_col() // frame with color around the tag..
+
+// ============================================
+// BACKGROUND IMAGE SETUP
+// ============================================
+
+
+
+// Pass background config to JavaScript
+{% if config_desk.background %}
+window.config_desk_background = '{{ config_desk.background }}';
+{% endif %}
+
+function setupBackground(backgroundImage) {
+    if (!backgroundImage) {
+        return;
+    }
+
+    console.log('Setting up background overlay...');
+
+    // Create full-screen background overlay
+    var bgOverlay = $('<div>').attr('id', 'bg-overlay').css({
+        'position': 'fixed',
+        'top': '0',
+        'left': '0',
+        'right': '0',
+        'bottom': '0',
+        'width': '100vw',
+        'height': '100vh',
+        'background-image': 'url(/bckgrds/' + backgroundImage + ')',
+        'background-size': 'cover',
+        'background-position': 'center',
+        'background-repeat': 'no-repeat',
+        'background-attachment': 'fixed',
+        'opacity': '0.1',
+        'z-index': '-999999',
+        'pointer-events': 'none'
+    });
+
+    // Prepend to HTML (before body)
+    $('html').prepend(bgOverlay);
+
+    // Force transparent backgrounds on all elements
+    $('body, html, body > *, xmp, #content').each(function() {
+        var bg = $(this).css('background-color');
+        if (bg === 'rgb(255, 255, 255)' || bg === '#ffffff' || bg === 'white') {
+            $(this).css('background-color', 'transparent');
+        }
+    });
+
+    console.log('Background overlay created, checking elements...');
+    console.log('Body background:', $('body').css('background-color'));
+    console.log('HTML background:', $('html').css('background-color'));
+}
+
+// Initialize background on document ready if background is configured
+$(document).ready(function() {
+    // Check if background is set via global config_desk variable
+    if (typeof window.config_desk_background !== 'undefined' && window.config_desk_background) {
+        setupBackground(window.config_desk_background);
+        setTimeout(function() { setupBackground(window.config_desk_background); }, 500);
+    }
+});

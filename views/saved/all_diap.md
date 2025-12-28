@@ -15,6 +15,45 @@
 !foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
 
 
+ --------------- diap2 ----------------- 
+
+ # Introduction !tit
+
+## Basic equations !fb
+
+!head supraconductivity
+
+### London penetration depth (1935).......
+!pos150/46
+
+* first attempt to explain supra.. 
+
+!pos506/503
+!eq \lambda_L = \sqrt{\frac{m}{\mu_0 n_s e^2}}
+
+!pos239/492
+!eq B(x) = B_0 \exp\left(-\frac{x}{\lambda_L}\right)
+
+### The Ginzburg-Landau Equation (1950)
+!pos150/147
+
+* first quantic equation in the field..
+* explains the field penetration inside the matter.. 
+
+!pos229/793
+!eq \frac{1}{2m} \left( -i\hbar\nabla - q\mathbf{A} \right)^2 \psi + \alpha\psi + \beta|\psi|^2\psi = 0
+
+
+!pos919/352
+!['Meissner effect' 412x412 %Meissner-effect%](imgs/Meissner-effect.jpeg)
+
+!foot formulae
+
+
+
+
+
+
  --------------- diap1 ----------------- 
 
  # introduction !tit
@@ -56,43 +95,28 @@ $memo1
 
 
 
- --------------- diap2 ----------------- 
+ --------------- diap4 ----------------- 
 
- # Introduction !tit
+ 
+# Rappel
 
-## Basic equations !fb
+## diapo 4
 
-!head supraconductivity
+!head dans les étoiles, l'immensité est infinie.. 
 
-### London penetration depth (1935).......
-!pos150/46
-
-* first attempt to explain supra.. 
-
-!pos506/503
-!eq \lambda_L = \sqrt{\frac{m}{\mu_0 n_s e^2}}
-
-!pos239/492
-!eq B(x) = B_0 \exp\left(-\frac{x}{\lambda_L}\right)
-
-### The Ginzburg-Landau Equation (1950)
-!pos150/147
-
-* first quantic equation in the field..
-* explains the field penetration inside the matter.. 
-
-!pos229/793
-!eq \frac{1}{2m} \left( -i\hbar\nabla - q\mathbf{A} \right)^2 \psi + \alpha\psi + \beta|\psi|^2\psi = 0
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+* La Voie Lactée irrégulière appartient au monde sublunaire
+* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
+* "Démocrite (460-370 BC) et la vision atomiste"cb
+* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
+* nous paraissent former une masse unie. !stp
+* Lucrèce (99-51 BC)
+* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
+* créent la "Voie Lactée"cy 
+* Critiques au moyen-âge : !stp
 
 
-!pos919/352
-!['Meissner effect' 412x412 %Meissner-effect%](imgs/Meissner-effect.jpeg)
-
-!foot formulae
-
-
-
-
+!foot Il était une fois un petit chaperon rouge.. 
 
 
  --------------- diap3 ----------------- 
@@ -125,30 +149,6 @@ $memo1
 !foot one example
 
 
-
-
- --------------- diap4 ----------------- 
-
- 
-# Rappel
-
-## diapo 4
-
-!head dans les étoiles, l'immensité est infinie.. 
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-* La Voie Lactée irrégulière appartient au monde sublunaire
-* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-* "Démocrite (460-370 BC) et la vision atomiste"cb
-* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-* nous paraissent former une masse unie. !stp
-* Lucrèce (99-51 BC)
-* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-* créent la "Voie Lactée"cy 
-* Critiques au moyen-âge : !stp
-
-
-!foot Il était une fois un petit chaperon rouge.. 
 
 
  --------------- diap5 ----------------- 

@@ -43,7 +43,7 @@ var addr = 'http://127.0.0.1:{}/d0'.format(port)
 
 
 // Load config and setup nunjucks with global variables
-var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+var config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
 var config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
 
 var nunjucksEnv = nunjucks.configure('views', {
@@ -105,7 +105,7 @@ routing.route_all(app, concat_diapos, function(num) {
 
 // Function to reload config
 function reloadConfig() {
-    config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+    config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
     config_desk = yaml.load(fs.readFileSync('views/config_desk.yaml', 'utf8'));
     nunjucksEnv.addGlobal('config', config);
     nunjucksEnv.addGlobal('config_desk', config_desk);
