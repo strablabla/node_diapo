@@ -72,6 +72,34 @@ app.use(express.static('lib'));
 app.use('/thumbnails', express.static('views/thumbnails'));
 app.use('/static', express.static('static'));
 
+// Serve slide_config.yaml
+app.get('/slide_config.yaml', function(req, res) {
+    res.sendFile(__dirname + '/views/slide_config/slide_config.yaml');
+});
+
+// Save slide_config.yaml
+app.use(express.text({ type: 'text/plain' }));
+app.post('/save-slide-config', function(req, res) {
+    var yamlContent = req.body;
+
+    // Validate YAML before saving
+    try {
+        yaml.load(yamlContent);
+    } catch (err) {
+        return res.status(400).json({ error: 'Invalid YAML: ' + err.message });
+    }
+
+    // Save to file
+    fs.writeFile('views/slide_config/slide_config.yaml', yamlContent, 'utf8', function(err) {
+        if (err) {
+            console.error('Error saving slide_config.yaml:', err);
+            return res.status(500).json({ error: 'Failed to save file' });
+        }
+        console.log('✅ Slide configuration saved');
+        res.json({ success: true });
+    });
+});
+
 //--------------  websocket
 
 var io = require('socket.io')(server);

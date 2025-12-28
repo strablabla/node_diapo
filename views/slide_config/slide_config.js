@@ -1,34 +1,39 @@
 // ============================================
 // SLIDE GENERAL CONFIGURATION (CSS & Layout)
+// Loads from slide_config.yaml and applies directly
 // ============================================
 
-//----------------------- general configuration
+$(document).ready(function() {
+    // Fetch and parse YAML config
+    $.get('/slide_config.yaml', function(yamlText) {
+        try {
+            // Parse YAML (using js-yaml if available, or fallback to simple parsing)
+            var config = jsyaml.load(yamlText);
 
-$('li').css({'font-size':'160%', 'margin': '30px 100px', 'color':'#000000', 'margin-left':'200px'})
-$('li li').css({'font-size':'80%', 'margin': '15px 30px', 'color':'#000000'})
-$('h1').css({'margin-left':'150px'})
-$('h2').css({'margin-left':'150px'})
-$('h3').css({'margin-left':'150px'})
-$('p').css({'margin-left':'100px'})
-$('.effect2').css({'box-shadow':'0 0 0 0'})
-$('.navbar-inner').hide()
-$('#toc').hide()
-$('#content').css({'margin-left':'0px',
-                   'margin-right':'0px',
-                   'padding-bottom':'0px',
-                   'padding-top':'0px',
-                   'padding-left':'100px',
-                   'height' : '100vh',
-                   'min-height': '790px'
-                   })
-$('body').css({'margin': '0', 'padding': '0', 'overflow': 'hidden'})
-$('html').css({'overflow': 'hidden'})
-$('.container').css({
-    'width': '100%',
-    'max-width': '100%',
-    'margin': '0',
-    'padding': '0'
-})
-//$('li li').hide()         // hide the Mémos
-$('.help').hide()         // hide the help
-$('#gobottom').hide()     // hide go to bottom
+            console.log('📋 Loading slide configuration from YAML...');
+
+            // Apply CSS rules
+            if (config.css) {
+                for (var selector in config.css) {
+                    if (config.css.hasOwnProperty(selector)) {
+                        $(selector).css(config.css[selector]);
+                    }
+                }
+            }
+
+            // Apply hide() to elements
+            if (config.hide && Array.isArray(config.hide)) {
+                config.hide.forEach(function(selector) {
+                    $(selector).hide();
+                });
+            }
+
+            console.log('✅ Slide configuration applied');
+
+        } catch (err) {
+            console.error('❌ Error loading slide config:', err);
+        }
+    }).fail(function() {
+        console.error('❌ Failed to load slide_config.yaml');
+    });
+});
