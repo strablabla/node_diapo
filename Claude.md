@@ -653,3 +653,188 @@ node_diapo/
 - Le dossier `views/thumbnails/` doit exister mais son contenu n'est pas versionné
 - Pour régénérer toutes les vignettes: redémarrer le serveur
 - Pour régénérer une vignette: modifier la diapo et sauvegarder (Ctrl+S)
+
+---
+
+## 📅 27 Décembre 2025 - Jour 7
+
+### Panneau d'aide à la syntaxe pour l'éditeur
+
+**Nouvelle fonctionnalité:**
+- Double-clic sur les numéros de ligne ouvre un menu avec bouton "Syntax"
+- Clic sur "Syntax" affiche un panneau avec toutes les balises markdown (!tit, !fb, !fr, etc.)
+
+**Implémentation:**
+
+1. **Fichier créé:** `lib/syntax_help.js` (210 lignes)
+   - Fonction `setupSyntaxHelper(editor)`
+   - Détection de double-clic sur gutter CodeMirror
+   - Panel Quick Menu (120x150px) avec bouton Syntax centré en bas
+   - Panel d'aide avec liste complète des balises markdown
+   - Gestion des clics extérieurs pour fermer les panels
+
+2. **Intégration dans text.html:**
+   - Inclusion du script: `<script src="/syntax_help.js"></script>`
+   - Initialisation: `setupSyntaxHelper(editor)`
+
+3. **Challenges résolus:**
+   - Problème 404: fichier déplacé de `views/` vers `lib/` (servi par Express)
+   - Panel se fermant immédiatement: ajout de `e.stopPropagation()` et délai de 300ms
+   - Centrage du bouton: utilisation de flexbox avec `flex-direction: column`, `justify-content: flex-end`, `align-items: center`
+
+### Système d'upload de favicon
+
+**Fonctionnalité:** Upload de favicon par drag & drop avec préfixe `fav_`
+
+**Implémentation:**
+
+1. **Modifications dans `lib/upload_image.js`:**
+   - Nouvelle fonction `handleFaviconUpload()`
+   - Détection des fichiers commençant par "fav_"
+   - Stockage dans `public/favicons/`
+   - Sauvegarde du nom dans `config.json`
+   - Appel de `reloadConfig()` pour mettre à jour Nunjucks
+
+2. **Modifications dans `html_app.js`:**
+   - Chargement de `config.json` au démarrage
+   - Passage de la config à Nunjucks via `addGlobal('config', config)`
+   - Fonction `reloadConfig()` pour recharger après upload
+   - Passage de `reloadConfig` à `handle_upload_image()`
+
+3. **Modifications dans `views/header.html`:**
+   - Ajout de balise conditionnelle:
+   ```html
+   {% if config.favicon %}
+   <link rel="icon" href="/favicons/{{ config.favicon }}">
+   {% endif %}
+   ```
+
+### Système d'image de fond avec opacité
+
+**Fonctionnalité:** Upload d'image de fond par drag & drop avec préfixe `bg_`
+
+**Implémentation:**
+
+1. **Upload et stockage (`lib/upload_image.js`):**
+   - Nouvelle fonction `handleBackgroundUpload()`
+   - Détection des fichiers commençant par "bg_"
+   - Initialement stocké dans `public/`, puis déplacé vers `public/bckgrds/`
+   - Sauvegarde du nom dans `config.json` (puis migré vers `config_desk.yaml`)
+
+2. **Affichage du background (`views/modif_css.html`):**
+   - CSS pour forcer les backgrounds transparents sur `html`, `body`, `body > xmp`
+   - JavaScript pour créer un overlay fixe avec l'image
+   - Opacité: 0.1
+   - z-index: -999999
+   - Multiple exécutions (0ms, 500ms, 1000ms, 2000ms) pour contourner Strapdown
+   - Force transparent sur tous les éléments blancs
+
+3. **Challenges résolus:**
+   - Strapdown appliquant du blanc après chargement: solution avec multiples setTimeout
+   - Overlay pas visible: utilisation de z-index très négatif et backgrounds forcés à transparent
+   - Plusieurs itérations avant de trouver la bonne approche
+
+### Migration vers fichiers YAML
+
+**Objectif:** Remplacer JSON par YAML pour les fichiers de configuration
+
+**Modifications:**
+
+1. **Migration de config.json vers config.yaml:**
+   - Installation de `js-yaml` (déjà présent via Puppeteer)
+   - Conversion du contenu JSON en YAML
+   - Fichiers modifiés:
+     - `html_app.js`: `yaml.load(fs.readFileSync('config.yaml'))`
+     - `lib/upload_image.js`: écriture avec `yaml.dump()`
+     - `lib/update_viewport.js`: lecture/écriture YAML
+     - `lib/generate_pdf.js`: lecture YAML
+     - `lib/routing.js`: lecture YAML
+     - `lib/thumbnails.js`: lecture YAML
+
+2. **Création de config_desk.yaml:**
+   - Nouveau fichier `views/config_desk.yaml`
+   - Déplacement de la propriété `background` de config.json vers ce fichier
+   - Séparation config générale (config.yaml) / config présentation (config_desk.yaml)
+   - Chargement dans `html_app.js`: `nunjucksEnv.addGlobal('config_desk', config_desk)`
+
+3. **Avantages:**
+   - Format plus lisible
+   - Support natif des commentaires (ex: `#background: fichier.jpg`)
+   - Possibilité de désactiver le background en commentant la ligne
+
+### Refactorisation du code background
+
+**Objectif:** Centraliser tout le code lié au background dans `decorate.js`
+
+**Évolution:**
+
+1. **Première étape:** Déplacement du JavaScript de `modif_css.html` vers `decorate.js`
+   - Création de la fonction `setupBackground(backgroundImage)`
+   - Passage de la config via `window.config_desk_background`
+
+2. **Deuxième étape:** Tentative de renommer en `decorate.html`
+   - Ajout de balises `<script>` et `<style>` dans le fichier
+   - Intégration des templates Nunjucks `{% if config_desk.background %}`
+   - **Problème:** Erreur de syntaxe car `diapo.html` inclut déjà dans un contexte `<script>`
+
+3. **Solution finale:** Retour à `decorate.js` sans balises
+   - Le fichier contient uniquement du JavaScript pur
+   - Templates Nunjucks intégrés directement dans le code JS
+   - CSS pour backgrounds transparents reste dans `modif_css.html`
+   - Include dans `diapo.html`: `{% include 'decorate/decorate.js' %}`
+
+**Structure finale:**
+
+```javascript
+// decorate.js
+// ... fonctions de décoration existantes ...
+
+// Pass background config to JavaScript
+{% if config_desk.background %}
+window.config_desk_background = '{{ config_desk.background }}';
+{% endif %}
+
+function setupBackground(backgroundImage) {
+    // ... création overlay ...
+}
+
+$(document).ready(function() {
+    if (typeof window.config_desk_background !== 'undefined' && window.config_desk_background) {
+        setupBackground(window.config_desk_background);
+        setTimeout(function() { setupBackground(window.config_desk_background); }, 500);
+    }
+});
+```
+
+### Architecture des fichiers de configuration
+
+**Organisation finale:**
+
+1. **config.yaml** (racine du projet)
+   - Configuration générale de l'application
+   - Dimensions viewport
+   - Configuration mosaïque
+   - Email
+   - Favicon
+
+2. **views/config_desk.yaml**
+   - Configuration spécifique à la présentation
+   - Image de fond (background)
+   - Possibilité de commenter pour désactiver
+
+### Leçons apprises
+
+1. **Templates Nunjucks dans fichiers inclus:**
+   - Les fichiers .js peuvent contenir des templates Nunjucks `{% if %}`
+   - Ils sont traités par Nunjucks avant d'être envoyés au client
+   - Ne PAS ajouter de balises `<script>` si le fichier est inclus dans un contexte déjà script
+
+2. **Ordre de chargement:**
+   - Strapdown peut appliquer des styles après le chargement de la page
+   - Solution: multiples exécutions avec setTimeout
+   - Forcer les backgrounds à transparent de manière répétée
+
+3. **Séparation des responsabilités:**
+   - CSS dans `modif_css.html`
+   - JavaScript dans `decorate.js`
+   - Configuration dans fichiers YAML séparés
