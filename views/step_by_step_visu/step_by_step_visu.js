@@ -47,7 +47,7 @@ function progressive_visualization(stp){
     var hasHiddenContent = false;
     var lastVisibleElement = null;
 
-    $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *').each(function(){
+    $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *, #shortcuts-panel, #shortcuts-panel *').each(function(){
          var txt = $(this).text()
          //alert(htm)
          if ($(this).hasClass('stop')){

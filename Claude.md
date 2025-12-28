@@ -838,3 +838,293 @@ $(document).ready(function() {
    - CSS dans `modif_css.html`
    - JavaScript dans `decorate.js`
    - Configuration dans fichiers YAML séparés
+
+---
+
+## 📅 28 Décembre 2025 - Jour 8
+
+### Système de gestion des diapos amélioré
+
+#### 1. Nettoyage des fichiers diapo{n}.html inutiles
+
+**Problème identifié:**
+- Les fichiers `diapo0.html`, `diapo1.html`, etc. étaient générés mais jamais utilisés
+- Le routage utilise uniquement `diapo.html` (template générique) avec le paramètre `diapo_index`
+- Ces fichiers redondants étaient créés à chaque sauvegarde et modification
+
+**Solution:**
+- Suppression de tous les fichiers `diapo{n}.html` existants
+- Modification de `create_md_jinja()` pour ne créer que les fichiers markdown (`d{n}.html`)
+- Désactivation de `new_jinja()` (fonction vide conservée pour compatibilité)
+- Suppression des tentatives de création/suppression dans `slide_operations.js`
+
+**Fichiers modifiés:**
+- `static/js/modify_html.js` - lignes 46-54, 180-189
+- `lib/slide_operations.js` - lignes 10-28, 30-50, 52-96
+
+**Avantages:**
+- ~50% de fichiers en moins
+- Code plus simple et maintenable
+- Moins d'opérations I/O
+- Architecture plus claire
+
+#### 2. Amélioration du panneau d'aide aux raccourcis clavier
+
+**Modifications apportées:**
+
+1. **Suppression de la section "Touches bloquées"**
+   - Retrait de la documentation sur F5 et Ctrl+R
+   - Section inutile car le blocage est déjà effectif
+
+2. **Bouton de fermeture circulaire**
+   - Style cohérent avec le panneau markdown
+   - Bouton × circulaire blanc avec bordure noire
+   - Effet hover gris (#e0e0e0)
+
+3. **Traduction en anglais**
+   - Tout le texte passé en anglais
+   - "Navigation", "Editor", "Global views", "Slide management", "Advanced features"
+
+**Fichiers modifiés:**
+- `lib/shortcuts_help.js` - lignes 26-68, 94-102
+- `lib/syntax_help.js` - lignes 135-141 (effet hover cohérent)
+
+#### 3. Visualisation progressive bidirectionnelle avec touche B
+
+**Fonctionnalité:** La touche B permet maintenant une navigation bidirectionnelle dans la visualisation progressive
+
+**Comportement:**
+- **Flèche bas** : toujours vers l'avant (comportement original)
+- **Flèche haut** : toujours vers l'arrière (comportement original)
+- **Touche B** : va-et-vient automatique
+  - Descend jusqu'en bas
+  - Un clic supplémentaire ne fait rien (neutre)
+  - Puis remonte
+  - Un clic en haut ne fait rien (neutre)
+  - Puis redescend
+
+**Implémentation:**
+- Variables d'état: `maxSteps`, `bDirection` (1 ou -1), `bPendingClick` (flag neutre)
+- Handlers séparés pour `down`, `b`, et `up`
+- Détection automatique des bornes (top et bottom)
+
+**Fichiers modifiés:**
+- `views/step_by_step_visu/step_by_step_visu.js` - lignes 110-152
+- `lib/shortcuts_help.js` - ligne 37 (documentation)
+
+#### 4. Auto-masquage du curseur de la souris
+
+**Fonctionnalité:** Le curseur de la souris disparaît après 2 secondes d'inactivité
+
+**Implémentation:**
+- Détection du mouvement de la souris avec `mousemove`
+- Timer de 2 secondes (`setTimeout`)
+- Ajout de la classe CSS `hide-cursor` sur `body` et `html`
+- CSS avec `cursor: none !important` et sélecteurs forts
+- Réapparition immédiate lors du mouvement
+
+**Première tentative (échouée):**
+- Ne fonctionnait qu'en mode plein écran
+- Problème de détection de fullscreen
+
+**Solution finale:**
+- Fonctionne tout le temps (pas seulement en plein écran)
+- Sélecteurs CSS très forts pour override
+
+**Fichiers modifiés:**
+- `views/decorate/decorate.js` - lignes 155-204
+
+#### 5. Correction et amélioration de la suppression de diapos
+
+**Problèmes identifiés:**
+1. Race condition: navigation avant l'émission du socket event
+2. Pas de gestion d'erreurs dans les opérations fichiers
+3. Possibilité de supprimer la diapo 0 (invalide)
+4. Pas de confirmation utilisateur
+
+**Solutions implémentées:**
+
+1. **Dialog de confirmation personnalisé**
+   - Remplacement de `alert()` par un dialog stylé
+   - Overlay semi-transparent
+   - Deux boutons: Cancel (gris) et OK (rouge)
+   - Callbacks pour gérer les actions
+   - Fonction `showDeleteConfirmation(slideIndex, callback)`
+
+2. **Protection de la diapo 0**
+   - Vérification côté client ET serveur
+   - Message d'erreur spécifique si tentative de suppression
+   - `if (parseInt(namediap) === 0)` avec message ❌
+
+3. **Correction de la race condition**
+   - Ordre inversé: `socket.emit('delete')` PUIS navigation
+   - Délai de 100ms avant `window.location.href`
+
+4. **Gestion d'erreurs robuste**
+   - `try/catch` remplacé par callbacks avec `console.error`
+   - Logs détaillés pour chaque opération
+   - Emojis pour clarté: 🗑️, ✅, ❌
+
+5. **Régénération des thumbnails**
+   - Appel automatique après suppression réussie
+   - `thumbnails.create_thumbnails()` dans le callback de routing
+   - Broadcast du nouveau `maxdiap` à tous les clients
+
+6. **Correction du bug d'index après suppression**
+   - Problème: après suppression de la diapo 10, affichage "10/9" au lieu de "9/9"
+   - Cause: `state.diapo_index` pas mis à jour côté serveur WebSocket
+   - Solution: `state.diapo_index = state.diapo_index - 1` si suppression de la diapo courante ou précédente
+   - Broadcast de `maxdiap` pour mettre à jour tous les clients
+
+**Fichiers modifiés:**
+- `views/create_delete/create_delete.js` - lignes 48-186 (dialog + handler)
+- `lib/slide_operations.js` - lignes 10-28 (error handling)
+- `lib/websocket.js` - lignes 128-198 (validation + thumbnails + diapo_index)
+
+#### 6. Amélioration de la création de nouvelles diapos (Ctrl+P)
+
+**Évolution de la fonctionnalité:**
+
+**Avant:**
+- Créait une diapo vide à la fin
+- Simple `alert()` pour notifier
+- Pas de navigation automatique
+- `maxdiap` pas mis à jour
+
+**Après:**
+- Crée la diapo juste **après la diapo courante**
+- Décale toutes les diapos suivantes
+- Navigation automatique vers la nouvelle diapo
+- Notification stylée verte "Creating new slide..."
+- Broadcast de `maxdiap` à tous les clients
+
+**Implémentation:**
+
+1. **Nouvelle fonction `insert_slide_after()`** (`lib/slide_operations.js`)
+   - Décale les diapos de la fin vers la position d'insertion
+   - Renommage `d{i}.html` → `d{i+1}.html` en ordre inverse
+   - Callback asynchrone pour séquencer les opérations
+   - Compteur `completedOps` pour tracker la fin
+
+2. **Handler WebSocket amélioré** (`lib/websocket.js`)
+   - Reçoit `insert_after_index` du client
+   - Appelle `insert_slide_after()` avec callback
+   - Crée la nouvelle diapo au bon index
+   - Reroute et broadcast `maxdiap`
+   - Émet `new_slide_created` pour navigation
+
+3. **Client amélioré** (`views/create_delete/create_delete.js`)
+   - Envoie `diapo_index` courant au serveur
+   - Notification verte (#28a745)
+   - Écoute `new_slide_created` pour naviguer
+   - Délai de 100ms avant navigation
+
+**Fichiers modifiés:**
+- `lib/slide_operations.js` - lignes 52-96 (nouvelle fonction)
+- `lib/websocket.js` - lignes 78-106 (handler amélioré)
+- `views/create_delete/create_delete.js` - lignes 7-46 (client)
+
+#### 7. Nouvelle fonctionnalité: Duplication de diapo (Ctrl+D)
+
+**Fonctionnalité:** Dupliquer la diapo courante juste après elle
+
+**Workflow:**
+1. Lecture du contenu de la diapo source
+2. Décalage des diapos suivantes (appel à `insert_slide_after()`)
+3. Création de la copie à l'index suivant
+4. Rerouting et mise à jour de `numdiap`
+5. Broadcast de `maxdiap`
+6. Navigation automatique vers la diapo dupliquée
+
+**Implémentation:**
+
+1. **Fonction `duplicate_slide()`** (`lib/slide_operations.js`)
+   - Lit le contenu avec `fs.readFile()`
+   - Appelle `insert_slide_after()` pour faire de la place
+   - Écrit le contenu copié avec `fs.writeFile()`
+   - Callback avec `(err, duplicate_index)`
+
+2. **Handler WebSocket** (`lib/websocket.js`)
+   - Événement `duplicate_diap`
+   - Gestion d'erreurs avec `duplicate_error`
+   - Émission de `slide_duplicated` avec le nouvel index
+
+3. **Client** (`views/create_delete/create_delete.js`)
+   - Raccourci Ctrl+D
+   - Notification bleue (#17a2b8) "Duplicating slide..."
+   - Navigation automatique vers la copie
+   - Gestion d'erreurs avec message rouge
+
+4. **Documentation mise à jour** (`lib/shortcuts_help.js`)
+   - Ajout de "Ctrl + D - Duplicate current slide"
+
+**Fichiers modifiés:**
+- `lib/slide_operations.js` - lignes 98-138 (fonction de duplication)
+- `lib/websocket.js` - lignes 108-137 (handler)
+- `views/create_delete/create_delete.js` - lignes 48-111 (client)
+- `lib/shortcuts_help.js` - ligne 56 (documentation)
+
+### Architecture et organisation
+
+**Simplification de la structure:**
+```
+views/diapos/
+├── d0.html, d1.html, d2.html...    # Contenu markdown des diapos
+└── diapo.html                       # Template générique unique
+```
+
+**Avant:** 2 × N fichiers (d{n}.html + diapo{n}.html)
+**Après:** N + 1 fichiers (d{n}.html + 1 template générique)
+
+**Modules de gestion des diapos:**
+- `lib/slide_operations.js` - Opérations sur les fichiers (delete, shift, insert, duplicate)
+- `lib/websocket.js` - Handlers Socket.io pour toutes les opérations
+- `views/create_delete/create_delete.js` - Interface client (raccourcis clavier)
+
+### Leçons apprises
+
+1. **Gestion des callbacks asynchrones:**
+   - Problème: opérations asynchrones non séquencées causent des race conditions
+   - Solution: callbacks imbriqués et compteurs pour tracker la complétion
+
+2. **Synchronisation client-serveur:**
+   - `state.diapo_index` doit être maintenu à jour sur le serveur
+   - Broadcast de `maxdiap` à tous les clients après toute modification
+   - Délais de navigation (100ms) pour laisser le serveur traiter
+
+3. **Patterns de notification utilisateur:**
+   - Vert (#28a745): succès/création
+   - Bleu (#17a2b8): information/duplication
+   - Rouge (#dc3545): erreur/suppression
+
+4. **Réutilisation de code:**
+   - `insert_slide_after()` utilisée par création ET duplication
+   - Fonction générique avec callback pour maximum de flexibilité
+
+### Raccourcis clavier (état actuel)
+
+**Navigation:**
+- → / Page Down: Diapo suivante
+- ← / Page Up: Diapo précédente
+- ↓ / B: Visualisation progressive (ligne suivante)
+- ↑: Visualisation progressive (ligne précédente)
+
+**Éditeur:**
+- Alt + T: Toggle éditeur de texte
+- Ctrl + S: Sauvegarder positions
+
+**Vues globales:**
+- Alt + A: Vue globale (liste complète)
+- Alt + M: Vue miniatures (mosaïque)
+
+**Gestion des diapos:**
+- Ctrl + P: Créer nouvelle diapo (après la courante)
+- Ctrl + D: Dupliquer diapo courante
+- Alt + Ctrl + X: Supprimer diapo courante
+
+**Fonctions avancées:**
+- Alt + Ctrl + P: Générer PDF
+- Ctrl + M: Toggle mémos
+- Alt + V: Aide commandes vocales
+- Ctrl + V: Toggle reconnaissance vocale
+- Ctrl + H: Afficher aide raccourcis
