@@ -46,13 +46,10 @@ function create_diapo_jinja(fs, diapo_index, nstrap){
 function create_md_jinja(fs, diapo_index, new_text){
 
       /*
-      Markdown and jinja
+      Markdown only - no need for individual jinja files, we use diapo.html template
       */
 
-      var nstrap = new_strap(diapo_index) // new diapo jinja html code..
-      console.log(nstrap)
-      create_diapo_md(fs, diapo_index, new_text)   // markdown code..
-      create_diapo_jinja(fs, diapo_index, nstrap)
+      create_diapo_md(fs, diapo_index, new_text)   // markdown code only
 
 }
 
@@ -181,11 +178,10 @@ exports.modify_html_with_newtext = function(socket, fs, util, new_text, diapo_in
 exports.new_jinja = function(fs, diapo_index){
 
       /*
-      jinja
+      No longer needed - we use the generic diapo.html template
+      This function is kept for compatibility but does nothing
       */
 
-      var nstrap = new_strap(diapo_index) // new diapo jinja html code..
-      console.log(nstrap)
-      create_diapo_jinja(fs, diapo_index, nstrap)
+      console.log('Skipping jinja generation for index {} - using generic template'.format(diapo_index))
 
 }
