@@ -26,9 +26,11 @@ key('alt+ctrl+p', function(){         // Generate PDF from thumbnails
             notification.text('PDF généré avec succès ! Téléchargement en cours...')
 
             // Trigger download
+            // Extract filename from URL to preserve the deck title
             var link = document.createElement('a')
             link.href = data.downloadUrl
-            link.download = 'slides.pdf'
+            var filename = data.downloadUrl.split('/').pop()  // Get filename from URL
+            link.download = filename
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)

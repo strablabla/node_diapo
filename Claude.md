@@ -1024,7 +1024,40 @@ $(document).ready(function() {
 - `lib/websocket.js` - lignes 78-106 (handler amélioré)
 - `views/create_delete/create_delete.js` - lignes 7-46 (client)
 
-#### 7. Nouvelle fonctionnalité: Duplication de diapo (Ctrl+D)
+#### 7. Correction du bug de visualisation progressive avec Ctrl+H
+
+**Problème identifié:**
+- Quand l'utilisateur ouvrait le panneau d'aide aux raccourcis (Ctrl+H)
+- Seuls les titres de sections (h4) étaient visibles
+- Le contenu des listes (li) était caché par la visualisation progressive
+
+**Cause:**
+- La fonction `progressive_visualization()` cache tous les éléments `li` et `p`
+- Le panneau d'aide contient des listes (`<li>`) pour chaque raccourci
+- Ces éléments n'étaient pas exclus de la logique de masquage
+
+**Solution:**
+- Ajout de `#shortcuts-panel, #shortcuts-panel *` à la liste d'exclusion
+- Similaire à l'exclusion déjà existante pour `#infos` (système de mémos)
+
+**Fichier modifié:**
+- `views/step_by_step_visu/step_by_step_visu.js` - ligne 50
+
+**Code modifié:**
+```javascript
+// Avant
+$('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *').each(function(){
+
+// Après
+$('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *, #shortcuts-panel, #shortcuts-panel *').each(function(){
+```
+
+**Résultat:**
+- Le panneau d'aide affiche maintenant correctement tout son contenu
+- Les listes de raccourcis sont visibles
+- Pas d'interférence avec la visualisation progressive
+
+#### 8. Nouvelle fonctionnalité: Duplication de diapo (Ctrl+D)
 
 **Fonctionnalité:** Dupliquer la diapo courante juste après elle
 
@@ -1128,3 +1161,76 @@ views/diapos/
 - Alt + V: Aide commandes vocales
 - Ctrl + V: Toggle reconnaissance vocale
 - Ctrl + H: Afficher aide raccourcis
+
+---
+
+#### 9. Extraction et sauvegarde du titre du deck pour nommage automatique des PDF
+
+**Fonctionnalité:** Le système détecte automatiquement le titre du deck depuis la balise `!deck_title` de la première diapo et l'utilise pour nommer les fichiers PDF générés.
+
+**Balise utilisée:**
+```markdown
+!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
+```
+
+**Workflow:**
+
+1. **Extraction automatique lors de la sauvegarde**
+   - Quand l'utilisateur sauvegarde la première diapo (d0.html)
+   - Le système détecte la ligne commençant par `!deck_title`
+   - Extrait le texte qui suit la balise
+   - Ignore la balise dans les titres (ligne avec `#`)
+
+2. **Sauvegarde dans views/config_deck.yaml**
+   - Le titre est stocké dans `views/config_deck.yaml`
+   - Format: `deck_title: titre complet ici`
+   - Fichier créé automatiquement s'il n'existe pas
+
+3. **Utilisation pour le PDF**
+   - Lors de la génération du PDF (Alt+Ctrl+P)
+   - Le système lit le titre depuis `views/config_deck.yaml`
+   - Sanitize le titre pour créer un nom de fichier valide
+   - **Avec titre**: génère `titre_sanitized.pdf`
+   - **Sans titre**: génère `slides_timestamp.pdf`
+
+**Exemples de transformation:**
+```
+Avec titre:
+  Titre original: les supraconducteurs de type I et II, l'histoire continue !!!
+  Nom de fichier: les_supraconducteurs_de_type_i_et_ii_lhistoire_con.pdf
+
+Sans titre:
+  Nom de fichier: slides_1766943437971.pdf
+```
+
+**Règles de sanitization:**
+- Espaces → underscores (_)
+- Caractères spéciaux → supprimés
+- Tout en minuscules
+- Limité à 50 caractères
+
+**Nouveau module créé:** `lib/deck_title.js`
+
+**Fonctions:**
+- `extractDeckTitle(text)` - Extrait le titre du markdown
+- `saveDeckTitle(title)` - Sauvegarde dans views/config_deck.yaml
+- `getDeckTitle()` - Lit le titre depuis views/config_deck.yaml
+- `sanitizeTitleForFilename(title)` - Convertit en nom de fichier valide
+- `updateDeckTitleFromFirstSlide()` - Workflow complet d'extraction/sauvegarde
+
+**Fichiers modifiés:**
+- `lib/deck_title.js` - nouveau module (147 lignes)
+- `lib/websocket.js` - lignes 28, 72-78 (appel lors de la sauvegarde)
+- `lib/generate_pdf.js` - lignes 5, 30-43 (utilisation du titre avec logique conditionnelle)
+- `views/create_pdf/create_pdf.js` - lignes 28-36 (préservation du nom)
+
+**Structure du fichier views/config_deck.yaml:**
+```yaml
+deck_title: les supraconducteurs de type I et II, l'histoire continue !!!
+```
+
+**Avantages:**
+- PDFs nommés automatiquement de façon descriptive
+- Pas besoin de renommer manuellement les fichiers
+- Titre toujours synchronisé avec la première diapo
+- Noms de fichiers safe pour tous les systèmes d'exploitation

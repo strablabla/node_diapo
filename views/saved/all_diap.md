@@ -1,20 +1,4 @@
 
- --------------- diap0 ----------------- 
-
- 
-# supracondcuctors !slide_title
-
-!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
-
-!author par les auteurs de BCS... 
-
-!date 10 Mai 2078
-
-
-
-!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
-
-
  --------------- diap2 ----------------- 
 
  # Introduction !tit
@@ -54,28 +38,68 @@
 
 
 
+ --------------- diap0 ----------------- 
+
+ 
+# supracondcuctors !slide_title
+
+!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
+
+!author par les auteurs de BCS... 
+
+!date 10 Mai 2078
+
+
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+
  --------------- diap4 ----------------- 
 
  
-# Rappel
+# supracondcuctors !desk_title
 
-## diapo 4
+!deck_title les supraconducteurs de type I et II, l'histoire continue !!!
 
-!head dans les étoiles, l'immensité est infinie.. 
+!author par les auteurs de BCS... 
 
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-* La Voie Lactée irrégulière appartient au monde sublunaire
-* Un phénomène "atmosphérique comme les étoiles"cy filantes et les comètes !stp
-* "Démocrite (460-370 BC) et la vision atomiste"cb
-* Des "étoiles très petites"cy et serrées qui, à cause de la "distance"b du ciel à la Terre,
-* nous paraissent former une masse unie. !stp
-* Lucrèce (99-51 BC)
-* la juxtaposition et le "mélange des rayons lumineux"cb  !stp
-* créent la "Voie Lactée"cy 
-* Critiques au moyen-âge : !stp
+!date 10 Mai 2078
 
 
-!foot Il était une fois un petit chaperon rouge.. 
+
+!foot http://www.physique.usherb.ca/~tremblay/cours/ING-610
+
+
+ --------------- diap3 ----------------- 
+
+ 
+# Applications !tit
+
+## Josephson effect 
+
+### Principle
+!pos150/0
+
+* quantized flux and voltage... 
+
+!pos299/413
+!eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
+
+
+### Schema
+!pos150/91
+
+* Insulator in sandwich between two supraconductors.. 
+
+!pos407/627
+!['josepson_schema' 214x247 %josepson_schema%](imgs/josepson_schema.jpg)
+
+
+!head supra applications
+
+!foot one example
+
+
 
 
  --------------- diap6 ----------------- 
@@ -99,6 +123,55 @@ simple texte en format p pour être déplacé..
 !tagv car
 
 
+
+
+ --------------- diap5 ----------------- 
+
+ # Mama météo
+
+* Les "Météorologiques"u d'Aristote (384-322 BC)
+
+La Voie "Lactée irrégulière"u appartient au monde sublunaire
+
+Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
+
+"Démocrite (460-370 BC) et la vision atomiste"cb 
+
+Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
+nous paraissent former une masse unie.
+
+## titre quelconque
+
+## deuxième étage..
+
+* ici je refais "encore une ligne"b .. 
+
+
+!foot Besoin d'un pied de page.. 
+
+
+ --------------- diap7 ----------------- 
+
+ # nouvelle diapo..
+
+## Diapo 7
+
+* Il était une fois dans la ville de Foix, ahah
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  		bizmuth et belzébuth..
+       ```
+* Catalan equation
+
+!pos766/471
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
+
+!pos1077/352
+!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
+
+!pos480/357
+!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
  --------------- diap1 ----------------- 
@@ -142,55 +215,6 @@ $memo1
 
 
 
- --------------- diap7 ----------------- 
-
- # nouvelle diapo..
-
-## Diapo 7
-
-* Il était une fois dans la ville de Foix, ahah
-* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
-* dans cette contrée reculée, en plein milieu de rien..
-	 * ```
-  		bizmuth et belzébuth..
-       ```
-* Catalan equation
-
-!pos766/471
-!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
-
-!pos1077/352
-!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
-
-!pos480/357
-!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
-
-
- --------------- diap5 ----------------- 
-
- # Mama météo
-
-* Les "Météorologiques"u d'Aristote (384-322 BC)
-
-La Voie "Lactée irrégulière"u appartient au monde sublunaire
-
-Un "phénomène atmosphérique"cy comme les étoiles filantes et les comètes
-
-"Démocrite (460-370 BC) et la vision atomiste"cb 
-
-Des "étoiles très petites"u et serrées qui, à cause de la "distance"b du ciel à la Terre,
-nous paraissent former une masse unie.
-
-## titre quelconque
-
-## deuxième étage..
-
-* ici je refais "encore une ligne"b .. 
-
-
-!foot Besoin d'un pied de page.. 
-
-
  --------------- diap8 ----------------- 
 
  # nouvelle diapo..
@@ -215,38 +239,6 @@ nous paraissent former une masse unie.
 !['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
- --------------- diap3 ----------------- 
-
- 
-# Applications !tit
-
-## Josephson effect 
-
-### Principle
-!pos150/0
-
-* quantized flux and voltage... 
-
-!pos299/413
-!eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
-
-
-### Schema
-!pos150/91
-
-* Insulator in sandwich between two supraconductors.. 
-
-!pos407/627
-!['josepson_schema' 214x247 %josepson_schema%](imgs/josepson_schema.jpg)
-
-
-!head supra applications
-
-!foot one example
-
-
-
-
  --------------- diap9 ----------------- 
 
   # intermediate slide 8 !tit
@@ -254,6 +246,14 @@ nous paraissent former une masse unie.
  ## zip
  
  ### zafzaf
+
+ --------------- diap10 ----------------- 
+
+  # diap 8 !tit
+ 
+ ## ahahaha
+ 
+ ### voilàààà
 
  --------------- diap11 ----------------- 
 
