@@ -56,38 +56,6 @@ $memo1
 
 
 
- --------------- diap3 ----------------- 
-
- 
-# Applications !tit
-
-## Josephson effect 
-
-### Principle
-!pos150/0
-
-* quantized flux and voltage... 
-
-!pos299/413
-!eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
-
-
-### Schema
-!pos150/91
-
-* Insulator in sandwich between two supraconductors.. 
-
-!pos888/250
-!['josepson_schema' 214x247 %josepson_schema%](imgs/josepson_schema.jpg)
-
-
-!head supra applications
-
-!foot one example
-
-
-
-
  --------------- diap2 ----------------- 
 
  # Introduction !tit
@@ -151,6 +119,38 @@ $memo1
 !foot Il était une fois un petit chaperon rouge.. 
 
 
+ --------------- diap3 ----------------- 
+
+ 
+# Applications !tit
+
+## Josephson effect 
+
+### Principle
+!pos150/0
+
+* quantized flux and voltage... 
+
+!pos299/413
+!eq \frac{\partial \phi}{\partial t} = \frac{2eV}{\hbar}
+
+
+### Schema
+!pos150/91
+
+* Insulator in sandwich between two supraconductors.. 
+
+!pos888/250
+!['josepson_schema' 214x247 %josepson_schema%](imgs/josepson_schema.jpg)
+
+
+!head supra applications
+
+!foot one example
+
+
+
+
  --------------- diap5 ----------------- 
 
  # Mama météo
@@ -199,30 +199,6 @@ simple texte en format p pour être déplacé..
 
 
 
- --------------- diap8 ----------------- 
-
- # nouvelle diapo..
-
-## Diapo 7
-
-* Il était une fois dans la ville de Foix, ahah
-* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
-* dans cette contrée reculée, en plein milieu de rien..
-	 * ```
-  		bizmuth et belzébuth..
-       ```
-* Catalan equation
-
-!pos766/471
-!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
-
-!pos1077/352
-!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
-
-!pos480/357
-!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
-
-
  --------------- diap7 ----------------- 
 
  # nouvelle diapo..
@@ -247,13 +223,29 @@ simple texte en format p pour être déplacé..
 !['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
 
 
- --------------- diap9 ----------------- 
+ --------------- diap8 ----------------- 
 
-  # intermediate slide 8 !tit
- 
- ## zip
- 
- ### zafzaf
+ # nouvelle diapo..
+
+## Diapo 7
+
+* Il était une fois dans la ville de Foix, ahah
+* [Altın Gün - Goca Dünya ;;](https://www.youtube.com/watch?v=WXTIJzPg1H4)
+* dans cette contrée reculée, en plein milieu de rien..
+	 * ```
+  		bizmuth et belzébuth..
+       ```
+* Catalan equation
+
+!pos766/471
+!eq \frac{1}{2 \pi} \int_{0}^{4} x^{n} \sqrt{\frac{4-x}{x}} dx = C_{n}
+
+!pos1077/352
+!['sapin de Noël!' 198x350 %sapin-de-Noël%](imgs/sapin-de-Nol.jpg)
+
+!pos480/357
+!['aragonite' 225x300 %aragonite%](imgs/aragonite.jpg)
+
 
  --------------- diap10 ----------------- 
 
@@ -262,6 +254,14 @@ simple texte en format p pour être déplacé..
  ## ahahaha
  
  ### voilàààà
+
+ --------------- diap9 ----------------- 
+
+  # intermediate slide 8 !tit
+ 
+ ## zip
+ 
+ ### zafzaf
 
  --------------- diap11 ----------------- 
 

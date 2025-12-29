@@ -1,34 +1,23 @@
-# Slide Configuration
-# Each key is a jQuery selector, values are CSS properties
-
-# CSS rules (will use .css())
 css:
   li:
     font-size: 160%
     margin: 30px 100px
     color: '#000000'
     margin-left: 200px
-
-  'li li':
+  li li:
     font-size: 80%
     margin: 15px 30px
     color: '#000000'
-
   h1:
-    margin-left: 150px
-
+    margin-left: 13%
   h2:
-    margin-left: 150px
-
+    margin-left: 13%
   h3:
-    margin-left: 150px
-
+    margin-left: 13%
   p:
-    margin-left: 100px
-
+    margin-left: 8%
   .effect2:
     box-shadow: 0 0 0 0
-
   '#content':
     margin-left: 0px
     margin-right: 0px
@@ -37,22 +26,19 @@ css:
     padding-left: 100px
     height: 100vh
     min-height: 790px
-
   body:
     margin: 0
     padding: 0
     overflow: hidden
-
   html:
     overflow: hidden
-
   .container:
     width: 100%
     max-width: 100%
     margin: 0
     padding: 0
-
-# Elements to hide (will use .hide())
+  ul:
+    margin-left: 7.5%
 hide:
   - .navbar-inner
   - '#toc'

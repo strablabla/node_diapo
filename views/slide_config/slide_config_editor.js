@@ -4,7 +4,10 @@
 
 (function() {
     var editorPanel = null;
-    var editorTextarea = null;
+    var marginSlider = null;
+    var marginValueDisplay = null;
+    var ulMarginSlider = null;
+    var ulMarginValueDisplay = null;
 
     function createEditorPanel() {
         // Create overlay
@@ -27,10 +30,8 @@
         var editorContainer = $('<div>').css({
             'background': 'white',
             'border-radius': '8px',
-            'padding': '20px',
-            'width': '80%',
-            'max-width': '900px',
-            'height': '80%',
+            'padding': '30px',
+            'width': '500px',
             'display': 'flex',
             'flex-direction': 'column',
             'box-shadow': '0 4px 20px rgba(0,0,0,0.3)',
@@ -42,10 +43,10 @@
             'display': 'flex',
             'justify-content': 'space-between',
             'align-items': 'center',
-            'margin-bottom': '15px'
+            'margin-bottom': '30px'
         });
 
-        var title = $('<h3>').text('Slide Configuration Editor').css({
+        var title = $('<h3>').text('Header Margins').css({
             'margin': '0',
             'color': '#333'
         });
@@ -68,34 +69,117 @@
 
         header.append(title).append(closeBtn);
 
-        // Create textarea
-        editorTextarea = $('<textarea>')
-            .attr('id', 'yaml-editor')
+        // Create slider container
+        var sliderContainer = $('<div>').css({
+            'display': 'flex',
+            'flex-direction': 'column',
+            'gap': '25px',
+            'margin-bottom': '30px'
+        });
+
+        // Create single slider for margin
+        var sliderRow = $('<div>').css({
+            'display': 'flex',
+            'flex-direction': 'column',
+            'gap': '8px'
+        });
+
+        var labelRow = $('<div>').css({
+            'display': 'flex',
+            'justify-content': 'space-between',
+            'align-items': 'center'
+        });
+
+        var label = $('<label>').text('Margin:').css({
+            'font-weight': 'bold',
+            'font-size': '14px',
+            'color': '#333'
+        });
+
+        marginValueDisplay = $('<span>').text('0%').css({
+            'font-family': 'monospace',
+            'font-size': '14px',
+            'color': '#666',
+            'min-width': '50px',
+            'text-align': 'right'
+        });
+
+        labelRow.append(label).append(marginValueDisplay);
+
+        marginSlider = $('<input>')
+            .attr('type', 'range')
+            .attr('min', '0')
+            .attr('max', '50')
+            .attr('step', '0.5')
+            .attr('value', '0')
             .css({
-                'height': '500px',
                 'width': '100%',
-                'border-radius': '4px',
-                'resize': 'vertical',
-                'font-family': "'Courier New', Courier, monospace",
-                'font-size': '14px',
-                'line-height': '1.5',
-                'padding': '10px',
-                'border': '1px solid #ccc',
-                'background-color': '#ffffff',
-                'color': '#000000',
-                'display': 'block'
+                'cursor': 'pointer'
+            })
+            .on('input', function() {
+                var val = $(this).val();
+                marginValueDisplay.text(val + '%');
             });
+
+        sliderRow.append(labelRow).append(marginSlider);
+        sliderContainer.append(sliderRow);
+
+        // Create second slider for ul margin
+        var ulSliderRow = $('<div>').css({
+            'display': 'flex',
+            'flex-direction': 'column',
+            'gap': '8px'
+        });
+
+        var ulLabelRow = $('<div>').css({
+            'display': 'flex',
+            'justify-content': 'space-between',
+            'align-items': 'center'
+        });
+
+        var ulLabel = $('<label>').text('UL Margin:').css({
+            'font-weight': 'bold',
+            'font-size': '14px',
+            'color': '#333'
+        });
+
+        ulMarginValueDisplay = $('<span>').text('0%').css({
+            'font-family': 'monospace',
+            'font-size': '14px',
+            'color': '#666',
+            'min-width': '50px',
+            'text-align': 'right'
+        });
+
+        ulLabelRow.append(ulLabel).append(ulMarginValueDisplay);
+
+        ulMarginSlider = $('<input>')
+            .attr('type', 'range')
+            .attr('min', '0')
+            .attr('max', '50')
+            .attr('step', '0.5')
+            .attr('value', '0')
+            .css({
+                'width': '100%',
+                'cursor': 'pointer'
+            })
+            .on('input', function() {
+                var val = $(this).val();
+                ulMarginValueDisplay.text(val + '%');
+            });
+
+        ulSliderRow.append(ulLabelRow).append(ulMarginSlider);
+        sliderContainer.append(ulSliderRow);
 
         // Create buttons container
         var buttonsContainer = $('<div>').css({
             'display': 'flex',
             'justify-content': 'flex-end',
-            'gap': '10px',
-            'margin-top': '15px'
+            'gap': '10px'
         });
 
         var cancelBtn = $('<button>').text('Cancel').css({
-            'padding': '8px 20px',
+            'padding': '10px 24px',
             'background': '#6c757d',
             'color': 'white',
             'border': 'none',
@@ -109,7 +193,7 @@
         });
 
         var saveBtn = $('<button>').text('Save & Apply').css({
-            'padding': '8px 20px',
+            'padding': '10px 24px',
             'background': '#28a745',
             'color': 'white',
             'border': 'none',
@@ -126,7 +210,7 @@
 
         // Assemble everything
         editorContainer.append(header);
-        editorContainer.append(editorTextarea);
+        editorContainer.append(sliderContainer);
         editorContainer.append(buttonsContainer);
 
         editorPanel.append(editorContainer);
@@ -140,16 +224,47 @@
 
         // Load current YAML content
         $.get('/slide_config.yaml', function(yamlText) {
-            editorTextarea.val(yamlText);
-            editorPanel.css('display', 'flex');
+            var config = jsyaml.load(yamlText);
 
-            // Focus textarea after a short delay
-            setTimeout(function() {
-                var textarea = document.getElementById('yaml-editor');
-                if (textarea) {
-                    textarea.focus();
+            // Get margin-left from h1 (or use 0 if not set)
+            var percentValue = 0;
+            if (config.css && config.css.h1 && config.css.h1['margin-left']) {
+                var marginLeft = config.css.h1['margin-left'];
+
+                // Convert px to % (assuming viewport width ~1920px)
+                if (typeof marginLeft === 'string' && marginLeft.includes('px')) {
+                    var pxValue = parseFloat(marginLeft);
+                    percentValue = (pxValue / 1920) * 100;
+                } else if (typeof marginLeft === 'string' && marginLeft.includes('%')) {
+                    percentValue = parseFloat(marginLeft);
+                } else if (typeof marginLeft === 'number') {
+                    percentValue = (marginLeft / 1920) * 100;
                 }
-            }, 100);
+            }
+
+            marginSlider.val(percentValue.toFixed(1));
+            marginValueDisplay.text(percentValue.toFixed(1) + '%');
+
+            // Get margin-left from ul (or use 0 if not set)
+            var ulPercentValue = 0;
+            if (config.css && config.css.ul && config.css.ul['margin-left']) {
+                var ulMarginLeft = config.css.ul['margin-left'];
+
+                // Convert px to %
+                if (typeof ulMarginLeft === 'string' && ulMarginLeft.includes('px')) {
+                    var ulPxValue = parseFloat(ulMarginLeft);
+                    ulPercentValue = (ulPxValue / 1920) * 100;
+                } else if (typeof ulMarginLeft === 'string' && ulMarginLeft.includes('%')) {
+                    ulPercentValue = parseFloat(ulMarginLeft);
+                } else if (typeof ulMarginLeft === 'number') {
+                    ulPercentValue = (ulMarginLeft / 1920) * 100;
+                }
+            }
+
+            ulMarginSlider.val(ulPercentValue.toFixed(1));
+            ulMarginValueDisplay.text(ulPercentValue.toFixed(1) + '%');
+
+            editorPanel.css('display', 'flex');
         }).fail(function(xhr, status, error) {
             console.error('Failed to load YAML:', status, error);
             alert('Failed to load slide_config.yaml: ' + error);
@@ -163,31 +278,58 @@
     }
 
     function saveConfig() {
-        var yamlContent = editorTextarea.val();
+        // Load current YAML to preserve other settings
+        $.get('/slide_config.yaml', function(yamlText) {
+            var config = jsyaml.load(yamlText);
 
-        // Validate YAML
-        try {
-            jsyaml.load(yamlContent);
-        } catch (err) {
-            alert('YAML syntax error:\n' + err.message);
-            return;
-        }
+            // Get the margin values
+            var percentValue = parseFloat(marginSlider.val());
+            var ulPercentValue = parseFloat(ulMarginSlider.val());
 
-        // Send to server
-        $.ajax({
-            url: '/save-slide-config',
-            type: 'POST',
-            contentType: 'text/plain',
-            data: yamlContent,
-            success: function(response) {
-                console.log('✅ Slide configuration saved');
-                closeEditor();
-                // Reload the page to apply changes
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Failed to save configuration:\n' + error);
+            // Update margin-left values for h1, h2, h3 with the same percentage value
+            ['h1', 'h2', 'h3'].forEach(function(tag) {
+                // Ensure css section and tag exist
+                if (!config.css) {
+                    config.css = {};
+                }
+                if (!config.css[tag]) {
+                    config.css[tag] = {};
+                }
+
+                // Set margin-left as percentage string
+                config.css[tag]['margin-left'] = percentValue + '%';
+            });
+
+            // Update margin-left for ul
+            if (!config.css) {
+                config.css = {};
             }
+            if (!config.css.ul) {
+                config.css.ul = {};
+            }
+            config.css.ul['margin-left'] = ulPercentValue + '%';
+
+            // Convert back to YAML
+            var newYamlContent = jsyaml.dump(config);
+
+            // Send to server
+            $.ajax({
+                url: '/save-slide-config',
+                type: 'POST',
+                contentType: 'text/plain',
+                data: newYamlContent,
+                success: function() {
+                    console.log('✅ Slide configuration saved');
+                    closeEditor();
+                    // Reload the page to apply changes
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    alert('Failed to save configuration:\n' + error);
+                }
+            });
+        }).fail(function(xhr, status, error) {
+            alert('Failed to load current configuration:\n' + error);
         });
     }
 

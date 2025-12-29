@@ -2,18 +2,24 @@
 // CONTEXT MENU FOR IMAGES AND EQUATIONS
 // ============================================
 
+// Add global CSS for context menu with !important to override everything
+$('<style>').text(`
+    #image-context-menu {
+        position: fixed !important;
+        z-index: 2147483647 !important;
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.2) !important;
+        min-width: 180px !important;
+        padding: 5px 0 !important;
+    }
+`).appendTo('head');
+
 // Create context menu
 var $contextMenu = $('<div>')
     .attr('id', 'image-context-menu')
     .css({
-        'position': 'fixed',
-        'background': 'white',
-        'border': '1px solid #ccc',
-        'box-shadow': '2px 2px 8px rgba(0,0,0,0.2)',
-        'z-index': '10000',
-        'display': 'none',
-        'min-width': '180px',
-        'padding': '5px 0'
+        'display': 'none'
     })
 
 $('body').append($contextMenu)
