@@ -6,6 +6,7 @@ function match__inject_stop(elem, patt){
 
       /*
       Inject class stop
+      Also extract step number if specified (e.g., !stp=0)
       */
 
       elem.each(function(){
@@ -14,11 +15,18 @@ function match__inject_stop(elem, patt){
                pattern = htm.match(patt)
                var class_added = pattern.slice(1,-1)
                $(this).attr('class', 'stop')                  // adding Class
+
+               // Check if there's a step number specified (e.g., !stp=0)
+               var stepMatch = htm.match(/!stp=(\d+)/)
+               if (stepMatch) {
+                   $(this).attr('data-stp-num', stepMatch[1])
+               }
            }
        })
 }
 
 match__inject_stop($('li'), /\!stp/) // inject Class stop
+match__inject_stop($('p'), /\!stp/) // inject Class stop for paragraphs (images)
 
 function progressive_visu_hide_show(elem,showline,count,reg){
 
@@ -39,30 +47,50 @@ function progressive_visualization(stp){
 
     /*
     Show the li or p one after another according to tags !stp ..
+    Also handles !stp=X where X is the step number at which to show the element
     */
 
     var count = 0;
-    var reg = /\!stp/
+    var reg = /\!stp(=\d+)?/
     var showline = true;
     var hasHiddenContent = false;
     var lastVisibleElement = null;
 
     $('li, p').not('#num, #footlim, .foot, .head, #infos, #infos *, #shortcuts-panel, #shortcuts-panel *').each(function(){
-         var txt = $(this).text()
          //alert(htm)
          if ($(this).hasClass('stop')){
-             count += 1
-             if (count > stp){
-                 showline = false
-                 hasHiddenContent = true
+             // Check if this element has a specific step number
+             var stpNum = $(this).attr('data-stp-num')
+
+             if (stpNum !== undefined) {
+                 // Element with !stp=X: show only when stp >= X
+                 var targetStep = parseInt(stpNum)
+                 if (stp >= targetStep) {
+                     $(this).show()
+                     $(this).html($(this).html().replace(reg,''))
+                 } else {
+                     $(this).hide()
+                     hasHiddenContent = true
+                 }
+             } else {
+                 // Normal !stp behavior (sequential)
+                 count += 1
+                 if (count > stp){
+                     showline = false
+                     hasHiddenContent = true
+                 }
+                 progressive_visu_hide_show($(this),showline,count,reg)
              }
+         } else {
+             // Element without !stp - show if showline is true
+             progressive_visu_hide_show($(this),showline,count,reg)
          }
-        progressive_visu_hide_show($(this),showline,count,reg )
+
         if ($(this).hasClass('targ_memo')){ $(this).hide() }   // hide memo tags..
         if ($(this).hasClass('foot')){ $(this).show() }        // show footer
 
         // Track the last visible element
-        if (showline && $(this).is(':visible')) {
+        if ($(this).is(':visible')) {
             lastVisibleElement = $(this)
         }
     })
