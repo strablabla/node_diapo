@@ -1350,3 +1350,166 @@ git show ec81c2e:views/diapos/d4.html > views/diapos/d4.html
 
 **Leçon apprise:**
 > Dans une architecture client-serveur avec état asynchrone, toujours inclure le contexte nécessaire dans chaque requête. Ne jamais supposer que l'état du serveur est synchronisé avec le client.
+
+---
+
+## 📅 29 Décembre 2025 - Jour 9
+
+### Séparation de !pdf_title et !deck_title
+
+**Fonctionnalité:** Distinction claire entre le titre utilisé pour le nom du PDF et le titre affiché sur la page de garde.
+
+**Modifications:**
+
+1. **Renommage du module**
+   - `lib/deck_title.js` → `lib/pdf_title.js`
+   - Fonctions renommées: `extractPdfTitle()`, `savePdfTitle()`, `getPdfTitle()`
+
+2. **Deux balises distinctes:**
+   - `!pdf_title` - Définit le nom du fichier PDF (extrait de `# Titre !pdf_title`)
+   - `!deck_title` - Reste pour le titre affiché sur la page de garde (géré par first_page.js)
+
+3. **Extraction et sauvegarde au démarrage**
+   - Nouvelle fonction `init_system.js` pour centraliser l'initialisation
+   - Extrait `!pdf_title` depuis d0.html au démarrage du serveur
+   - Sauvegarde dans `views/config_deck.yaml`
+
+**Fichiers modifiés:**
+- `lib/pdf_title.js` - renommé et adapté (lignes 11-40)
+- `lib/init_system.js` - nouveau module d'initialisation (32 lignes)
+- `lib/websocket.js` - ligne 28, 86-92 (extraction lors de la sauvegarde de d0)
+- `lib/generate_pdf.js` - ligne 5, 32-35 (utilisation du pdf_title)
+- `lib/syntax_help.js` - lignes 64-71 (documentation mise à jour)
+- `html_app.js` - lignes 23-24, 125-132 (intégration init_system)
+
+### Éditeur de configuration des marges (Ctrl+C)
+
+**Fonctionnalité:** Panneau graphique pour ajuster les marges gauches des headers et listes.
+
+**Implémentation:**
+
+1. **Interface avec sliders**
+   - Deux glissières: "Margin" (h1, h2, h3) et "UL Margin" (ul)
+   - Valeurs en pourcentage (0% à 50%)
+   - Conversion automatique des valeurs px existantes en %
+   - Sauvegarde dans `views/slide_config/slide_config.yaml`
+
+2. **Configuration YAML dynamique**
+   - Chargement du YAML au démarrage
+   - Application des styles CSS via jQuery
+   - Format: sélecteurs jQuery comme clés, propriétés CSS comme valeurs
+   - Section `hide:` pour masquer des éléments
+
+3. **Résolution du problème d'affichage du textarea (initialement prévu)**
+   - Problème: `flex: 1` ne fonctionnait pas pour afficher le texte
+   - Solution finale: Remplacement par interface à sliders (plus ergonomique)
+   - Fichier créé: `views/slide_config/slide_config_editor.js` (345 lignes)
+
+**Fichiers modifiés:**
+- `views/slide_config/slide_config_editor.js` - nouveau module (345 lignes)
+- `views/slide_config/slide_config.yaml` - configuration des styles (46 lignes)
+- `views/slide_config/slide_config.js` - chargement et application (40 lignes)
+- `html_app.js` - lignes 75-101 (routes pour charger/sauvegarder le YAML)
+- `views/diapo.html` - ligne 3, 45 (inclusion js-yaml et éditeur)
+- `public/js-yaml.min.js` - bibliothèque YAML côté client
+
+**Structure du YAML:**
+```yaml
+css:
+  h1:
+    margin-left: 13%
+  h2:
+    margin-left: 13%
+  h3:
+    margin-left: 13%
+  ul:
+    margin-left: 7.5%
+hide:
+  - .navbar-inner
+  - '#toc'
+```
+
+### Menu contextuel au-dessus des images
+
+**Problème:** Le menu contextuel (clic droit) apparaissait sous les images.
+
+**Solution:**
+- z-index maximum: `2147483647` (Int32 max)
+- CSS avec `!important` dans balise `<style>` pour forcer le style
+- Position: `fixed !important`
+
+**Fichier modifié:**
+- `views/context_menu/context_menu.js` - lignes 6-16 (style global forcé)
+
+### Visualisation progressive avec numéro de step (!stp=X)
+
+**Fonctionnalité:** Afficher un élément à un step spécifique au lieu de séquentiellement.
+
+**Syntaxe:**
+- `!stp` - Comportement séquentiel normal (step 1, 2, 3...)
+- `!stp=0` - Affiche l'élément au step 0 (caché avant, visible après premier appui sur ↓)
+- `!stp=2` - Affiche l'élément au step 2
+
+**Implémentation:**
+- Extraction du numéro de step avec regex `/!stp=(\d+)/`
+- Stockage dans attribut `data-stp-num`
+- Logique conditionnelle: `if (stp >= targetStep) show() else hide()`
+- Application aux paragraphes (images) en plus des listes
+
+**Fichiers modifiés:**
+- `views/step_by_step_visu/step_by_step_visu.js` - lignes 5-29, 46-96
+- `lib/syntax_help.js` - lignes 142-145 (documentation ajoutée)
+
+**Cas d'usage:**
+```markdown
+!pos866/433
+!['img' 268x254 %id%](imgs/image.jpeg) !stp=1
+```
+→ L'image sera cachée au départ et apparaîtra au step 1
+
+### Documentation mise à jour
+
+**Aide à la syntaxe (double-clic sur numéros de ligne):**
+- Ajout de `!stp=X` dans la section "Progressive Display"
+- Ajout de la touche B pour navigation bidirectionnelle
+- Documentation du clic droit pour redimensionner/supprimer images
+
+**Fichiers:**
+- `lib/syntax_help.js` - lignes 136-157
+
+### Architecture technique
+
+**Nouveaux modules:**
+```
+lib/
+├── pdf_title.js          # Extraction et gestion du titre PDF
+├── init_system.js        # Initialisation centralisée au démarrage
+```
+
+**Nouveaux composants client:**
+```
+views/slide_config/
+├── slide_config.yaml           # Configuration des styles
+├── slide_config.js             # Application des styles
+└── slide_config_editor.js      # Éditeur graphique (Ctrl+C)
+```
+
+### Leçons apprises
+
+1. **Problème de visibilité CSS:**
+   - `flex: 1` peut ne pas fonctionner pour les textarea dans certains contextes
+   - Solution: `height: 500px` avec `display: block`
+   - Alternative: Interface graphique plus ergonomique que textarea brut
+
+2. **z-index et !important:**
+   - Pour forcer un élément au-dessus de tout, utiliser z-index max avec `!important`
+   - Appliquer via balise `<style>` dans le head plutôt que jQuery `.css()`
+
+3. **Visualisation progressive:**
+   - Possibilité de mélanger comportement séquentiel (!stp) et absolu (!stp=X)
+   - Important d'exclure tous les panneaux d'aide de la logique de masquage
+
+4. **Configuration centralisée:**
+   - YAML plus lisible que JSON pour configuration utilisateur
+   - Permet commentaires et structure hiérarchique claire
+   - jQuery peut utiliser les sélecteurs YAML directement
