@@ -20,6 +20,7 @@ var thumbnails = require('./lib/thumbnails');
 var uploadImage = require('./lib/upload_image');
 var uploadVideo = require('./lib/upload_video');
 var idleShutdown = require('./lib/idle_shutdown');
+var appConfig = require('./lib/app_config');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
@@ -107,9 +108,8 @@ app.post('/save-slide-config', function(req, res) {
 var io = require('socket.io')(server);
 
 // Stop once the last reader's tab has been closed for a while (config.yaml:
-// idle_shutdown_sec, default 120 s, 0 = never).
-idleShutdown.setupIdleShutdown(io,
-    config.idle_shutdown_sec === undefined ? 120 : config.idle_shutdown_sec)
+// idle_shutdown_sec, default 120 s, 0 = never), read again at each countdown.
+idleShutdown.setupIdleShutdown(io, appConfig.idleShutdownSec)
 
 // Setup websocket handlers and get shared state
 var websocketState = setupWebSocket(io, server, {
@@ -161,6 +161,9 @@ app.post('/upload-video', function(req, res) {
         uploadVideo.handle_upload_video(req, res, modify)
     })
 })
+
+// General settings, for the configuration panel (Ctrl+Shift+C)
+appConfig.setup(app, express, reloadConfig)
 
 //--------------  Start
 

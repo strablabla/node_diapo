@@ -1382,7 +1382,7 @@ git show ec81c2e:views/diapos/d4.html > views/diapos/d4.html
 - `lib/syntax_help.js` - lignes 64-71 (documentation mise à jour)
 - `html_app.js` - lignes 23-24, 125-132 (intégration init_system)
 
-### Éditeur de configuration des marges (Ctrl+C)
+### Éditeur de configuration des marges (Ctrl+Shift+C, devenu le panneau de configuration)
 
 **Fonctionnalité:** Panneau graphique pour ajuster les marges gauches des headers et listes.
 
@@ -1491,7 +1491,7 @@ lib/
 views/slide_config/
 ├── slide_config.yaml           # Configuration des styles
 ├── slide_config.js             # Application des styles
-└── slide_config_editor.js      # Éditeur graphique (Ctrl+C)
+└── slide_config_editor.js      # Panneau de configuration (Ctrl+Shift+C)
 ```
 
 ### Leçons apprises
