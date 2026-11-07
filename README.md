@@ -58,6 +58,8 @@ The browser will automatically open on the first slide. A few seconds after star
 
 The server stops by itself 2 minutes after the last browser tab on it was closed (changing slides reloads the page, which is why it waits). Set `idle_shutdown_sec` in `config.yaml` to change the delay, or to `0` to keep it running until stopped by hand (Ctrl+C in its terminal). The hidden tabs that make the thumbnails do not count.
 
+If the server stops while pages are still open (Ctrl+C, terminal closed, crash), those pages show a red banner saying so, instead of looking alive while nothing is saved any more. Once node_diapo is started again they reconnect by themselves and the banner goes.
+
 Starting the application while it is already running does not fail: the browser opens on the running instance. If port 3067 is held by another program, the start stops with a message saying so.
 
 ## Project Structure
