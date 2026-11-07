@@ -155,6 +155,7 @@ initSystem({
     cleanupOldPDFs: cleanupOldPDFs,
     pdfTitle: pdfTitle,
     thumbnails: thumbnails,
-    numdiap: numdiap,
+    // A getter, not the value: numdiap is still null here, route_all sets it later.
+    getNumdiap: function() { return numdiap },
     port: port
 });
