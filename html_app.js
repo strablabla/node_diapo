@@ -1,4 +1,5 @@
 var express = require('express')
+var http = require('http');
 var open = require('open');
 var _ = require('underscore');
 var countFiles = require('count-files');
@@ -18,6 +19,7 @@ var concat_diapos = require('./lib/concat_diapos');
 var thumbnails = require('./lib/thumbnails');
 var uploadImage = require('./lib/upload_image');
 var uploadVideo = require('./lib/upload_video');
+var idleShutdown = require('./lib/idle_shutdown');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
@@ -39,8 +41,7 @@ var server = require('http').createServer(app);
 
 var comment = false;
 
-var port = 3067
-server.listen(port);
+var port = 3067                 // listened on at the end, once everything is set up
 var addr = 'http://127.0.0.1:{}/d0'.format(port)
 
 
@@ -105,6 +106,11 @@ app.post('/save-slide-config', function(req, res) {
 
 var io = require('socket.io')(server);
 
+// Stop once the last reader's tab has been closed for a while (config.yaml:
+// idle_shutdown_sec, default 120 s, 0 = never).
+idleShutdown.setupIdleShutdown(io,
+    config.idle_shutdown_sec === undefined ? 120 : config.idle_shutdown_sec)
+
 // Setup websocket handlers and get shared state
 var websocketState = setupWebSocket(io, server, {
     port: port,
@@ -156,16 +162,42 @@ app.post('/upload-video', function(req, res) {
     })
 })
 
+//--------------  Start
 
-console.log('Server running at {}'.format(addr));
-open(addr,"node-strap");
+// The port already taken is most often node_diapo itself, left running: say
+// so and open the browser on it, rather than crash on EADDRINUSE. Anything
+// else on that port is reported as such.
+server.on('error', function(err) {
+    if (err.code !== 'EADDRINUSE') { throw err }
+    http.get(addr, function(res) {
+        var body = ''
+        res.on('data', function(chunk) { body += chunk })
+        res.on('end', function() {
+            if (body.indexOf('node diapo') !== -1) {
+                console.log('node_diapo is already running on port {}: opening it.'.format(port))
+                open(addr).then(function() { process.exit(0) }, function() { process.exit(0) })
+            } else {
+                console.error('Port {} is used by another program: node_diapo cannot start.'.format(port))
+                process.exit(1)
+            }
+        })
+    }).on('error', function() {
+        console.error('Port {} is taken and does not answer: node_diapo cannot start.'.format(port))
+        process.exit(1)
+    })
+})
 
-// Initialize system (cleanup, extract PDF title, create thumbnails)
-initSystem({
-    cleanupOldPDFs: cleanupOldPDFs,
-    pdfTitle: pdfTitle,
-    thumbnails: thumbnails,
-    // A getter, not the value: numdiap is still null here, route_all sets it later.
-    getNumdiap: function() { return numdiap },
-    port: port
+server.listen(port, function() {
+    console.log('Server running at {}'.format(addr));
+    open(addr);
+
+    // Initialize system (cleanup, extract PDF title, create thumbnails)
+    initSystem({
+        cleanupOldPDFs: cleanupOldPDFs,
+        pdfTitle: pdfTitle,
+        thumbnails: thumbnails,
+        // A getter, not the value: numdiap is still null here, route_all sets it later.
+        getNumdiap: function() { return numdiap },
+        port: port
+    });
 });

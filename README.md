@@ -47,6 +47,12 @@ The application will start at `http://127.0.0.1:3067/d0`
 
 The browser will automatically open on the first slide. A few seconds after startup, the server takes a screenshot of every slide with Puppeteer; these thumbnails (`views/thumbnails/`, not tracked by git) are shown above the slider at the bottom of the screen and used for the PDF export.
 
+### Stopping the Application
+
+The server stops by itself 2 minutes after the last browser tab on it was closed (changing slides reloads the page, which is why it waits). Set `idle_shutdown_sec` in `config.yaml` to change the delay, or to `0` to keep it running until stopped by hand (Ctrl+C in its terminal). The hidden tabs that make the thumbnails do not count.
+
+Starting the application while it is already running does not fail: the browser opens on the running instance. If port 3067 is held by another program, the start stops with a message saying so.
+
 ## Project Structure
 
 ```
@@ -197,7 +203,7 @@ The system supports enriched markdown syntax with special markers:
 
 ## Configuration
 
-- `config.yaml`: viewport size (also used for the thumbnails), color bar, number of miniatures per row, favicon...
+- `config.yaml`: viewport size (also used for the thumbnails), color bar, number of miniatures per row, favicon, `idle_shutdown_sec` (see Stopping the Application)...
 - `views/config_deck.yaml`: deck title, background image, PDF title
 
 ## Slide Versioning
