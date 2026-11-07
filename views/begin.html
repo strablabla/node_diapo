@@ -2,3 +2,39 @@
 <html>
 
 <meta charset="UTF-8">
+
+<!--
+Hide the page until its scripts have finished shaping it. The slide arrives as
+raw markdown, is turned into a straptoc page, then restyled by the diapo
+scripts: without this, each arrow key flashed those intermediate states. While
+the body is hidden Chrome keeps the previous slide on screen, so the change is
+direct. Revealed once the DOM has been still for QUIET_MS, or after MAX_MS
+whatever happens, so a restless script can never leave the page hidden.
+-->
+<!-- #bg-overlay sits outside body (decorate.js); left visible, it alone would
+     count as the new page's first content and end the hold too early. -->
+<style id="slide-cloak">body, #bg-overlay { visibility: hidden !important; }</style>
+<script>
+(function() {
+    var QUIET_MS = 150;
+    var MAX_MS = 1000;
+    var revealed = false;
+    var observer = null;
+    function reveal() {
+        if (revealed) return;
+        revealed = true;
+        if (observer) observer.disconnect();
+        var cloak = document.getElementById('slide-cloak');
+        if (cloak) cloak.remove();
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var quietTimer = setTimeout(reveal, QUIET_MS);
+        observer = new MutationObserver(function() {
+            clearTimeout(quietTimer);
+            quietTimer = setTimeout(reveal, QUIET_MS);
+        });
+        observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+        setTimeout(reveal, MAX_MS);
+    });
+})();
+</script>
