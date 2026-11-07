@@ -25,3 +25,8 @@ static/slides_*.pdf
 
 # Videos dropped on slides: heavy, copy them by hand to another machine
 public/videos/
+
+# Made by install.js from icons/node_diapo.png
+icons/node_diapo.ico
+# Server output when started from the macOS app
+logs/

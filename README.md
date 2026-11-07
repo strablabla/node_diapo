@@ -19,25 +19,32 @@ node_diapo is a web-based presentation editor that allows you to create, edit, a
 
 ## Prerequisites
 
-- Node.js 18 or higher (required by Puppeteer)
-- npm
+- Node.js 20.19 or later (jsdom 27 needs `^20.19`, `^22.12` or `>=24`), with npm: https://nodejs.org
 
 Once installed, presenting needs no internet connection: all libraries and fonts are served locally (`scripts/vendor/`). Only YouTube videos need the network.
 
 ## Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/strablabla/node_diapo.git
-cd node_diapo
-
-# Install dependencies
-npm install
 ```
 
-`npm install` also downloads the headless Chrome that Puppeteer uses to make the slide thumbnails.
+Then run the installer of your system, from the `node_diapo` folder:
+
+- **Windows**: double-click `install.bat`
+- **Linux, macOS**: `./install.sh` (or double-click it, if your file manager runs scripts)
+
+It checks the Node version, runs `npm install` (which also downloads the headless Chrome that Puppeteer uses for the slide thumbnails), and puts a **node_diapo** launcher on the Desktop:
+
+- Linux: a `.desktop` file, also added to the applications menu; it opens a terminal showing the server's messages
+- macOS: a `node_diapo.app`; the server's messages go to `logs/node_diapo.log`
+- Windows: a shortcut, with the application's icon
+
+The work is done by `install.js`, the same on every OS. Run it again after moving the folder or upgrading Node: the launcher calls Node by its full path, so that it works where the `PATH` is not set (an app started from the macOS Finder, Node installed with nvm). `node install.js --no-npm` only recreates the launcher.
 
 ## Starting the Application
+
+Double-click the **node_diapo** launcher on the Desktop, or run `start_diapo.sh` (Linux, macOS) / `start_diapo.bat` (Windows), or simply:
 
 ```bash
 node html_app.js
