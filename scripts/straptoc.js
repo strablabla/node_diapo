@@ -1056,53 +1056,55 @@ available colors : 'r', 'b', 'y', 'g', 'o', 'm'
 
 */
 
+/*
+Works on the text only. It used to run its regexes on each element's HTML and
+write it back: inside a code block (prettified spans carrying class and style
+attributes) it took pieces of tags, such as '" style="co', for annotations and
+broke them, and fragments like 'style= lor: rgb(0, 0, 0);">' showed in the
+block. Now each text node is styled by its nearest li or p only (nested lists
+are not processed twice), and text inside pre or code is left alone.
+*/
+
 var buc = function(pli){
 
-    var stl = ['b','u','c'] // 'b', 'u',
-    for (i in stl){
-        var currstl = stl[i]
-        // alert(currstl)
-        pli.each(function(){
-            var txt = $(this).html().replace(/\<br\>/g, ' <br>'); // .replace('<br>',' ')
-            if (currstl != 'c'){
-                var re = new RegExp('\"[^"]+\"' + currstl + ' ', 'g')   // case b or u
-                }
-            else{
-                var re = new RegExp('\"([^"]+)\"' + currstl + '([rbygom]) ?', 'g') // case color sans point
+    var dic_col = {'r':'red', 'b':'blue', 'y':'#ffe066', 'g':'#8cd98c', 'o':'orange', 'm':'#cc0066'}
+    // "text"c<col> with an optional space, "text"b or "text"u before a space or the end
+    var re = /"([^"]+)"(?:c([rbygom]) ?|([bu])(?=\s|$))/g
+
+    var style_text_node = function(node){
+        var txt = node.nodeValue
+        re.lastIndex = 0
+        if (!re.test(txt)) return
+        re.lastIndex = 0
+        var frag = document.createDocumentFragment()
+        var last = 0, m
+        while ((m = re.exec(txt)) !== null){
+            frag.appendChild(document.createTextNode(txt.slice(last, m.index)))
+            if (m[2]){                                   // color
+                frag.appendChild($('<span/>').text(m[1] + ' ')
+                    .css({'color': dic_col[m[2]], 'pointer-events': 'none'})[0])
             }
-            var tm = txt.match(re)
-            if (tm){
-                for (i in tm){
-                    // alert(tm[i])
-                    txtm = tm[i].toString()
-                    if (currstl != 'c'){               // case b or u
-                        var ttmm = txtm.slice(1,-3)
-                        nwstl = '<'+ currstl +'>' + ttmm  + '</'+ currstl +'>' + ' '
-                        // alert(nwstl)
-                        var bu = new RegExp(tm[i], 'g')
-                        var txt = txt.replace(bu, nwstl)
-                        $(this).html(txt)
-                    }
-                    else if (currstl == 'c'){    // case color
-                        // alert('Text matched for color is ' + txtm)
-                        dic_col = {'r':'red', 'b':'blue', 'y':'#ffe066', 'g':'#8cd98c', 'o':'orange', 'm':'#cc0066'}
-                        // Extraire le texte et la couleur avec regex
-                        var match = txtm.match(/\"([^"]+)\"c([rbygom])/)
-                        if (match) {
-                            var ttmm = match[1]
-                            var col = match[2]
-                            //alert('text=' + ttmm + ' col=' + col)
-                            var nwstl =  $('<span/>').text(ttmm + ' ').css({'color':dic_col[col], 'pointer-events':'none'})
-                            interm = $('<div/>').append(nwstl)
-                            var cc = new RegExp(tm[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g') // Escape special chars
-                            var txt = txt.replace(cc, interm.html())
-                            $(this).html(txt)
-                        }
-                    }
-                } // end for (i in tm) i in text matched
-              }  // end if tm
-         }) // end each p, li
-    } // end for (i in stl)
+            else {                                       // bold or underline
+                frag.appendChild($('<' + m[3] + '/>').text(m[1])[0])
+            }
+            last = re.lastIndex
+        }
+        frag.appendChild(document.createTextNode(txt.slice(last)))
+        node.parentNode.replaceChild(frag, node)
+    }
+
+    pli.each(function(){
+        var owner = this
+        var walker = document.createTreeWalker(this, NodeFilter.SHOW_TEXT)
+        var nodes = []
+        while (walker.nextNode()) { nodes.push(walker.currentNode) }
+        nodes.forEach(function(node){
+            var parent = $(node.parentNode)
+            if (parent.closest('li, p')[0] !== owner) return      // belongs to a nested li/p
+            if (parent.closest('pre, code').length) return        // code is shown as written
+            style_text_node(node)
+        })
+    })
 }
 
 buc($("li")) // dealing with list
