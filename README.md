@@ -21,7 +21,8 @@ node_diapo is a web-based presentation editor that allows you to create, edit, a
 
 - Node.js 18 or higher (required by Puppeteer)
 - npm
-- An internet connection while presenting: several libraries are still loaded from CDNs (see Known Issues)
+
+Once installed, presenting needs no internet connection: all libraries and fonts are served locally (`scripts/vendor/`). Only YouTube videos need the network.
 
 ## Installation
 
@@ -57,7 +58,9 @@ node_diapo/
 │                            #   scripts (shortcuts_help.js, syntax_help.js)
 ├── static/js/               # Server-side helpers (markdown to HTML, versioning)
 ├── scripts/                 # Client libraries: straptoc.js/.css, CodeMirror,
-│                            #   keymaster, Artyom, screenfull
+│   │                        #   keymaster, Artyom, screenfull
+│   └── vendor/              # Third-party libraries and fonts, formerly
+│                            #   loaded from CDNs (see its README)
 ├── views/                   # Nunjucks templates
 │   ├── diapos/
 │   │   ├── d0.html, d1.html ... # Slide contents (markdown)
@@ -201,10 +204,6 @@ The system supports enriched markdown syntax with special markers:
 Each slide modification is automatically saved in `views/saved/` with a timestamp. The system keeps up to 10 versions per slide.
 
 ## Known Issues
-
-### Libraries loaded from CDNs
-
-`views/header.html` and `views/slider.html` still load jQuery, jQuery UI, d3, Bootstrap, MathLive, Google Fonts and others from CDNs. Without a network, or on one that does not answer, slides may stay blank or half-built. `cdn.rawgit.com`, used for alertify, has been shut down since 2019, and `unpkg.com` (MathLive) can take up to ~15 s to answer. Serving these files locally would remove the problem.
 
 ### Outdated Dependencies
 
