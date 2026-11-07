@@ -132,6 +132,10 @@ function setupBackground(backgroundImage) {
 
     // Force transparent backgrounds on all elements
     $('body, html, body > *, xmp, #content').each(function() {
+        // Spare an element that sets its own background inline: that is a choice,
+        // not a stylesheet default. Panels such as the Ctrl+H help are white this
+        // way, and turning them transparent let the slide show through them.
+        if (this.style.backgroundColor) return;
         var bg = $(this).css('background-color');
         if (bg === 'rgb(255, 255, 255)' || bg === '#ffffff' || bg === 'white') {
             $(this).css('background-color', 'transparent');
