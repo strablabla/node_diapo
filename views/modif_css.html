@@ -73,30 +73,83 @@
 
 /* An unfolded video opens over the slide instead of pushing the text below it
    down. Out of the flow but with no offsets, the sub-list stays exactly where
-   it would have been, right under its title. Covers the YouTube thumbnail
-   (.youtube), the player that replaces it once clicked (#youtube_<id>), and
-   local videos (ul.strapvid). */
-ul:has(> li > .youtube),
-ul:has(> li > [id^="youtube_"]),
+   it would have been, right under its title. Covers YouTube videos, in their frame
+   (.video-frame, straptoc.js), and local videos (ul.strapvid). */
+ul:has(> li > .video-frame),
 ul.strapvid {
     position: absolute;
     z-index: 1000;
 }
 
-/* A frame around the YouTube thumbnail and player, and a handle in the
-   bottom-right corner to resize them. Only the width is dragged: the height
-   follows from the 16/9 ratio, which overrides the fixed height straptoc sets.
-   The player inherits the thumbnail's width (straptoc.js). */
+ul:has(> li > .video-frame) {
+    list-style: none;
+}
+
+/* The frame around a YouTube video: an opaque white mat, by which the video
+   is dragged, with the close button in its top-right corner. */
+.video-frame {
+    display: inline-block;
+    position: relative;
+    padding: 42px;
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    cursor: move;
+}
+
+.video-close {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid #333;
+    border-radius: 50%;
+    background: #fff;
+    color: #333;
+    font: bold 18px/1 Arial, sans-serif;
+    cursor: pointer;
+}
+
+.video-close:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* A local video is resized by its frame's corner, in the white mat: the
+   video's own corner holds the player's fullscreen button. The frame's width
+   is what the handle sets (box-sizing is border-box, from Bootstrap: 684px
+   leaves 600px of video); the height follows the video, whatever its ratio. */
+.video-frame.resizable-frame {
+    width: 684px;
+    min-width: 280px;
+    max-width: 95vw;
+    height: auto !important;
+    overflow: hidden;
+    resize: both;
+}
+
+.video-frame.resizable-frame video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 3px solid #333;
+    background: #000;
+    cursor: default;
+}
+
+/* The YouTube thumbnail and player, in the frame above, with a handle in the
+   bottom-right corner to resize them. resize: both, for the diagonal cursor;
+   the height the handle writes inline loses to height: auto !important, so
+   only the width really changes and the 16/9 ratio holds (it also overrides
+   the fixed height straptoc sets). The player inherits the thumbnail's width
+   (straptoc.js). */
 .youtube,
 [id^="youtube_"] {
     box-sizing: border-box;
     border: 3px solid #333;
     border-radius: 0;
-    /* A translucent mat around the frame, to set the video apart from the
-       slide's background, then the drop shadow outside it. Shadows take no
-       room and catch no mouse, so resizing and dragging are unchanged. */
-    box-shadow: 0 0 0 42px rgba(255, 255, 255, 0.55),
-                0 8px 28px 42px rgba(0, 0, 0, 0.35);
+    position: relative;
     background-color: #000;
     background-size: cover;
     aspect-ratio: 16 / 9;
@@ -105,7 +158,7 @@ ul.strapvid {
     max-width: 95vw;
     margin: 0 !important;
     overflow: hidden;
-    resize: horizontal;
+    resize: both;
 }
 
 [id^="youtube_"] iframe {

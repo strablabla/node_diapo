@@ -1621,54 +1621,106 @@ buc($("p"))  // dealing with p
 
         //=====================================================================   Local video
 
-        if  ($(this).text().match('%%')){       // insert local video, works with Chrome
+        if  ($(this).text().match('%%')){       // insert local video, framed below
             var vid_url = $(this).attr('href')
-            var vid = $('<video/>', {'frameborder': '0', 'src': vid_url, 'width': '600', 'height': '400' })
-            vid .prop("controls",true);
+            var vid = $('<video/>', {'src': vid_url, 'preload': 'metadata'}).addClass('local-video')
+            vid.prop("controls",true);
             var track = $('<track/>', {'label': 'english', 'src': vid_url.replace('.mp4', '.vtt'), 'kind': 'subtitles', 'srclang': 'es' })
             vid.append(track)
-            var div = $('<div/>').css({'text-align':'center'})
-            var keeplink = $('<a/>').text($(this).text().split('%%')[0])
-                                    .attr('href',$(this).attr('href'))
-            keeplink.insertBefore($(this))
-            $(this).replaceWith(div.append(vid));
+            $(this).replaceWith(vid);
         } // end if
  }) // end each
 
-   //=====================================================================   Youtube
+   //=====================================================================   Video frames
+
+ /*
+ Each video sits in a frame (div.video-frame): a white mat that holds the close
+ button and by which the video is dragged (CSS in modif_css.html). Closing
+ folds the list back, like [-]: a playing YouTube video turns back into its
+ thumbnail, which stops it; a local video is paused.
+ Resizing: a YouTube thumbnail or player from its own bottom-right corner; a
+ local video from the frame's corner, since the player's controls (fullscreen)
+ sit in the video's corner.
+ */
+
+ var youtube_thumbnail = function(id){
+     return $('<div/>').addClass('youtube').attr('id', id)
+         .css('background-image', 'url(http://img.youtube.com/vi/' + id + '/hqdefault.jpg)')
+         // Overlay the Play icon to make it look like a video player
+         .append($('<div/>', {'class': 'play'}))
+ }
+
+ // A press in the bottom-right corner belongs to the browser's resize handle:
+ // keep it from the frame's draggable, whose mousedown would cancel it (bound
+ // first, so it runs first on the frame itself). While resizing, an iframe
+ // ignores the mouse (.yt-resizing, modif_css.html): otherwise, shrinking, the
+ // pointer crosses it, it takes the mouseup, and the page believes the button
+ // is still held.
+ var protect_resize_corner = function(elem){
+     elem.on('mousedown', function(event) {
+         var r = this.getBoundingClientRect()
+         if (event.clientX > r.right - 20 && event.clientY > r.bottom - 20) {
+             event.stopImmediatePropagation()
+             var video = $(this).addClass('yt-resizing')
+             $(document).one('mouseup', function() { video.removeClass('yt-resizing') })
+         }
+     })
+ }
+
+ var close_video = function(frame){
+     var player = frame.find('[id^="youtube_"]')
+     if (player.length){
+         var thumb = youtube_thumbnail(player.attr('id').slice('youtube_'.length))
+                         .css('width', player.outerWidth() + 'px')
+         player.replaceWith(thumb)
+         protect_resize_corner(thumb)
+     }
+     frame.find('video').each(function() { this.pause() })
+     frame.closest('ul').hide()
+ }
+
+ // Wraps elem in a frame with its close button, and makes the frame draggable.
+ var frame_video = function(elem, resizable){
+     elem.wrap($('<div/>').addClass('video-frame'))
+     var frame = elem.parent()
+     if (resizable) { frame.addClass('resizable-frame'); protect_resize_corner(frame) }
+     $('<button/>').addClass('video-close').attr('title', 'Close the video').text('×')
+         .on('click', function(event) { event.stopPropagation(); close_video(frame) })
+         .appendTo(frame)
+     // iframeFix: without it a YouTube iframe swallows the mouse as soon as the
+     // pointer crosses it, and the drag stops dead. draggable leaves the
+     // frame's size inline after a drag: clear it, or the frame would no longer
+     // follow its video (a resizable frame keeps the width the user gave it).
+     frame.draggable({ iframeFix: true, cancel: '.video-close, video',
+                       stop: function() {
+                           $(this).css(resizable ? {'height': ''} : {'width': '', 'height': ''})
+                       } })
+     return frame
+ }
+
+ $("video.local-video").each(function() {
+     frame_video($(this), true)
+ })
 
  $(".youtube").each(function() { // take the youtube class element and replace..
-     $(this).css('background-image', 'url(http://img.youtube.com/vi/' + this.id + '/hqdefault.jpg)');
-     // Overlay the Play icon to make it look like a video player
-     $(this).append($('<div/>', {'class': 'play'}));
+     var thumb = $(this)
+     thumb.css('background-image', 'url(http://img.youtube.com/vi/' + this.id + '/hqdefault.jpg)')
+     thumb.append($('<div/>', {'class': 'play'}))
+     protect_resize_corner(thumb)
+     frame_video(thumb, false)
+
      $(document).delegate('#'+this.id, 'click', function() {
          // Create an iFrame with autoplay set to true
          var iframe_url = "https://www.youtube.com/embed/" + this.id + "?autoplay=1&autohide=1";
          if ($(this).data('params')) iframe_url+='&'+$(this).data('params');
          // The player keeps the thumbnail's width, possibly resized by the user;
-         // the iframe fills it and the CSS (modif_css.html) keeps it 16/9 and resizable.
+         // the iframe fills it and the CSS keeps it 16/9 and resizable.
          var iframe = $('<iframe/>', {'frameborder': '0', 'src': iframe_url, 'allow': 'autoplay; fullscreen', 'allowfullscreen': true })
          var div = $('<div/>').css({'width': $(this).outerWidth() + 'px'})
          div.attr('id', "youtube_"+this.id)
-         // Replace the YouTube thumbnail with YouTube HTML5 Player
+         // Replace the YouTube thumbnail with YouTube HTML5 Player, in the same frame
          $(this).replaceWith(div.append(iframe));
-         // A press in the bottom-right corner belongs to the browser's resize
-         // handle: keep it from draggable, whose mousedown would cancel it.
-         // Bound before draggable so that it runs first. While resizing, the
-         // iframe ignores the mouse (.yt-resizing, modif_css.html): otherwise,
-         // shrinking, the pointer crosses it, it takes the mouseup, and the
-         // page believes the button is still held.
-         $("#youtube_"+this.id).on('mousedown', function(event) {
-             var r = this.getBoundingClientRect()
-             if (event.clientX > r.right - 20 && event.clientY > r.bottom - 20) {
-                 event.stopImmediatePropagation()
-                 var player = $(this).addClass('yt-resizing')
-                 $(document).one('mouseup', function() { player.removeClass('yt-resizing') })
-             }
-         })
-         // iframeFix: without it the YouTube iframe swallows the mouse as soon
-         // as the pointer crosses it, and the drag stops dead.
-         $("#youtube_"+this.id).draggable({ iframeFix: true }) // make the video draggable
+         protect_resize_corner(div)
      }); // delegate
 
  }); // youtube each

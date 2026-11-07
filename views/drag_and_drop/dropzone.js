@@ -1,5 +1,5 @@
 // ============================================
-// DRAG & DROP IMAGE UPLOAD
+// DRAG & DROP IMAGE AND VIDEO UPLOAD
 // ============================================
 
 // Create drop zone overlay
@@ -20,7 +20,7 @@ dropZone.css({
     'color': '#4444ff',
     'pointer-events': 'none'
 })
-dropZone.html('Drop image here')
+dropZone.html('Drop image or video here')
 $('body').append(dropZone)
 
 // Prevent default drag behaviors on document
@@ -79,8 +79,31 @@ $(document).on('drop', function(e) {
                     alert('Failed to upload image: ' + error)
                 }
             })
+        } else if (file.type.match('video.*')) {
+            // A video becomes a folded local video line at the end of the
+            // slide (lib/upload_video.js); the drop position is not used.
+            var videoData = new FormData()
+            videoData.append('video', file)
+            videoData.append('diapo_index', diapo_index)
+            $('#drop-zone').html('Uploading video...').css('display', 'flex')
+            $.ajax({
+                url: '/upload-video',
+                type: 'POST',
+                data: videoData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Video uploaded successfully:', response)
+                    location.reload()
+                },
+                error: function(xhr) {
+                    $('#drop-zone').hide().html('Drop image or video here')
+                    var reason = (xhr.responseJSON && xhr.responseJSON.error) || xhr.statusText
+                    alert('Failed to upload video: ' + reason)
+                }
+            })
         } else {
-            alert('Please drop an image file')
+            alert('Please drop an image or a video file')
         }
     }
 })

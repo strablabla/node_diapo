@@ -177,9 +177,10 @@ The system supports enriched markdown syntax with special markers:
 
 #### Videos
 - `[title ;;](https://www.youtube.com/watch?v=...)`: YouTube video
-- `[title %%](videos/file.mp4)`: local video (subtitles from `file.vtt` if present)
-- A video sits folded under its title; click **[-]** to unfold it. It opens over the slide without moving the text, in a frame with a translucent mat.
-- Drag the bottom-right corner to resize it (16/9 kept), drag its frame to move it. The size is not saved.
+- `[title %%](videos/file.mp4)`: local video, from `public/` (subtitles from `file.vtt` next to it, if present). MP4 (H.264), WebM or Ogg.
+- **Drag and drop** a video file onto a slide to add it: it is stored in `public/videos/` and a `[title %%](videos/...)` line is appended to the slide. `public/videos/` is not tracked by git (videos are heavy): copy it by hand to another machine.
+- A video sits folded under its title; click **[-]** to unfold it. It opens over the slide without moving the text, in a white frame: drag the frame to move it, click **×** in its top-right corner to close it (a playing video stops).
+- Resize it from the bottom-right corner: of the video for YouTube (16/9 kept), of the frame for a local video (the video's own corner holds the fullscreen button). The size and position are not saved.
 
 #### Progressive Visualization & Styling
 - `!stp`: Mark a stop point for progressive content reveal

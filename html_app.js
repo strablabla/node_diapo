@@ -17,6 +17,7 @@ var cleanupOldPDFs = require('./lib/cleanup_pdfs');
 var concat_diapos = require('./lib/concat_diapos');
 var thumbnails = require('./lib/thumbnails');
 var uploadImage = require('./lib/upload_image');
+var uploadVideo = require('./lib/upload_video');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
@@ -144,6 +145,15 @@ function reloadConfig() {
 // Image upload endpoint (uses websocketState.diapo_index)
 app.post('/upload-image', uploadImage.upload.single('image'), function(req, res) {
     uploadImage.handle_upload_image(req, res, websocketState.diapo_index, modify, reloadConfig)
+})
+
+// Video upload endpoint: the slide index comes with the drop. A refused file
+// (not MP4/WebM/Ogg) gets its reason back instead of an error page.
+app.post('/upload-video', function(req, res) {
+    uploadVideo.upload.single('video')(req, res, function(err) {
+        if (err) { return res.status(400).json({ error: err.message }) }
+        uploadVideo.handle_upload_video(req, res, modify)
+    })
 })
 
 

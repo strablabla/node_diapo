@@ -22,3 +22,6 @@ views/thumbnails/
 # Generated PDFs
 slides.pdf
 static/slides_*.pdf
+
+# Videos dropped on slides: heavy, copy them by hand to another machine
+public/videos/
