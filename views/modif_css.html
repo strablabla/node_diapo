@@ -71,6 +71,75 @@
     display: none !important;
 }
 
+/* An unfolded video opens over the slide instead of pushing the text below it
+   down. Out of the flow but with no offsets, the sub-list stays exactly where
+   it would have been, right under its title. Covers the YouTube thumbnail
+   (.youtube), the player that replaces it once clicked (#youtube_<id>), and
+   local videos (ul.strapvid). */
+ul:has(> li > .youtube),
+ul:has(> li > [id^="youtube_"]),
+ul.strapvid {
+    position: absolute;
+    z-index: 1000;
+}
+
+/* A frame around the YouTube thumbnail and player, and a handle in the
+   bottom-right corner to resize them. Only the width is dragged: the height
+   follows from the 16/9 ratio, which overrides the fixed height straptoc sets.
+   The player inherits the thumbnail's width (straptoc.js). */
+.youtube,
+[id^="youtube_"] {
+    box-sizing: border-box;
+    border: 3px solid #333;
+    border-radius: 0;
+    /* A translucent mat around the frame, to set the video apart from the
+       slide's background, then the drop shadow outside it. Shadows take no
+       room and catch no mouse, so resizing and dragging are unchanged. */
+    box-shadow: 0 0 0 42px rgba(255, 255, 255, 0.55),
+                0 8px 28px 42px rgba(0, 0, 0, 0.35);
+    background-color: #000;
+    background-size: cover;
+    aspect-ratio: 16 / 9;
+    height: auto !important;
+    min-width: 200px;
+    max-width: 95vw;
+    margin: 0 !important;
+    overflow: hidden;
+    resize: horizontal;
+}
+
+[id^="youtube_"] iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 0;
+}
+
+/* The resize corner of the player. With square corners the YouTube iframe,
+   isolated by Chrome, takes the press there before the browser's resize handle
+   does; this square of the slide's own, laid over the iframe, keeps it on the
+   page. It also draws a visible grip. */
+[id^="youtube_"]::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    z-index: 1;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg,
+        transparent 45%, rgba(255, 255, 255, 0.8) 45%, rgba(255, 255, 255, 0.8) 55%,
+        transparent 55%, transparent 70%, rgba(255, 255, 255, 0.8) 70%,
+        rgba(255, 255, 255, 0.8) 80%, transparent 80%);
+}
+
+/* Set by straptoc.js while the player is being resized. */
+.yt-resizing iframe {
+    pointer-events: none;
+}
+
 {% if config_desk.background %}
 html, body {
     background: transparent !important;

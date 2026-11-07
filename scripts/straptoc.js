@@ -1643,14 +1643,30 @@ buc($("p"))  // dealing with p
          // Create an iFrame with autoplay set to true
          var iframe_url = "https://www.youtube.com/embed/" + this.id + "?autoplay=1&autohide=1";
          if ($(this).data('params')) iframe_url+='&'+$(this).data('params');
-         // The height and width of the iFrame should be the same as parent
-         var iframe = $('<iframe/>', {'frameborder': '0', 'src': iframe_url, 'width': $(this).width(), 'height': $(this).height() })
-         var div = $('<div/>').css({'text-align':'center'})
+         // The player keeps the thumbnail's width, possibly resized by the user;
+         // the iframe fills it and the CSS (modif_css.html) keeps it 16/9 and resizable.
+         var iframe = $('<iframe/>', {'frameborder': '0', 'src': iframe_url, 'allow': 'autoplay; fullscreen', 'allowfullscreen': true })
+         var div = $('<div/>').css({'width': $(this).outerWidth() + 'px'})
          div.attr('id', "youtube_"+this.id)
-         //div.draggable()
          // Replace the YouTube thumbnail with YouTube HTML5 Player
          $(this).replaceWith(div.append(iframe));
-         $("#youtube_"+this.id).draggable() // make the video draggable
+         // A press in the bottom-right corner belongs to the browser's resize
+         // handle: keep it from draggable, whose mousedown would cancel it.
+         // Bound before draggable so that it runs first. While resizing, the
+         // iframe ignores the mouse (.yt-resizing, modif_css.html): otherwise,
+         // shrinking, the pointer crosses it, it takes the mouseup, and the
+         // page believes the button is still held.
+         $("#youtube_"+this.id).on('mousedown', function(event) {
+             var r = this.getBoundingClientRect()
+             if (event.clientX > r.right - 20 && event.clientY > r.bottom - 20) {
+                 event.stopImmediatePropagation()
+                 var player = $(this).addClass('yt-resizing')
+                 $(document).one('mouseup', function() { player.removeClass('yt-resizing') })
+             }
+         })
+         // iframeFix: without it the YouTube iframe swallows the mouse as soon
+         // as the pointer crosses it, and the drag stops dead.
+         $("#youtube_"+this.id).draggable({ iframeFix: true }) // make the video draggable
      }); // delegate
 
  }); // youtube each
