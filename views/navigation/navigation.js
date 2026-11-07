@@ -10,6 +10,8 @@ function set_page_num_and_slider(diapo_index){
       Set the page number and position in the slider
       */
 
+      if (diapo_index === null) return       // not a slide: /all, /all_mini
+
       if (diapo_index != 0){
 
             var isInIframe = (window.self !== window.top);
@@ -63,17 +65,20 @@ function set_page_num_and_slider(diapo_index){
 //---------------
 
 $('h1').css({'right':'5%'})
-var diapo_index = {{ diapo_index }}  // Initialize with value from server-side template
+// Set from the server-side template. The /all and /all_mini views include
+// this file without a slide index: null there, and no page number or slider.
+var diapo_index = {{ diapo_index if diapo_index is defined else 'null' }}
 console.log('Initial diapo_index from template:', diapo_index)
 
-socket.on('numdiap', function(numdiap){
-      console.log('Received numdiap from server:', numdiap)
-      diapo_index = parseInt(numdiap)
-      set_page_num_and_slider(diapo_index)
-     })  // index of current diap
+// The slide's own index comes from its URL, through the template, and is the
+// only one to trust. The server answers each connection with its shared
+// "current" index, i.e. whichever tab reported last: taking it showed wrong
+// page numbers (or NaN, before maxdiap), and made the next arrow key jump from
+// that wrong index. So the page tells the server where it is (the /text
+// editor needs it), and ignores what comes back.
 // Emit initial diapo_index to server
 console.log('Emitting initial diapo_index to server:', diapo_index)
-socket.emit('numdiap', diapo_index)
+if (diapo_index !== null) socket.emit('numdiap', diapo_index)
 var diapo_max = null
 socket.on('maxdiap', function(text){
   console.log('Received maxdiap from server:', text)

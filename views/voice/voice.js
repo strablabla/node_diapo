@@ -59,7 +59,11 @@ var voice_cmds = function(){/*
 
 */}.toString().slice(14,-3)
 
-$('#help_voice_cmds').html(simple_md(voice_cmds))
+// simple_md comes from straptoc's processing of a slide: the /all and
+// /all_mini views do not run it, nor have this help panel.
+if (typeof simple_md === 'function') {
+    $('#help_voice_cmds').html(simple_md(voice_cmds))
+}
 
 //----------- voice commands
 
