@@ -2,9 +2,11 @@
 // PDF GENERATION FROM THUMBNAILS
 // ============================================
 
-key('alt+ctrl+p', function(){         // Generate PDF from thumbnails
-    console.log('Generating PDF from thumbnails...')
-    socket.emit('generate_pdf')
+// fresh: take every thumbnail again first (right-click menu), so the PDF shows
+// the slides as they are now; without, the thumbnails already made are used.
+function generatePdf(fresh) {
+    console.log('Generating PDF from thumbnails' + (fresh ? ', taken again first' : '') + '...')
+    socket.emit('generate_pdf', { fresh: !!fresh })
     // Show a notification
     var notification = $('<div>').text('Génération du PDF en cours...').css({
         'position': 'fixed',
@@ -20,8 +22,12 @@ key('alt+ctrl+p', function(){         // Generate PDF from thumbnails
     })
     $('body').append(notification)
 
+    socket.on('pdf_progress', showProgress)
+    function showProgress(text) { notification.text(text) }
+
     // Listen for completion
     socket.once('pdf_generated', function(data) {
+        socket.off('pdf_progress', showProgress)
         if (data.success) {
             notification.text('PDF généré avec succès ! Téléchargement en cours...')
 
@@ -45,4 +51,6 @@ key('alt+ctrl+p', function(){         // Generate PDF from thumbnails
             }, 3000)
         }
     })
-})
+}
+
+key('alt+ctrl+p', function(){ generatePdf(false) });

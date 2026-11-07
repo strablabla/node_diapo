@@ -1732,15 +1732,9 @@ buc($("p"))  // dealing with p
     /*
     Close all the lists
     */
-    if(event.keyCode == 27){ // Trigger statekeys with Escape
-          if (statekey != 'blcoked'){
-            statekey *= -1
-          }
-          else{
-            statekey = -1
-          }
-         $('#esc').toggle()
-        } // end if
+    // Escape no longer switches the one-letter keys mode on and off (statekey,
+    // shown by the green square #esc): in a slideshow it only made the square
+    // blink, and Escape closes the panels and menus instead. The mode stays off.
 
 //===================================================================== Close all the lists
 
