@@ -135,7 +135,7 @@ node_diapo/
 - **Ctrl+S**: Save position of images and equations
 - **Ctrl+Shift+C**: Configuration panel (slide style, general settings)
 - **Ctrl+Shift+D**: Debug panel (the server's terminal, the page's console)
-- **Alt+Ctrl+P**: Generate a PDF from the thumbnails as they are
+- **Alt+Ctrl+P**: Generate a PDF from the thumbnails as they are (a slide with `!stp` lines gets one page per step)
 - **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
 
 </small>
