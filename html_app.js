@@ -1,3 +1,7 @@
+// First of all, to keep every line the server writes for the debug panel.
+var debugLog = require('./lib/debug_log');
+debugLog.capture();
+
 var express = require('express')
 var http = require('http');
 var open = require('open');
@@ -106,6 +110,8 @@ app.post('/save-slide-config', function(req, res) {
 //--------------  websocket
 
 var io = require('socket.io')(server);
+
+debugLog.attach(io);    // the server's output, for the debug panel (Ctrl+Shift+D)
 
 // Stop once the last reader's tab has been closed for a while (config.yaml:
 // idle_shutdown_sec, default 120 s, 0 = never), read again at each countdown.

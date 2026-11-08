@@ -74,8 +74,8 @@ function desktopDir() {
 }
 
 function linuxLauncher(desktop) {
-    // Terminal=true: the server's messages stay readable, and the window
-    // closes by itself when the server stops (idle shutdown).
+    // Terminal=false: no window; start_diapo.sh sends the server's messages to
+    // logs/node_diapo.log, and the page shows them (Ctrl+Shift+D).
     var quote = function(s) { return '"' + s.replace(/(["`$\\])/g, '\\$1') + '"' }
     var entry = [
         '[Desktop Entry]',
@@ -85,7 +85,7 @@ function linuxLauncher(desktop) {
         'Exec=env NODE=' + quote(NODE) + ' ' + quote(path.join(APP_DIR, 'start_diapo.sh')),
         'Path=' + APP_DIR,
         'Icon=' + ICON_PNG,
-        'Terminal=true',
+        'Terminal=false',
         'Categories=Office;Presentation;',
         ''
     ].join('\n')
@@ -103,8 +103,8 @@ function linuxLauncher(desktop) {
 
 function macLauncher(desktop) {
     // An .app bundle is just a folder with a fixed layout. It starts the
-    // server in the background, with its messages in logs/node_diapo.log; the
-    // server stops by itself once the browser is closed.
+    // server in the background, with its messages in logs/node_diapo.log
+    // (start_diapo.sh); the server stops by itself once the browser is closed.
     var app = path.join(desktop, APP_NAME + '.app')
     fs.rmSync(app, { recursive: true, force: true })
     var macos = path.join(app, 'Contents', 'MacOS')
@@ -126,9 +126,7 @@ function macLauncher(desktop) {
     var q = function(s) { return "'" + s.replace(/'/g, "'\\''") + "'" }
     fs.writeFileSync(path.join(macos, 'launcher'), [
         '#!/bin/sh',
-        'mkdir -p ' + q(path.join(APP_DIR, 'logs')),
-        'NODE=' + q(NODE) + ' exec ' + q(path.join(APP_DIR, 'start_diapo.sh')) +
-            ' >> ' + q(path.join(APP_DIR, 'logs', 'node_diapo.log')) + ' 2>&1', ''
+        'NODE=' + q(NODE) + ' exec ' + q(path.join(APP_DIR, 'start_diapo.sh')), ''
     ].join('\n'), { mode: 0o755 })
     // Icon: the PNG turned into .icns with the stock macOS tools, if present.
     try {
@@ -159,14 +157,14 @@ function windowsLauncher(desktop) {
     var ico = path.join(APP_DIR, 'icons', 'node_diapo.ico')
     fs.writeFileSync(ico, Buffer.concat([header, png]))
 
-    // start_diapo.bat runs "node" from the PATH unless NODE is set: the
-    // shortcut goes through cmd to set it.
+    // start_diapo.vbs starts the server with no window; the shortcut gives it
+    // the absolute path of node.
     var link = path.join(desktop, APP_NAME + '.lnk')
     var ps = function(s) { return "'" + s.replace(/'/g, "''") + "'" }
     var script = [
         '$s = (New-Object -ComObject WScript.Shell).CreateShortcut(' + ps(link) + ')',
-        '$s.TargetPath = $env:ComSpec',
-        '$s.Arguments = ' + ps('/c set "NODE=' + NODE + '" && "' + path.join(APP_DIR, 'start_diapo.bat') + '"'),
+        '$s.TargetPath = (Join-Path $env:WINDIR "System32\\wscript.exe")',
+        '$s.Arguments = ' + ps('"' + path.join(APP_DIR, 'start_diapo.vbs') + '" "' + NODE + '"'),
         '$s.WorkingDirectory = ' + ps(APP_DIR),
         '$s.IconLocation = ' + ps(ico + ',0'),
         '$s.Description = ' + ps('Slideshows in markdown'),

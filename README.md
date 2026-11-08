@@ -36,9 +36,11 @@ Then run the installer of your system, from the `node_diapo` folder:
 
 It checks the Node version, runs `npm install` (which also downloads the headless Chrome that Puppeteer uses for the slide thumbnails), and puts a **node_diapo** launcher on the Desktop:
 
-- Linux: a `.desktop` file, also added to the applications menu; it opens a terminal showing the server's messages
-- macOS: a `node_diapo.app`; the server's messages go to `logs/node_diapo.log`
+- Linux: a `.desktop` file, also added to the applications menu
+- macOS: a `node_diapo.app`
 - Windows: a shortcut, with the application's icon
+
+The launcher starts the server with no window. Its messages are in the page (**Ctrl+Shift+D**, Terminal tab) and in `logs/node_diapo.log`, started afresh at each launch. `start_diapo.bat`, or `start_diapo.sh` from a terminal, keeps them in a window, to look into a server that does not start.
 
 The work is done by `install.js`, the same on every OS. Run it again after moving the folder or upgrading Node: the launcher calls Node by its full path, so that it works where the `PATH` is not set (an app started from the macOS Finder, Node installed with nvm). `node install.js --no-npm` only recreates the launcher.
 
@@ -132,6 +134,7 @@ node_diapo/
 - **Ctrl+M**: Show/hide memos indicators
 - **Ctrl+S**: Save position of images and equations
 - **Ctrl+Shift+C**: Configuration panel (slide style, general settings)
+- **Ctrl+Shift+D**: Debug panel (the server's terminal, the page's console)
 - **Alt+Ctrl+P**: Generate a PDF from the thumbnails as they are
 - **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
 
