@@ -58,7 +58,7 @@ The browser will automatically open on the first slide. A few seconds after star
 
 ### Stopping the Application
 
-It can be stopped from the right-click menu ("Stop node_diapo"). Otherwise the server stops by itself 2 minutes after the last browser tab on it was closed (changing slides reloads the page, which is why it waits). Set `idle_shutdown_sec` in `config.yaml`, or in the configuration panel (Ctrl+Shift+C), to change the delay, or to `0` to keep it running until stopped by hand (Ctrl+C in its terminal). The hidden tabs that make the thumbnails do not count.
+It can be stopped from the right-click menu ("Stop node_diapo"), which also closes its pages (a tab the browser refuses to close is left blank). Otherwise the server stops by itself 2 minutes after the last browser tab on it was closed (changing slides reloads the page, which is why it waits). Set `idle_shutdown_sec` in `config.yaml`, or in the configuration panel (Ctrl+Shift+C), to change the delay, or to `0` to keep it running until stopped by hand (Ctrl+C in its terminal). The hidden tabs that make the thumbnails do not count.
 
 If the server stops while pages are still open (Ctrl+C, terminal closed, crash), those pages show a red banner saying so, instead of looking alive while nothing is saved any more. Once node_diapo is started again they reconnect by themselves and the banner goes.
 
