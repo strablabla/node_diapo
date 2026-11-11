@@ -6,7 +6,9 @@
 //   - the slides' style, views/slide_config/slide_config.yaml (css section),
 //     read and written through /slide_config.yaml and /save-slide-config;
 //   - the general settings of config.yaml, through /app-config and
-//     /save-app-config (lib/app_config.js).
+//     /save-app-config (lib/app_config.js);
+//   - the presentation's name, for its files (views/config_deck.yaml,
+//     through /deck-name and /save-deck-name, lib/deck_archive.js).
 // Style changes are previewed on the slide as the controls move; Cancel puts
 // the saved style back, Save writes both files and reloads the page.
 //
@@ -62,6 +64,8 @@
         input[type=range] { width: 100%; cursor: pointer; margin: 0; }
         input[type=number] { width: 90px; padding: 4px 6px; font: inherit;
                              border: 1px solid #bbb; border-radius: 4px; }
+        input[type=text] { width: 100%; box-sizing: border-box; padding: 5px 8px; font: inherit;
+                           border: 1px solid #bbb; border-radius: 4px; margin-top: 4px; }
         input[type=color] { width: 60px; height: 28px; padding: 0 2px; cursor: pointer;
                             border: 1px solid #bbb; border-radius: 4px; background: white; }
         .error { color: #c62828; min-height: 18px; margin: 8px 0 0; }
@@ -94,6 +98,11 @@
         '  <div class="header"><h3>Configuration</h3><button class="close" title="Close (Esc)">×</button></div>' +
         '  <h4>Slide style</h4><div class="file">views/slide_config/slide_config.yaml</div>' +
            STYLE_FIELDS.map(styleRow).join('') +
+        '  <h4>Presentation</h4><div class="file">views/config_deck.yaml</div>' +
+        '  <div class="row"><div class="label"><span>Name</span></div>' +
+        '    <input type="text" data-deck="name" maxlength="150">' +
+        '    <div class="hint">For its files: the exported one, the backups, the PDF. ' +
+        'The title, on the first slide, is part of that slide\'s text (Alt+T).</div></div>' +
         '  <h4>General</h4><div class="file">config.yaml</div>' +
         '  <div class="row"><div class="label"><span>Slider bar colour</span>' +
         '    <input type="color" data-app="color_bar"></div></div>' +
@@ -197,7 +206,9 @@
             host.addEventListener(type, function(e) {
                 e.stopPropagation();
                 if (type === 'keydown' && e.key === 'Escape') cancel();
-                if (type === 'keydown' && e.key === 'Enter' && e.target.tagName === 'INPUT') save();
+                // The field typed in: seen from here, e.target is only the host.
+                var typedIn = (e.composedPath && e.composedPath()[0]) || e.target;
+                if (type === 'keydown' && e.key === 'Enter' && typedIn.tagName === 'INPUT') save();
             });
         });
     }
@@ -205,7 +216,7 @@
     function open() {
         if (!host) create();
         $in('.error').textContent = '';
-        $.when($.get('/slide_config.yaml'), $.getJSON('/app-config')).done(function(styleRes, appRes) {
+        $.when($.get('/slide_config.yaml'), $.getJSON('/app-config'), $.getJSON('/deck-name')).done(function(styleRes, appRes, deckRes) {
             savedStyle = jsyaml.load(styleRes[0]) || {};
             var css = savedStyle.css || {};
             STYLE_FIELDS.forEach(function(f) {
@@ -214,6 +225,8 @@
                 var shown = $in('[data-value="' + f.id + '"]');
                 if (shown) shown.textContent = styleValue(f, input);
             });
+
+            $in('[data-deck="name"]').value = deckRes[0].name || '';
 
             var app = appRes[0];
             $in('[data-app="color_bar"]').value = toHex(app.color_bar);
@@ -259,8 +272,15 @@
             idle_shutdown_sec: Number($in('[data-app="idle_shutdown_sec"]').value)
         };
 
-        $.ajax({ url: '/save-app-config', type: 'POST', contentType: 'application/json',
-                 data: JSON.stringify(app) })
+        var name = $in('[data-deck="name"]').value.trim();
+        if (!name) { error.textContent = 'Not saved: the presentation needs a name'; return; }
+
+        $.ajax({ url: '/save-deck-name', type: 'POST', contentType: 'application/json',
+                 data: JSON.stringify({ name: name }) })
+        .then(function() {
+            return $.ajax({ url: '/save-app-config', type: 'POST', contentType: 'application/json',
+                            data: JSON.stringify(app) });
+        })
         .then(function() {
             return $.ajax({ url: '/save-slide-config', type: 'POST', contentType: 'text/plain',
                             data: jsyaml.dump(style) });
