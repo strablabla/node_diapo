@@ -5,6 +5,12 @@
 // A right click on the slide opens a small menu:
 //   - Export the PDF: every thumbnail is taken again first, so the PDF shows
 //     the slides as they are now (Alt+Ctrl+P uses the thumbnails as they are);
+//   - Export the presentation: one .zip file with the slides, their images,
+//     videos, drawings, title and style (lib/deck_archive.js);
+//   - Open a presentation: such a file replaces this one, which is saved
+//     first in backups/; every open page goes to its first slide;
+//   - New presentation (Ctrl+Alt+N): one title slide in place of this
+//     presentation, saved first in backups/ too;
 //   - Configuration (Ctrl+Shift+C);
 //   - Stop node_diapo: the server exits, the open pages say so.
 //
@@ -48,6 +54,10 @@
     var HTML =
         '<div class="menu">' +
         '  <div class="item" data-action="pdf"><span>Export the slides as PDF</span></div>' +
+        '  <div class="item" data-action="export"><span>Export the presentation</span><span class="keys">.zip</span></div>' +
+        '  <div class="item" data-action="open"><span>Open a presentation…</span></div>' +
+        '  <div class="item" data-action="new"><span>New presentation</span><span class="keys">Ctrl+Alt+N</span></div>' +
+        '  <div class="sep"></div>' +
         '  <div class="item" data-action="config"><span>Configuration</span><span class="keys">Ctrl+Shift+C</span></div>' +
         '  <div class="sep"></div>' +
         '  <div class="item danger" data-action="stop"><span>Stop node_diapo</span></div>' +
@@ -77,6 +87,12 @@
     function run(action) {
         if (action === 'pdf') {
             generatePdf(true);
+        } else if (action === 'export') {
+            exportDeck();
+        } else if (action === 'open') {
+            chooseDeck();
+        } else if (action === 'new') {
+            newDeck();
         } else if (action === 'config') {
             if (window.openConfigPanel) window.openConfigPanel();
         } else if (action === 'stop') {
@@ -84,6 +100,104 @@
                 socket.emit('shutdown');
             }
         }
+    }
+
+    // ------------------------------------------------ presentation files
+
+    function exportDeck() {
+        // The server names the file (Content-Disposition): a link is enough,
+        // the page stays.
+        var link = document.createElement('a');
+        link.href = '/export-deck';
+        link.download = '';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
+    function chooseDeck() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.zip,application/zip';
+        input.style.display = 'none';
+        input.addEventListener('change', function() {
+            var file = input.files[0];
+            input.remove();
+            if (file) openDeck(file);
+        });
+        document.body.appendChild(input);
+        input.click();
+    }
+
+    function notice(text) {
+        var el = document.getElementById('deck-notice');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'deck-notice';
+            el.style.cssText = 'position: fixed; left: 50%; top: 20px; transform: translateX(-50%); z-index: 2147483647; '
+                + 'background: #333; color: white; padding: 10px 18px; border-radius: 6px; margin: 0; '
+                + 'font: 15px Arial, sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,0.3);';
+            document.body.appendChild(el);
+        }
+        el.textContent = text;
+        return el;
+    }
+
+    function openDeck(file) {
+        if (!confirm('Open "' + file.name + '" in place of the current presentation?\n\n'
+                     + 'The current one is saved first in the backups folder of node_diapo, '
+                     + 'as a file that can be opened again the same way.')) return;
+        var el = notice('Opening ' + file.name + '…');
+        fetch('/import-deck', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: file })
+            .then(function(res) {
+                return res.json().catch(function() { return { error: 'HTTP ' + res.status } }).then(function(body) {
+                    if (!res.ok || !body.success) throw new Error(body.error || ('HTTP ' + res.status));
+                    el.textContent = body.slides + ' slides opened. The previous presentation is in ' + body.backup;
+                    // The server then sends every page to the first slide.
+                });
+            })
+            .catch(function(err) {
+                el.remove();
+                alert('The presentation could not be opened:\n\n' + err.message);
+            });
+    }
+
+    function newDeck() {
+        if (!confirm('Start a new presentation in place of the current one?\n\n'
+                     + 'The current one is saved first in the backups folder of node_diapo, '
+                     + 'as a file that "Open a presentation" opens again. '
+                     + 'The background and the style stay.')) return;
+        var el = notice('New presentation…');
+        fetch('/new-deck', { method: 'POST' })
+            .then(function(res) {
+                return res.json().catch(function() { return { error: 'HTTP ' + res.status } }).then(function(body) {
+                    if (!res.ok || !body.success) throw new Error(body.error || ('HTTP ' + res.status));
+                    el.textContent = 'New presentation. The previous one is in ' + body.backup;
+                });
+            })
+            .catch(function(err) {
+                el.remove();
+                alert('The new presentation could not be made:\n\n' + err.message);
+            });
+    }
+
+    // Ctrl+Alt+N. Capture phase, and by the key's place as well as its
+    // letter: the same key on AZERTY and QWERTY.
+    if (window.top === window) {
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.altKey && !e.shiftKey && !e.metaKey && !e.repeat
+                && (e.code === 'KeyN' || (e.key || '').toLowerCase() === 'n')) {
+                e.preventDefault();
+                e.stopPropagation();
+                hide();
+                newDeck();
+            }
+        }, true);
+    }
+
+    // Another presentation was opened, from this page or another one.
+    if (window.top === window) {
+        socket.on('deck_replaced', function() { location.replace('/d0') });
     }
 
     function show(x, y) {

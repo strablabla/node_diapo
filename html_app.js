@@ -26,6 +26,7 @@ var uploadVideo = require('./lib/upload_video');
 var idleShutdown = require('./lib/idle_shutdown');
 var appConfig = require('./lib/app_config');
 var drawings = require('./lib/drawings');
+var deckArchive = require('./lib/deck_archive');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
@@ -184,6 +185,23 @@ drawings.setup(app, express, function(index) {
             console.error('Error updating thumbnail:', err)
         })
     }, 3000)
+})
+
+// The presentation as one file: export, and opening one in place of this one
+// (right-click menu). Once opened: settings read again, slides counted and
+// routed, every page sent to the first slide, thumbnails made. The pages
+// wait half a second, for nunjucks to notice the new slide files.
+deckArchive.setup(app, express, function(count) {
+    reloadConfig()
+    websocketState.diapo_index = 0
+    routing.route_all(app, concat_diapos, function(num) {
+        numdiap = num
+        websocketState.updateNumdiap(num)
+        setTimeout(function() { io.emit('deck_replaced') }, 500)
+        thumbnails.create_thumbnails(num, port).catch(function(err) {
+            console.error('Error creating thumbnails:', err)
+        })
+    })
 })
 
 //--------------  Start

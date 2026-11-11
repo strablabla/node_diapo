@@ -30,3 +30,6 @@ public/videos/
 icons/node_diapo.ico
 # Server output when started from the macOS app
 logs/
+
+# The presentation in place, saved before another one is opened (lib/deck_archive.js)
+backups/

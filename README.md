@@ -93,6 +93,7 @@ node_diapo/
 │   ├── drawings/            # d0.json ...: drawings kept with the slides
 │   ├── saved/               # Saved versions of the slides
 │   └── thumbnails/          # Generated thumbnails (git-ignored)
+├── backups/                 # Presentations saved before another was opened
 └── public/                  # Public resources (images, videos)
 ```
 
@@ -125,6 +126,7 @@ node_diapo/
 - **Ctrl+P**: Create a new slide
 - **Ctrl+D**: Duplicate current slide
 - **Alt+Ctrl+X**: Delete current slide
+- **Ctrl+Alt+N**: New presentation, one title slide (the current one is saved in `backups/`, see Presentation Files)
 
 </small>
 
@@ -138,7 +140,7 @@ node_diapo/
 - **Ctrl+Shift+C**: Configuration panel (slide style, general settings)
 - **Ctrl+Shift+D**: Debug panel (the server's terminal, the page's console)
 - **Alt+Ctrl+P**: Generate a PDF from the thumbnails as they are (a slide with `!stp` lines gets one page per step)
-- **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
+- **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), export or open a presentation (see below), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
 
 </small>
 
@@ -237,6 +239,17 @@ The system supports enriched markdown syntax with special markers:
 
 - `config.yaml`: viewport size (also used for the thumbnails), color bar, number of miniatures per row, favicon, `idle_shutdown_sec` (see Stopping the Application)...
 - `views/config_deck.yaml`: deck title, background image, PDF title
+
+## Presentation Files
+
+The right-click menu saves the whole presentation in one `.zip` file, named after its title (`about_superconductors.diapo.zip`), to keep it or to open it in node_diapo on another machine:
+
+- **Export the presentation**: the slides, their drawings, the title and background (`views/config_deck.yaml`), the style (`slide_config.yaml`), and the images, videos and background the slides use, only those.
+- **Open a presentation…**: such a file replaces the presentation in place. It is checked first, and nothing changes if anything is wrong in it. The current presentation is then saved in `backups/` (a file of the same kind, which opens again the same way), and every open page goes to the first slide. The images and videos are added to `public/`; those of the same name are replaced.
+
+- **New presentation** (**Ctrl+Alt+N**): one title slide in place of the presentation, which is saved in `backups/` first, as when opening one. The background and the style stay.
+
+node_diapo holds one presentation at a time.
 
 ## Slide Versioning
 
