@@ -33,3 +33,15 @@ logs/
 
 # The presentation in place, saved before another one is opened (lib/deck_archive.js)
 backups/
+
+# The presentation being written: kept in its .diapo.zip files (right-click
+# menu, Export the presentation), not in git. Made afresh at start when
+# missing (lib/deck_archive.js). diapo.html, the slides' template, is code.
+views/diapos/d[0-9]*.html
+views/drawings/
+views/config_deck.yaml
+views/saved/all_diap.md
+# Images and backgrounds added to the slides from now on (those already
+# tracked stay so)
+public/imgs/*
+public/bckgrds/*

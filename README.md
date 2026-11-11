@@ -249,7 +249,7 @@ The right-click menu saves the whole presentation in one `.zip` file, named afte
 
 - **New presentation** (**Ctrl+Alt+N**): one title slide in place of the presentation, which is saved in `backups/` first, as when opening one. The background and the style stay.
 
-node_diapo holds one presentation at a time.
+node_diapo holds one presentation at a time. Its files (`views/diapos/d*.html`, `views/drawings/`, `views/config_deck.yaml`, images and backgrounds added since) are not tracked by git: keep a presentation as its exported file. Started without any slide, node_diapo makes a new presentation.
 
 ## Slide Versioning
 

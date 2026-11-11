@@ -53,6 +53,9 @@ var addr = 'http://127.0.0.1:{}/d0'.format(port)
 
 
 
+// The presentation's files are not in git: made here when there are none.
+deckArchive.ensureDeck()
+
 // Load config and setup nunjucks with global variables
 var config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
 var config_desk = yaml.load(fs.readFileSync('views/config_deck.yaml', 'utf8'));
