@@ -25,6 +25,7 @@ var uploadImage = require('./lib/upload_image');
 var uploadVideo = require('./lib/upload_video');
 var idleShutdown = require('./lib/idle_shutdown');
 var appConfig = require('./lib/app_config');
+var drawings = require('./lib/drawings');
 var slideOperations = require('./lib/slide_operations');
 var routing = require('./lib/routing');
 var setupWebSocket = require('./lib/websocket');
@@ -170,6 +171,20 @@ app.post('/upload-video', function(req, res) {
 
 // General settings, for the configuration panel (Ctrl+Shift+C)
 appConfig.setup(app, express, reloadConfig)
+
+// Drawings kept with the slides (lib/slide_drawing.js). The thumbnail is
+// taken again once the drawing has been still for a few seconds: each one
+// starts a headless browser, too heavy to do at every stroke.
+var drawingThumbTimers = {}
+drawings.setup(app, express, function(index) {
+    clearTimeout(drawingThumbTimers[index])
+    drawingThumbTimers[index] = setTimeout(function() {
+        delete drawingThumbTimers[index]
+        thumbnails.updateSingleThumbnail(index, port, websocketState.numdiap).catch(function(err) {
+            console.error('Error updating thumbnail:', err)
+        })
+    }, 3000)
+})
 
 //--------------  Start
 

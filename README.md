@@ -72,7 +72,8 @@ node_diapo/
 ├── config.yaml              # Viewport size, colors, favicon...
 ├── lib/                     # Server modules (routing, websocket, thumbnails,
 │                            #   PDF, slide operations) and a few client
-│                            #   scripts (shortcuts_help.js, syntax_help.js)
+│                            #   scripts (shortcuts_help.js, syntax_help.js,
+│                            #   slide_drawing.js)
 ├── static/js/               # Server-side helpers (markdown to HTML, versioning)
 ├── scripts/                 # Client libraries: straptoc.js/.css, CodeMirror,
 │   │                        #   keymaster, Artyom, screenfull
@@ -89,6 +90,7 @@ node_diapo/
 │   │                        #   decorate, handle_position, voice...
 │   ├── text.html            # Markdown editor
 │   ├── diapo_all.html       # All slides view
+│   ├── drawings/            # d0.json ...: drawings kept with the slides
 │   ├── saved/               # Saved versions of the slides
 │   └── thumbnails/          # Generated thumbnails (git-ignored)
 └── public/                  # Public resources (images, videos)
@@ -140,10 +142,27 @@ node_diapo/
 
 </small>
 
+#### Drawing on the slides
+<small>
+
+Bring the mouse to the **right edge** of the window: a toolbar slides out, with **?** (the shortcuts help) and the pen.
+
+- **D**: Drawing mode on/off (**Esc** leaves it); it stays on from slide to slide
+- **L**: Switch layer. Each slide has two:
+  - **Live**: for the talk; kept while the tab is open (going back to a slide shows it again), never saved
+  - **Slide**: part of the presentation; saved at each stroke in `views/drawings/d<n>.json`, shown in the thumbnails and the PDF
+- **P** pen, **H** highlighter, **E** eraser (removes whole strokes); colours and three sizes in the toolbar
+- **Ctrl+Z** undo, **Ctrl+Y** or **Ctrl+Shift+Z** redo
+- Toolbar only: move the live drawing into the slide, erase the layer, hide the drawings
+
+The drawings follow their slide when slides are added, duplicated or deleted. They are placed like the slides' content, which keeps its distance from the top and moves sideways with the window's width: drawn on one screen, they stay on what they mark on another, within a few pixels.
+
+</small>
+
 #### Help
 <small>
 
-- **Ctrl+H**: Show keyboard shortcuts help
+- **?** in the toolbar at the right edge, or **Ctrl+H**: Show keyboard shortcuts help
 - **Alt+V**: Show voice commands help
 - **Ctrl+V**: Toggle voice recognition
 - In the editor, the **Syntax** button (or a double-click in the line-number gutter) shows the markdown syntax help

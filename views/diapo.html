@@ -126,3 +126,9 @@ console.log('===== DIAPO.HTML SCRIPT STARTING =====');
 
 <!-- Keyboard shortcuts help panel -->
 <script src="/shortcuts_help.js"></script>
+
+<!-- Drawing on the slides and the toolbar at the right edge. The drawing kept
+     with this slide comes with the page (lib/drawings.js); null on /all and
+     /all_mini, which are not one slide. -->
+<script>var SLIDE_DRAWING = {{ slide_drawing | safe if slide_drawing is defined else 'null' }};</script>
+<script src="/slide_drawing.js"></script>
