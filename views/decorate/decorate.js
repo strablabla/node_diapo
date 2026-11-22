@@ -68,27 +68,36 @@ function make_foot(){
 function frame_col(){
 
       /*
-      Frame with color around tag element
-      eg: !fb  for blue frame ..
+      Colored frame or band on a title (h1, h2, h3):
+        !fb  !fr  !fg  !fo  !fy   frame around it   (blue, red, green, orange, yellow)
+        !hb  !hr  !hg  !ho  !hy   band behind it, as a highlighter
+      Only these letters: "!head", "!foot"... are left alone.
+
+      The frame or band goes on a span around the text, not on the title: the
+      title stays a block, on its own line (two decorated ## one below the
+      other, not side by side), and keeps its alignment (a # stays centered).
       */
 
-      var dic_col = {'b':'blue','r':'red','g':'green','o':'orange'}
-      var tags = ['h1','h2','h3']
-      var reg = /\!f\w/
-      for (var i in tags){
-            $(tags[i]).each(function(){
-                var regmatch = $(this).text().match(reg)
-                if (regmatch){
-                      var col = dic_col[regmatch[0].slice(-1)] // find color..
-                      var cssfb = {'border':'3px solid ' + col, 'display':'inline-block', 'padding':' 7px 7px 7px 7px'}
-                      elem_match__inject_css($(this), reg, cssfb)
-                }
+      var frame_col = {'b':'blue', 'r':'red', 'g':'#5cc95c', 'o':'orange', 'y':'#e6c200'}
+      var band_col = {'b':'#cce0ff', 'r':'#ffd1d1', 'g':'#cdf2cd', 'o':'#ffdfb0', 'y':'#fff2a0'}
+      var marks = [
+            { reg: /\!f([brgoy])\b/, css: function(c){ return {'border': '3px solid ' + frame_col[c]} } },
+            { reg: /\!h([brgoy])\b/, css: function(c){ return {'background-color': band_col[c], 'border-radius': '4px'} } }
+      ]
+      $('h1, h2, h3').each(function(){
+            var text = $(this).text(), css = null
+            marks.forEach(function(mark){              // both may be used: !fb !hy
+                  var m = text.match(mark.reg)
+                  if (!m) return
+                  css = $.extend(css || {'display': 'inline-block', 'padding': '7px'}, mark.css(m[1]))
+                  text = text.replace(mark.reg, '')
             })
-      }
+            if (css) $(this).empty().append($('<span/>').addClass('title-deco').text(text.trim()).css(css))
+      })
 }
 
 make_title() // style h1 title with !tit marker
-frame_col() // frame with color around the tag..
+frame_col() // frame or band of color on the titles
 
 // ============================================
 // BACKGROUND IMAGE SETUP

@@ -13,6 +13,11 @@
 //     goes to its first slide;
 //   - New presentation (Ctrl+Alt+N): one title slide in place of this
 //     presentation, saved first in backups/ too;
+//   - Full screen: the slides fill the screen, until Esc or "Exit full
+//     screen" (same menu). Each slide is a page of its own, and the browser
+//     leaves full screen at each new page: so the slides are shown in a frame
+//     put over the page, the frame made full screen; only the frame goes from
+//     slide to slide. Leaving, the page goes to the slide the frame was on.
 //   - Configuration (Ctrl+Shift+C);
 //   - Stop node_diapo: the server exits, the open pages say so.
 //
@@ -60,6 +65,7 @@
         '  <div class="item" data-action="open"><span>Open a presentation…</span></div>' +
         '  <div class="item" data-action="new"><span>New presentation</span><span class="keys">Ctrl+Alt+N</span></div>' +
         '  <div class="sep"></div>' +
+        '  <div class="item" data-action="fullscreen"><span class="fs-label">Full screen</span><span class="keys">Esc to leave</span></div>' +
         '  <div class="item" data-action="config"><span>Configuration</span><span class="keys">Ctrl+Shift+C</span></div>' +
         '  <div class="sep"></div>' +
         '  <div class="item danger" data-action="stop"><span>Stop node_diapo</span></div>' +
@@ -95,6 +101,8 @@
             showOpenPanel();
         } else if (action === 'new') {
             newDeck();
+        } else if (action === 'fullscreen') {
+            toggleFullScreen();
         } else if (action === 'config') {
             if (window.openConfigPanel) window.openConfigPanel();
         } else if (action === 'stop') {
@@ -102,6 +110,64 @@
                 socket.emit('shutdown');
             }
         }
+    }
+
+    // ------------------------------------------------ full screen
+
+    // The standard names (Chrome, Edge, Firefox, Opera, Safari 16.4 and later)
+    // or Safari's older webkit ones. None on the iPhone, where only a video
+    // can fill the screen.
+    function fsElement(doc) { return doc.fullscreenElement || doc.webkitFullscreenElement || null }
+    function fsExit(doc) {
+        var exit = doc.exitFullscreen || doc.webkitExitFullscreen;
+        if (exit) exit.call(doc);
+    }
+    function fsRequest(el) {
+        var request = el.requestFullscreen || el.webkitRequestFullscreen;
+        if (!request) return Promise.reject(new Error('not available in this browser'));
+        // An old Safari returns nothing: its failure comes as an event.
+        return Promise.resolve(request.call(el));
+    }
+    var FS_CHANGE = 'onfullscreenchange' in document ? 'fullscreenchange' : 'webkitfullscreenchange';
+    var FS_ERROR = 'onfullscreenchange' in document ? 'fullscreenerror' : 'webkitfullscreenerror';
+
+    function toggleFullScreen() {
+        if (window.IN_PRESENTER) { fsExit(window.parent.document); return }
+        if (fsElement(document)) { fsExit(document); return }
+
+        var frame = document.createElement('iframe');
+        frame.id = 'presenter-frame';
+        frame.src = location.pathname;
+        frame.style.cssText = 'position: fixed; inset: 0; width: 100%; height: 100%; border: 0; margin: 0; '
+                            + 'padding: 0; background: white; z-index: 2147483646;';
+        // The keys (arrows, D...) go to the slide in the frame.
+        frame.addEventListener('load', function() { frame.contentWindow.focus() });
+        document.body.appendChild(frame);
+
+        function stopListening() {
+            document.removeEventListener(FS_CHANGE, onChange);
+            document.removeEventListener(FS_ERROR, onError);
+        }
+        function onChange() {
+            if (fsElement(document)) return;
+            stopListening();
+            var path = null;
+            try { path = frame.contentWindow.location.pathname } catch (e) {}
+            frame.remove();
+            if (path && path !== location.pathname && /^\/d\d+$/.test(path)) location.replace(path);
+        }
+        function onError(err) {
+            if (!frame.parentNode) return;          // told twice: event and promise
+            stopListening();
+            frame.remove();
+            alert('Full screen is not possible here (' + ((err && err.message) || 'refused by the browser') + ').\n\n'
+                  + 'The browser\'s own full screen does it too: F11 (Windows, Linux), Ctrl+Cmd+F (Mac).');
+        }
+        document.addEventListener(FS_CHANGE, onChange);
+        document.addEventListener(FS_ERROR, onError);
+
+        // Within the menu's click: the browser grants full screen only then.
+        fsRequest(frame).catch(onError);
     }
 
     // ------------------------------------------------ presentation files
@@ -365,7 +431,7 @@
 
     // Ctrl+Alt+N. Capture phase, and by the key's place as well as its
     // letter: the same key on AZERTY and QWERTY.
-    if (window.top === window) {
+    if (window.top === window || window.IN_PRESENTER) {
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.altKey && !e.shiftKey && !e.metaKey && !e.repeat
                 && (e.code === 'KeyN' || (e.key || '').toLowerCase() === 'n')) {
@@ -378,12 +444,13 @@
     }
 
     // Another presentation was opened, from this page or another one.
-    if (window.top === window) {
+    if (window.top === window || window.IN_PRESENTER) {
         socket.on('deck_replaced', function() { location.replace('/d0') });
     }
 
     function show(x, y) {
         if (!host) create();
+        shadow.querySelector('.fs-label').textContent = window.IN_PRESENTER ? 'Exit full screen' : 'Full screen';
         host.style.display = 'block';
         // Kept inside the window, flipped left or up near the edges.
         var w = host.offsetWidth, h = host.offsetHeight;

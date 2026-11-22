@@ -24,17 +24,25 @@
     // The style settings: each control drives one CSS property on one or
     // more selectors of slide_config.yaml.
     var STYLE_FIELDS = [
-        { id: 'title_margin', label: 'Titles: left margin', selectors: ['h1', 'h2', 'h3'],
+        // Titles (#) and subtitles (## and ###) apart: the title can stay
+        // centered while the subtitles line up with the text.
+        { id: 'title_top', label: 'Titles (#): vertical position (space above)', selectors: ['h1'],
+          prop: 'margin-top', kind: 'range', min: 0, max: 400, step: 5, unit: 'px' },
+        { id: 'title_margin', label: 'Titles (#): left margin', selectors: ['h1'],
           prop: 'margin-left', kind: 'range', min: 0, max: 50, step: 0.5, unit: '%' },
-        { id: 'p_margin', label: 'Paragraphs: left margin', selectors: ['p'],
+        { id: 'subtitle_top', label: 'Subtitles (##, ###): vertical position (space above)', selectors: ['h2', 'h3'],
+          prop: 'margin-top', kind: 'range', min: 0, max: 300, step: 5, unit: 'px' },
+        { id: 'subtitle_margin', label: 'Subtitles (##, ###): left margin', selectors: ['h2', 'h3'],
           prop: 'margin-left', kind: 'range', min: 0, max: 50, step: 0.5, unit: '%' },
-        { id: 'ul_margin', label: 'Lists: left margin', selectors: ['ul'],
+        // The lists' settings also apply to the text written without "*"
+        // (slide_config.js: paragraphsLikeLists).
+        { id: 'ul_margin', label: 'Lists and text: left margin', selectors: ['ul'],
           prop: 'margin-left', kind: 'range', min: 0, max: 50, step: 0.5, unit: '%' },
-        { id: 'li_size', label: 'Lists: text size', selectors: ['li'],
+        { id: 'li_size', label: 'Lists and text: text size', selectors: ['li'],
           prop: 'font-size', kind: 'range', min: 50, max: 300, step: 5, unit: '%' },
         { id: 'lili_size', label: 'Sub-lists: text size (relative to the list)', selectors: ['li li'],
           prop: 'font-size', kind: 'range', min: 40, max: 150, step: 5, unit: '%' },
-        { id: 'li_color', label: 'Lists: text colour', selectors: ['li', 'li li'],
+        { id: 'li_color', label: 'Lists and text: text colour', selectors: ['li', 'li li'],
           prop: 'color', kind: 'color' }
     ];
 
@@ -46,6 +54,11 @@
             background: rgba(0, 0, 0, 0.6);
             font: 14px/1.4 Arial, sans-serif; color: #222;
         }
+        /* While a setting is being changed: the slide shows through, to see it change. */
+        .overlay { transition: background 0.2s; }
+        .overlay.adjusting { background: transparent; }
+        .panel { transition: opacity 0.2s; }
+        .overlay.adjusting .panel { opacity: 0.4; }
         .panel {
             background: white; border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -152,8 +165,18 @@
         var rule = css[f.selectors[0]] || {};
         if (f.kind === 'color') return toHex(rule[f.prop] || '#000000');
         var n = toNumber(f, rule[f.prop]);
-        if (n === null) n = f.prop === 'font-size' ? 100 : 0;
+        if (n === null) n = f.prop === 'font-size' ? 100 : f.prop === 'margin-top' ? pageDefault(f) : 0;
         return Math.min(f.max, Math.max(f.min, n));
+    }
+
+    // A margin the file does not set yet: the one the slides' stylesheets give,
+    // read on a probe element, so that saving does not move anything.
+    function pageDefault(f) {
+        var probe = $('<' + f.selectors[0] + '>').css({ position: 'absolute', visibility: 'hidden' })
+                                                .text('x').appendTo('body');
+        var n = parseFloat(probe.css(f.prop)) || 0;
+        probe.remove();
+        return Math.round(n);
     }
 
     function styleValue(f, input) {
@@ -163,6 +186,17 @@
     // Live preview, the same way slide_config.js applies the file.
     function preview(f, value) {
         f.selectors.forEach(function(sel) { $(sel).css(f.prop, value) });
+        paragraphsLikeLists(currentCss());
+    }
+
+    // The style as the panel shows it now: the loaded file, with the fields' values.
+    function currentCss() {
+        var css = $.extend(true, {}, (savedStyle && savedStyle.css) || {});
+        STYLE_FIELDS.forEach(function(f) {
+            var v = styleValue(f, $in('[data-style="' + f.id + '"]'));
+            f.selectors.forEach(function(sel) { css[sel] = css[sel] || {}; css[sel][f.prop] = v });
+        });
+        return css;
     }
 
     function restoreStyle() {
@@ -174,6 +208,7 @@
                 $(sel).css(f.prop, rule[f.prop] === undefined ? '' : rule[f.prop]);
             });
         });
+        paragraphsLikeLists(css);
     }
 
     function create() {
@@ -184,8 +219,24 @@
         shadow.innerHTML = '<style>' + CSS + '</style>' + HTML;
         document.body.appendChild(host);
 
+        // The panel fades while a setting moves: from the press on the control
+        // to a moment after the last change (the arrow keys also move a slider).
+        var overlay = $in('.overlay'), fadeTimer = null, pressed = false;
+        function adjusting() {
+            clearTimeout(fadeTimer);
+            overlay.classList.add('adjusting');
+            if (!pressed) fadeTimer = setTimeout(function() { overlay.classList.remove('adjusting') }, 900);
+        }
+        window.addEventListener('pointerup', function() {
+            if (!pressed) return;
+            pressed = false;
+            adjusting();
+        }, true);
+
         shadow.querySelectorAll('[data-style]').forEach(function(input) {
+            input.addEventListener('pointerdown', function() { pressed = true; adjusting() });
             input.addEventListener('input', function() {
+                adjusting();
                 var f = field(input.getAttribute('data-style'));
                 var v = styleValue(f, input);
                 var shown = $in('[data-value="' + f.id + '"]');
@@ -244,7 +295,11 @@
 
     function isOpen() { return host && host.style.display !== 'none' }
 
-    function close() { if (host) host.style.display = 'none' }
+    function close() {
+        if (!host) return;
+        host.style.display = 'none';
+        $in('.overlay').classList.remove('adjusting');
+    }
 
     function cancel() {
         restoreStyle();

@@ -9,7 +9,7 @@ css:
     margin: 15px 30px
     color: '#000000'
   h1:
-    margin-left: 13%
+    margin-left: 0%
   h2:
     margin-left: 13%
   h3:

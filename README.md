@@ -106,6 +106,7 @@ node_diapo/
 
 - **Left/Right arrows**: Navigate between slides
 - **Page Up/Page Down**: Navigate between slides (alternative)
+- **Mouse in the bottom-right corner**: two chevrons come out, next to the page number: previous / next slide
 - **Alt+A**: View all slides
 - **Alt+M**: View miniatures
 
@@ -140,14 +141,14 @@ node_diapo/
 - **Ctrl+Shift+C**: Configuration panel (slide style, general settings)
 - **Ctrl+Shift+D**: Debug panel (the server's terminal, the page's console)
 - **Alt+Ctrl+P**: Generate a PDF from the thumbnails as they are (a slide with `!stp` lines gets one page per step)
-- **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), export or open a presentation (see below), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
+- **Right click** on the slide: menu to export the PDF (thumbnails taken again first, so it shows the slides as they are now), export or open a presentation (see below), show the slides in **full screen** (the arrows and chevrons go on from slide to slide in it; **Esc** or "Exit full screen" in the same menu leaves it, on the slide shown last), open the configuration, or stop node_diapo. Shift+right click gives the browser's menu.
 
 </small>
 
 #### Drawing on the slides
 <small>
 
-Bring the mouse to the **right edge** of the window: a toolbar slides out, with **?** (the shortcuts help) and the pen.
+Bring the mouse to the **right edge** of the window: a toolbar slides out, with **?** (the help: keyboard shortcuts and syntax) and the pen.
 
 - **D**: Drawing mode on/off (**Esc** leaves it); it stays on from slide to slide
 - **L**: Switch layer. Each slide has two:
@@ -164,7 +165,7 @@ The drawings follow their slide when slides are added, duplicated or deleted. Th
 #### Help
 <small>
 
-- **?** in the toolbar at the right edge, or **Ctrl+H**: Show keyboard shortcuts help
+- **?** in the toolbar at the right edge, or **Ctrl+H**: help, in two tabs: keyboard shortcuts, and the syntax of the slides (the list is in `lib/syntax_reference.js`)
 - **Alt+V**: Show voice commands help
 - **Ctrl+V**: Toggle voice recognition
 - In the editor, the **Syntax** button (or a double-click in the line-number gutter) shows the markdown syntax help
@@ -195,7 +196,7 @@ The application supports voice commands in French via Artyom.js for:
 
 ### Special Markdown Syntax
 
-The system supports enriched markdown syntax with special markers:
+The system supports enriched markdown syntax with special markers (the full list: **Syntax** tab of the help, **?** or **Ctrl+H**):
 
 #### Page Layout
 - `!deck_title`: Presentation title (title page)
